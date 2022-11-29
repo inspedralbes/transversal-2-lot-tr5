@@ -1,18 +1,49 @@
 Vue.component('inicio' , {
     data: function () {
         return {
-            
+            categoriesResult: []
         }
     },
     template: ` <div>
-                    <b-button pill variant="warning" v-b-modal="'modalSelectCategory'">PLAY</b-button>
+                    <b-button pill variant="warning" v-b-modal="'modalSelectCategory'" @click="getCategories">PLAY</b-button>
                     <b-modal id="modalSelectCategory" title="BootstrapVue">
                         <template #modal-title>
                             Select
                         </template>
-                        <sele
+                        <p>Difficulty</p>
+                        <b-form-select class="mb-3">
+                            <b-form-select-option value="Easy">Easy</b-form-select-option>
+                            <b-form-select-option value="Medium">Medium</b-form-select-option>
+                            <b-form-select-option value="Hard">Hard</b-form-select-option>
+                        </b-form-select>
+                        <br>
+                        <p>Category</p>
+                        <b-form-select class="mb-3" :options="categoriesResult">
+                        </b-form-select>
                     </b-modal>
-                </div>`
+                </div>`,
+    methods: {
+        getCategories: function () { 
+
+            fetch("https://the-trivia-api.com/api/categories")
+            .then(res => res.json())
+            .then(data => {
+                           
+                let categories = Object.values(data);
+                // console.log(categories); 
+                for (let i = 0; i < categories.length; i++) {
+                   
+                    // console.log(categories[i]);
+                    for (let j = 0; j < categories[i].length; j++) {
+                        // console.log(categories[i][j])
+                        this.categoriesResult.push = " { value: '" + categories[i][j] + "', text: '" + categories[i][j] + "'}"
+                    }
+                    console.log(this.categoriesResult);
+                }
+            });
+
+        }
+    }
     
 });
 
