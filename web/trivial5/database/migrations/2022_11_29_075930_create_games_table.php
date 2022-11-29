@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('games', function (Blueprint $table) {
             $table->id();
-            $table->string('userName');
-            $table->string('userSurname');
-            $table->string('userEmail')->unique();
-            $table->string('userPassword');
+            $table->string('category');
+            $table->string('difficulty');
+            $table->string('date');
+            $table->json('data')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('games');
     }
 };
