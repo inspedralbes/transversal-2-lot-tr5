@@ -4,8 +4,8 @@ Vue.component('inicio' , {
             
         }
     },
-    template: ` <div>
-                    <b-button pill variant="warning" v-b-modal="'modalSelectCategory'">PLAY</b-button>
+    template: ` <div class="container">
+                    <div  class="button_play"><b-button pill variant="warning" v-b-modal="'modalSelectCategory'">PLAY</b-button></div>
                     <b-modal id="modalSelectCategory" title="BootstrapVue">
                         <template #modal-title>
                             Select
