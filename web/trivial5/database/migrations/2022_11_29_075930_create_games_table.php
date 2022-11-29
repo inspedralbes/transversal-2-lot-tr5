@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->string('category');
+            $table->string('type');
             $table->string('difficulty');
             $table->string('date');
             $table->json('data')->nullable();
