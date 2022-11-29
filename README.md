@@ -1,6 +1,6 @@
 # League of Trivia (Grup 5)
 
-### integrants
+## Integrants
 
 - Iker Bravo
 
@@ -8,13 +8,7 @@
 
 - Yenifer Wu
 
-
-### Nom del projecte
-
-League of Trivia 
-
-
-### Petita descripció
+## Descripció
 
 League of Trivia és un quiz online multijugador que poden desafiar reciprocament.
  
