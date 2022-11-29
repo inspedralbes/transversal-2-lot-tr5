@@ -4,9 +4,47 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    
+    <title>Trivial 5</title>
+
+    <link rel="stylesheet" href="css/estils.css">
+    <link rel="stylesheet" href="css/normalize.css">
+
+    <!-- Load required Bootstrap and BootstrapVue CSS -->
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+    <script src="https://unpkg.com/vue-router@3/dist/vue-router.js"></script>
+
+    <script src="https://unpkg.com/@vue/composition-api"></script>
+    <script src="https://unpkg.com/vue-demi"></script>
+    <script src="https://unpkg.com/pinia"></script>
 </head>
 <body>
+    <div id="app" style="margin: 2%">
     
+        <b-tabs v-model="tabIndex" card>
+            <b-tab title="Ranking" to="/"></b-tab>
+            <b-tab title="Jugar" to="/" active></b-tab>
+            <b-tab title="Perfil" to="/"></b-tab>
+            <b-tab title="Login" to="/">Login</b-tab>
+        </b-tabs>
+        <!-- <b-link to="/">Ranking</b-link>
+        <b-link to="/" active>Jugar</b-link>
+        <b-link to="/">Perfil</b-link>
+        <b-link>Login</b-link> -->
+
+        <router-view></router-view>
+    </div>
+    <script src="js/utils.js"></script>
 </body>
 </html>
