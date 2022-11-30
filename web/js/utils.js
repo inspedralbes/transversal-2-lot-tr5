@@ -1,11 +1,116 @@
-Vue.component('question' , {
+/* Randomize array in-place using Durstenfeld shuffle algorithm */
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
 
+Vue.component('question' , {
+    data: function () {
+        return {
+            userAnswer: false,
+            arrayAnswersDesordenada: [],
+            answered: null
+        }
+    },
     props: ['infoQuestion'],
     template: ` <div>
-                    <h3>{{ infoQuestion.question }}</h3>
-    
-                    <b-button variant="success" @click="$emit('incrementQuestion')">Next</b-button>
+                    <h3></h3>
+                    <b-card
+                    :title=infoQuestion.question
+                    style="max-width: 20rem;"
+                    class="mb-2"
+                    >
+                        <b-row>
+                            <b-col lg="6" class="pb-2">
+                                <button @click="getAnswerUser(0)" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
+                            </b-col>
+                            <b-col lg="6" class="pb-2">
+                                <button @click="getAnswerUser(1)" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(1), respuesta__incorrecta: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col lg="6" class="pb-2">
+                                <button @click="getAnswerUser(2)" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(2), respuesta__incorrecta: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
+                            </b-col>
+                            <b-col lg="6" class="pb-2">
+                                <button @click="getAnswerUser(3)" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(3), respuesta__incorrecta: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
+                            </b-col>
+                        </b-row>
+                        <br>
+                        <b-button variant="success" @click="isAnswered">Next</b-button>
+                        <slot></slot>
+                    </b-card>
+                   
                 </div>`,
+    methods: {
+        getAnswerUser: function (numero) {
+
+            if(!this.answered){
+                console.log(this.arrayAnswersDesordenada[numero]);
+                console.log(this.infoQuestion.correctAnswer);
+                if(this.arrayAnswersDesordenada[numero].answer == this.infoQuestion.correctAnswer) {
+                    this.userAnswer=true;
+                    this.arrayAnswersDesordenada[numero].correcto = true;
+                }
+                else {
+                    this.userAnswer = false;
+                    this.arrayAnswersDesordenada[numero].incorrecto = true;
+                }
+                
+                this.answered = true;
+                this.$emit('userAnswer', this.userAnswer);
+            }
+        },
+        isAnswered: function() {
+            if(this.answered) {
+                this.$emit('incrementQuestion');
+            }
+            else {
+                alert("Answer the question");
+            }
+        },
+        comprobarRespuestaCorrecta: function(index) {
+            if(this.arrayAnswersDesordenada[index].correcto != null) {
+                return this.arrayAnswersDesordenada[index].correcto;
+            }
+            else {
+                return false;
+            }
+            
+        },
+        comprobarRespuestaIncorrecta: function(index) {
+            if(this.arrayAnswersDesordenada[index].incorrecto != null) {
+                return this.arrayAnswersDesordenada[index].incorrecto;
+            }
+            else {
+                return false;
+            }
+        }
+    },
+    mounted() {
+
+        this.infoQuestion.incorrectAnswers.forEach(element => {
+            let a = {
+                answer: element,
+                correcto: null,
+                incorrecto: null
+            };
+            this.arrayAnswersDesordenada.push(a);
+        });
+
+        let a = {
+            answer: this.infoQuestion.correctAnswer,
+            correcto: null,
+            incorrecto: null
+        };
+        this.arrayAnswersDesordenada.push(a);
+        shuffleArray(this.arrayAnswersDesordenada);
+        console.log(this.arrayAnswersDesordenada[0].answer);
+    }
 
 });
 
@@ -17,7 +122,8 @@ Vue.component('start' , {
             selectedDifficulty: "",
             selectedCategory: "",
             showQuestions: null,
-            actualQuestion: 0
+            actualQuestion: 0,
+            userAnswers: [null, null, null, null, null, null, null, null, null, null]
         }
     },
 
@@ -61,8 +167,13 @@ Vue.component('start' , {
                         </b-row>
                     </b-modal>
 
-                    <div v-if="showQuestions">
-                        <question :infoQuestion="this.questions[actualQuestion]" @incrementQuestion="incrementQuestion"></question>
+                    <div v-if="showQuestions" v-for="(question, index) in this.questions">
+                        <question v-show="actualQuestion == index":infoQuestion="question" @incrementQuestion="incrementQuestion" @userAnswer="addUserAnswer">
+                        <br><br>
+                        <div v-for="(answer, index) in userAnswers" class="respuestas__footer">
+                            <div v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(index), respuesta__incorrecta: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
+                        </div>
+                        </question>
                     </div>
                 </div>`,
     methods: {
@@ -75,7 +186,7 @@ Vue.component('start' , {
             .then(data => {
                 this.questions = data;
                 this.showQuestions = true;
-                console.log(this.questions[0].question);
+                console.log(this.questions[0]);
                 this.$bvModal.hide("modalSelectCategory");
             });
             
@@ -89,6 +200,25 @@ Vue.component('start' , {
                 //llevarlo a la pantalla final
             }
             console.log(this.actualQuestion);
+        },
+
+        addUserAnswer: function(userAnswer) {
+
+            this.userAnswers[this.actualQuestion] = userAnswer;
+            // this.userAnswers.push(userAnswer);
+
+            console.log(this.userAnswers);
+        },
+        comprobarRespuestaCorrecta: function(index) {
+            return this.userAnswers[index];
+        },
+        comprobarRespuestaIncorrecta: function(index) {
+
+            if(this.userAnswers[index] == null) {
+                return false;
+            }else {
+                return !this.userAnswers[index];
+            }
         }
 
     }
