@@ -20,6 +20,15 @@
     
 }
 
+.respuestas__body {
+    width: 100%;
+    height: 100%;
+    background-color: lightgray;
+    justify-content: center;
+    border: 1px solid black;
+    text-align: center;
+}
+
 .respuestas__footer {
     display: inline-flex;
     width: 10%;

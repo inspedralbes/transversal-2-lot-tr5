@@ -26,18 +26,18 @@ Vue.component('question' , {
                     >
                         <b-row>
                             <b-col lg="6" class="pb-2">
-                                <button @click="getAnswerUser(0)" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
+                                <button @click="getAnswerUser(0)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
                             </b-col>
                             <b-col lg="6" class="pb-2">
-                                <button @click="getAnswerUser(1)" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(1), respuesta__incorrecta: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
+                                <button @click="getAnswerUser(1)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(1), respuesta__incorrecta: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
                             </b-col>
                         </b-row>
                         <b-row>
                             <b-col lg="6" class="pb-2">
-                                <button @click="getAnswerUser(2)" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(2), respuesta__incorrecta: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
+                                <button @click="getAnswerUser(2)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(2), respuesta__incorrecta: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
                             </b-col>
                             <b-col lg="6" class="pb-2">
-                                <button @click="getAnswerUser(3)" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(3), respuesta__incorrecta: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
+                                <button @click="getAnswerUser(3)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(3), respuesta__incorrecta: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
                             </b-col>
                         </b-row>
                         <br>
@@ -59,6 +59,12 @@ Vue.component('question' , {
                 else {
                     this.userAnswer = false;
                     this.arrayAnswersDesordenada[numero].incorrecto = true;
+                    for (let i = 0; i < this.arrayAnswersDesordenada.length; i++) {
+                        if(this.arrayAnswersDesordenada[i].answer == this.infoQuestion.correctAnswer){
+                            this.arrayAnswersDesordenada[i].correcto = true;
+                        }
+                        
+                    }
                 }
                 
                 this.answered = true;
