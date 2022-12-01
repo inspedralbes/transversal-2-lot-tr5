@@ -8,6 +8,29 @@ function shuffleArray(array) {
     }
 }
 
+Vue.component('results' , {
+    data: function () {
+        return {
+            correctAnswers: 0,
+        }
+    },
+    props: ['results'],
+    template: ` <div>
+                    <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
+                </div>`,
+    mounted() {
+        for (let i = 0; i < this.results.length; i++) {
+            
+            if(this.results[i]){
+                this.correctAnswers++;
+            }
+            
+        }
+    }
+
+
+});
+
 Vue.component('question' , {
     data: function () {
         return {
@@ -24,6 +47,7 @@ Vue.component('question' , {
                     style="max-width: 20rem;"
                     class="mb-2"
                     >
+                        <br>
                         <b-row>
                             <b-col lg="6" class="pb-2">
                                 <button @click="getAnswerUser(0)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
@@ -80,7 +104,7 @@ Vue.component('question' , {
             }
         },
         comprobarRespuestaCorrecta: function(index) {
-            if(this.arrayAnswersDesordenada[index].correcto != null) {
+            if(this.arrayAnswersDesordenada[index].correcto) {
                 return this.arrayAnswersDesordenada[index].correcto;
             }
             else {
@@ -89,7 +113,7 @@ Vue.component('question' , {
             
         },
         comprobarRespuestaIncorrecta: function(index) {
-            if(this.arrayAnswersDesordenada[index].incorrecto != null) {
+            if(this.arrayAnswersDesordenada[index].incorrecto) {
                 return this.arrayAnswersDesordenada[index].incorrecto;
             }
             else {
@@ -97,7 +121,7 @@ Vue.component('question' , {
             }
         }
     },
-    mounted() {
+    beforeMount() {
 
         this.infoQuestion.incorrectAnswers.forEach(element => {
             let a = {
@@ -120,7 +144,7 @@ Vue.component('question' , {
 
 });
 
-Vue.component('start' , {
+Vue.component('game' , {
     data: function () {
         return {
             showButtonPlay: true,
@@ -128,6 +152,7 @@ Vue.component('start' , {
             selectedDifficulty: "",
             selectedCategory: "",
             showQuestions: null,
+            showResults: null,
             actualQuestion: 0,
             userAnswers: [null, null, null, null, null, null, null, null, null, null]
         }
@@ -181,6 +206,9 @@ Vue.component('start' , {
                         </div>
                         </question>
                     </div>
+                    <div v-if="showResults">
+                        <results :results=userAnswers></results>
+                    </div>
                 </div>`,
     methods: {
         createGame: function() {
@@ -203,7 +231,8 @@ Vue.component('start' , {
                 this.actualQuestion++;
             }
             else {
-                //llevarlo a la pantalla final
+                this.showQuestions = false;
+                this.showResults = true;
             }
             console.log(this.actualQuestion);
         },
@@ -225,16 +254,20 @@ Vue.component('start' , {
             }else {
                 return !this.userAnswers[index];
             }
-        }
+        },
 
     }
                 
 });
 
-const Start = {
+const Inicio = {
+    template: ``,
+}
+
+const Game = {
     template: ` <div>
-                    <start>
-                    </start>
+                    <game>
+                    </game>
                 </div>`,
 }
 const Perfil = {
@@ -245,7 +278,7 @@ const Perfil = {
 // Each route should map to a component.
 const routes = [{
     path: '/',
-    component: Start
+    component: Game
 }, {
     path: '/perfil',
     component: Perfil
