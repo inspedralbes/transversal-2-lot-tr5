@@ -19,7 +19,8 @@ return new class extends Migration
             $table->bigInteger('idGame')->unsigned();
             $table->bigInteger('idWinner')->unsigned();
             $table->string('date');
-            $table->boolean('isFinished')->default(0);
+            // $table->boolean('isFinished')->default(0);
+            $table->enum('status',['accepted', 'pending', 'rejected'])->default('pending');
 
             $table->primary(['idChallenger', 'idChallenged', 'idGame'])->index();
             $table->foreign('idChallenger')->references('id')->on('users')->onDelete('cascade');
