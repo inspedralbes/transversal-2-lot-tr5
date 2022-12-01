@@ -12,12 +12,22 @@ Vue.component('results' , {
     data: function () {
         return {
             correctAnswers: 0,
+            points: 0
         }
     },
-    props: ['results'],
+    props: ['results', 'timerRestante'],
     template: ` <div>
                     <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
+                    <h1>Timer restante {{timerRestante}} Puntuacion: {{this.points}}</h1>
+
                 </div>`,
+    methods: {
+
+        calcularPuntuacion: function() {
+            this.points = this.correctAnswers * this.timerRestante;
+        }
+
+    },
     mounted() {
         for (let i = 0; i < this.results.length; i++) {
             
@@ -26,6 +36,8 @@ Vue.component('results' , {
             }
             
         }
+
+        this.calcularPuntuacion();
     }
 
 
@@ -83,12 +95,15 @@ Vue.component('question' , {
                 else {
                     this.userAnswer = false;
                     this.arrayAnswersDesordenada[numero].incorrecto = true;
-                    for (let i = 0; i < this.arrayAnswersDesordenada.length; i++) {
-                        if(this.arrayAnswersDesordenada[i].answer == this.infoQuestion.correctAnswer){
-                            this.arrayAnswersDesordenada[i].correcto = true;
+                    
+
+                    setTimeout(() => {
+                        for (let i = 0; i < this.arrayAnswersDesordenada.length; i++) {
+                            if(this.arrayAnswersDesordenada[i].answer == this.infoQuestion.correctAnswer){
+                                this.arrayAnswersDesordenada[i].correcto = true;
+                            } 
                         }
-                        
-                    }
+                      }, 500);
                 }
                 
                 this.answered = true;
@@ -154,6 +169,7 @@ Vue.component('game' , {
             showQuestions: null,
             showResults: null,
             actualQuestion: 0,
+            timer: 90,
             userAnswers: [null, null, null, null, null, null, null, null, null, null]
         }
     },
@@ -204,10 +220,15 @@ Vue.component('game' , {
                         <div v-for="(answer, index) in userAnswers" class="respuestas__footer">
                             <div v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(index), respuesta__incorrecta: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
                         </div>
+                        <br><br>
+                        <h3>Timer: {{timer}}</h3>
                         </question>
                     </div>
+                    <div v-if="showQuestions">
+                        
+                    </div>
                     <div v-if="showResults">
-                        <results :results=userAnswers></results>
+                        <results :results=userAnswers :timerRestante=timer></results>
                     </div>
                 </div>`,
     methods: {
@@ -222,6 +243,7 @@ Vue.component('game' , {
                 this.showQuestions = true;
                 console.log(this.questions[0]);
                 this.$bvModal.hide("modalSelectCategory");
+                this.countDownTimer();
             });
             
         },
@@ -255,8 +277,19 @@ Vue.component('game' , {
                 return !this.userAnswers[index];
             }
         },
-
-    }
+        countDownTimer () {
+            if (this.timer > 0 && this.showQuestions == true) {
+                setTimeout(() => {
+                    this.timer--;
+                    this.countDownTimer()
+                }, 1000)
+            }
+            else {
+                this.showQuestions = false;
+                this.showResults = true;
+            }
+        },
+    },
                 
 });
 
