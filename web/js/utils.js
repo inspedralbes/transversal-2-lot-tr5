@@ -89,26 +89,27 @@ Vue.component('question' , {
                     <h3></h3>
                     <b-card
                     :title=infoQuestion.question
-                    style="max-width: 20rem;"
-                    class="mb-2"
+                    class="mb-2 question__card"
                     >
                         <br>
-                        <b-row>
-                            <b-col lg="6" class="pb-2">
-                                <button @click="getAnswerUser(0)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
-                            </b-col>
-                            <b-col lg="6" class="pb-2">
-                                <button @click="getAnswerUser(1)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(1), respuesta__incorrecta: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            <b-col lg="6" class="pb-2">
-                                <button @click="getAnswerUser(2)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(2), respuesta__incorrecta: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
-                            </b-col>
-                            <b-col lg="6" class="pb-2">
-                                <button @click="getAnswerUser(3)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(3), respuesta__incorrecta: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
-                            </b-col>
-                        </b-row>
+                        <div class="game__buttons_selection">
+                            <b-row>
+                                <b-col lg="6" class="pb-2">
+                                    <button @click="getAnswerUser(0)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
+                                </b-col>
+                                <b-col lg="6" class="pb-2">
+                                    <button @click="getAnswerUser(1)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(1), respuesta__incorrecta: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col lg="6" class="pb-2">
+                                    <button @click="getAnswerUser(2)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(2), respuesta__incorrecta: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
+                                </b-col>
+                                <b-col lg="6" class="pb-2">
+                                    <button @click="getAnswerUser(3)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(3), respuesta__incorrecta: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
+                                </b-col>
+                            </b-row>
+                        </div>
                         <br>
                         <slot></slot>
                     </b-card>
