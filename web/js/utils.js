@@ -72,7 +72,6 @@ Vue.component('question' , {
                             </b-col>
                         </b-row>
                         <br>
-                        <b-button variant="success" @click="isAnswered">Next</b-button>
                         <slot></slot>
                     </b-card>
                    
@@ -99,14 +98,6 @@ Vue.component('question' , {
                 }
                 this.answered = true;
                 this.$emit('userAnswer', this.userAnswer);
-            }
-        },
-        isAnswered: function() {
-            if(this.answered) {
-                this.$emit('incrementQuestion');
-            }
-            else {
-                alert("Answer the question");
             }
         },
         comprobarRespuestaCorrecta: function(index) {
@@ -209,7 +200,7 @@ Vue.component('game' , {
                     </b-modal>
 
                     <div v-if="showQuestions" v-for="(question, index) in this.questions">
-                        <question v-show="actualQuestion == index":infoQuestion="question" @incrementQuestion="incrementQuestion" @userAnswer="addUserAnswer">
+                        <question v-show="actualQuestion == index":infoQuestion="question" @userAnswer="addUserAnswer">
                         <br><br>
                         <div v-for="(answer, index) in userAnswers" class="respuestas__footer">
                             <div v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(index), respuesta__incorrecta: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
@@ -256,6 +247,18 @@ Vue.component('game' , {
             // this.userAnswers.push(userAnswer);
 
             console.log(this.userAnswers);
+            if(userAnswer) {
+                setTimeout(() => {
+                    this.incrementQuestion();
+                  }, "500");
+            }
+            else {
+                setTimeout(() => {
+                    this.incrementQuestion();
+                  }, "1500");
+            }
+            
+            
         },
         comprobarRespuestaCorrecta: function(index) {
             return this.userAnswers[index];
