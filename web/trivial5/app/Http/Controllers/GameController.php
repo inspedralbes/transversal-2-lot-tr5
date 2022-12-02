@@ -13,8 +13,8 @@ class GameController extends Controller
      */
     public function index($id)
     {
-        $preguntas = Pregunta::find($id);
-        return $preguntas;
+        $games = Game::find($id);
+        return $games;
         
     }
 
@@ -36,7 +36,16 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $game = new Game();
+        $game->category = $request->category;
+        $game->type = $request->type;
+        $game->difficulty = $request->difficulty;
+        $game->date = $request->date;
+        $game->data = $request->data;
+
+        $game->save();
+
+        return $game->id;
     }
 
     /**
