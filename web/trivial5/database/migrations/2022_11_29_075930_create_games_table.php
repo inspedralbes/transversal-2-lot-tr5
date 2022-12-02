@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
+            $table->enum('category',['arts_and_literature','film_and_tv','food_and_drink','general_knowledge',
+            'geography','history','music','science','society_and_culture','sport_and_leisure']);
             $table->enum('type',['demo','game_of_day','normal_game']);
-            $table->string('difficulty');
+            $table->enum('difficulty',['easy','medium','hard']);
             $table->string('date');
             $table->json('data')->nullable();
             $table->timestamps();
