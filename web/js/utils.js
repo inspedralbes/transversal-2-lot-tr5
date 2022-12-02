@@ -156,8 +156,8 @@ Vue.component('game' , {
     },
 
     template: ` <div class="container_button_play" >
-                    <div v-if="showButtonPlay" class="button_play"><b-button pill variant="warning" v-b-modal="'modalSelectCategory'">PLAY</b-button></div>
-                    <b-modal id="modalSelectCategory" title="Select your game mode" hide-footer>
+                    <div v-if="showButtonPlay" class="button_play"><b-button pill variant="warning" v-b-modal="'modalSelectGame'">PLAY</b-button></div>
+                    <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer>
                         <p>Difficulty</p>
                         <template>
                             <div>
@@ -199,6 +199,44 @@ Vue.component('game' , {
                         </b-row>
                     </b-modal>
 
+                    <b-modal v-if="!isLogged" id="modalSelectGame" title="Select a DEMO" hide-footer>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 1</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 2</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 3</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 4</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 5</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        </p>
+                        <br>
+                        <br>
+                        <b-row>
+                            <b-col lg="9" class="pb-2">
+                            </b-col>
+                            <b-col lg="3" class="pb-2">
+                                <b-button variant="success" @click="createGame">Continue</b-button>
+                            </b-col>
+                        </b-row>
+                    </b-modal>
+
                     <div v-if="showQuestions" v-for="(question, index) in this.questions">
                         <question v-show="actualQuestion == index":infoQuestion="question" @userAnswer="addUserAnswer">
                         <br><br>
@@ -219,7 +257,14 @@ Vue.component('game' , {
     methods: {
         createGame: function() {
             this.showButtonPlay = false;
-            let rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
+            let rutaFetch = "";
+            if(this.isLogged){
+                rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
+            }
+            else {
+                rutaFetch = "pedir al laravel";
+            }
+        
             console.log(rutaFetch);
             fetch(rutaFetch)
             .then(res => res.json())
@@ -227,7 +272,7 @@ Vue.component('game' , {
                 this.questions = data;
                 this.showQuestions = true;
                 console.log(this.questions[0]);
-                this.$bvModal.hide("modalSelectCategory");
+                this.$bvModal.hide("modalSelectGame");
                 this.countDownTimer();
             });
         },
@@ -284,6 +329,25 @@ Vue.component('game' , {
             }
         },
     },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    }
  
 });
 
