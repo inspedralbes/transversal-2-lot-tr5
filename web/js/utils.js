@@ -217,8 +217,7 @@ Vue.component('game' , {
             showQuestions: null,
             showResults: null,
             actualQuestion: 0,
-            timer: 90,
-            seconds:90,
+            timer: 150,
             userAnswers: [null, null, null, null, null, null, null, null, null, null]
         }
     },
@@ -392,7 +391,7 @@ Vue.component('game' , {
             let dateNow = new Date();
             let dataResults = FormData();
             dataResults.append('idGame', this.idGame);
-            dataResults.append('idUser', 'idUser cambiarlo');
+            dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('score', points);
             dataResults.append('date', dateNow);
             fetch('/trival5/public/saveresults', {
