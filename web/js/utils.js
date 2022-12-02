@@ -8,6 +8,44 @@ function shuffleArray(array) {
     }
 }
 
+Vue.component('login', {
+    template:`
+        <div>
+            <div v-show="!logged">
+                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
+                <b-form-input v-model="form.password" placeholder="Password" required></b-form-input>
+                <b-button @click="submitLogin">Log In</b-button>
+            </div>
+
+            <div v-show="logged">
+                Estás logueado como: {{infoLogin.name}}
+            </div>  
+        </div>`,
+
+    data: function(){
+        return{
+            form: {
+                username: '',
+                password: ''
+            },
+            infoLogin:{
+                name:'',
+                idUser:'',
+            },
+            
+            logged: false,
+        }
+    },
+    methods: {
+        submitLogin: function(){
+            //AQUI VA EL FETCH PARA EL BACK PARA QUE VALIDE LOS DATOS
+        }
+    }
+        
+});
+
+
+
 Vue.component('results' , {
     data: function () {
         return {
@@ -301,6 +339,9 @@ const Perfil = {
     template: ``,
 }
 
+const Login = {
+    template: `<login></login>`,
+}
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [{
@@ -309,6 +350,10 @@ const routes = [{
 }, {
     path: '/perfil',
     component: Perfil
+},
+{
+    path: '/login',
+    component: Login
 }, ]
 
 // 3. Create the router instance and pass the `routes` option
