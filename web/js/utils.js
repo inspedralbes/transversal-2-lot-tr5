@@ -195,8 +195,10 @@ Vue.component('game' , {
     },
 
     template: ` <div class="container_button_play" >
-                    <div v-if="showButtonPlay" class="button_play"><b-button pill variant="warning" v-b-modal="'modalSelectGame'">PLAY</b-button></div>
-                    <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer>
+                    <div v-if="showButtonPlay" class="div_button_play">
+                        <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
+                    </div>
+                    <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
                         <p>Difficulty</p>
                         <template>
                             <div>
