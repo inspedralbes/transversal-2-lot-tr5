@@ -1,5 +1,5 @@
 .container_button_play{
-    height: 800px;
+    height: 500px;
     position:relative;
 }
 .button_play{
@@ -82,10 +82,11 @@
 
 .navbar .nav-links li{
     transition: color .2s ease;
+    color: rgb(215, 215, 215);
 }
 
 .navbar .nav-links li:hover {
-    color: grey;
+    color: black;
     cursor: pointer;
 }
 
@@ -106,4 +107,15 @@
 @media screen and (max-width: 600px) {
     ul.topnav li.right, 
     ul.topnav li {float: none;}
+}
+
+
+.game__cards{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game__result{
+    text-align: center;
 }

@@ -16,31 +16,23 @@ Vue.component('results' , {
         }
     },
     props: ['results', 'timerRestante'],
-    template: ` <div>
+    template: ` <div class="game__result">
                     <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
-                    <h1>Timer restante {{timerRestante}} Puntuacion: {{this.points}}</h1>
-
+                    <h1>Time: {{timerRestante + 1}} Puntuacion: {{this.points}}</h1>
                 </div>`,
     methods: {
-
         calcularPuntuacion: function() {
             this.points = this.correctAnswers * this.timerRestante;
         }
-
     },
     mounted() {
         for (let i = 0; i < this.results.length; i++) {
-            
             if(this.results[i]){
                 this.correctAnswers++;
             }
-            
         }
-
         this.calcularPuntuacion();
     }
-
-
 });
 
 Vue.component('question' , {
@@ -52,7 +44,7 @@ Vue.component('question' , {
         }
     },
     props: ['infoQuestion'],
-    template: ` <div>
+    template: ` <div class="game__cards">
                     <h3></h3>
                     <b-card
                     :title=infoQuestion.question
@@ -84,7 +76,6 @@ Vue.component('question' , {
                 </div>`,
     methods: {
         getAnswerUser: function (numero) {
-
             if(!this.answered){
                 console.log(this.arrayAnswersDesordenada[numero]);
                 console.log(this.infoQuestion.correctAnswer);
@@ -95,8 +86,6 @@ Vue.component('question' , {
                 else {
                     this.userAnswer = false;
                     this.arrayAnswersDesordenada[numero].incorrecto = true;
-                    
-
                     setTimeout(() => {
                         for (let i = 0; i < this.arrayAnswersDesordenada.length; i++) {
                             if(this.arrayAnswersDesordenada[i].answer == this.infoQuestion.correctAnswer){
@@ -105,7 +94,6 @@ Vue.component('question' , {
                         }
                       }, 500);
                 }
-                
                 this.answered = true;
                 this.$emit('userAnswer', this.userAnswer);
             }
@@ -137,7 +125,6 @@ Vue.component('question' , {
         }
     },
     beforeMount() {
-
         this.infoQuestion.incorrectAnswers.forEach(element => {
             let a = {
                 answer: element,
@@ -156,7 +143,6 @@ Vue.component('question' , {
         shuffleArray(this.arrayAnswersDesordenada);
         console.log(this.arrayAnswersDesordenada[0].answer);
     }
-
 });
 
 Vue.component('game' , {
@@ -170,22 +156,27 @@ Vue.component('game' , {
             showResults: null,
             actualQuestion: 0,
             timer: 90,
+            seconds:90,
             userAnswers: [null, null, null, null, null, null, null, null, null, null]
         }
     },
 
     template: ` <div class="container_button_play" >
                     <div v-if="showButtonPlay" class="button_play"><b-button pill variant="warning" v-b-modal="'modalSelectCategory'">PLAY</b-button></div>
-                    <b-modal id="modalSelectCategory" title="Select" hide-footer>
+                    <b-modal id="modalSelectCategory" title="Select your game mode" hide-footer>
                         <p>Difficulty</p>
-                        <b-form-select class="mb-3" v-model="selectedDifficulty">
-                            <template #first>
-                                <b-form-select-option :value="null" disabled>-- Please select a difficulty --</b-form-select-option>
-                            </template>
-                            <b-form-select-option value="easy">Easy</b-form-select-option>
-                            <b-form-select-option value="medium">Medium</b-form-select-option>
-                            <b-form-select-option value="hard">Hard</b-form-select-option>
-                        </b-form-select>
+                        <template>
+                            <div>
+                                <b-form-select class="mb-3" v-model="selectedDifficulty">
+                                    <template #first>
+                                        <b-form-select-option :value="null" disabled>-- Please select a difficulty --</b-form-select-option>
+                                    </template>
+                                    <b-form-select-option value="easy">Easy</b-form-select-option>
+                                    <b-form-select-option value="medium">Medium</b-form-select-option>
+                                    <b-form-select-option value="hard">Hard</b-form-select-option>
+                                </b-form-select>
+                            </div>
+                        </template>
                         <br>
                         <p>Category</p>
                         <b-form-select class="mb-3" v-model="selectedCategory">
@@ -245,9 +236,7 @@ Vue.component('game' , {
                 this.$bvModal.hide("modalSelectCategory");
                 this.countDownTimer();
             });
-            
         },
-
         incrementQuestion: function() {
             if(this.actualQuestion < 9) {
                 this.actualQuestion++;
@@ -258,7 +247,6 @@ Vue.component('game' , {
             }
             console.log(this.actualQuestion);
         },
-
         addUserAnswer: function(userAnswer) {
 
             this.userAnswers[this.actualQuestion] = userAnswer;
@@ -290,7 +278,7 @@ Vue.component('game' , {
             }
         },
     },
-                
+ 
 });
 
 const Inicio = {
