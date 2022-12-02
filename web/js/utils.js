@@ -389,7 +389,7 @@ Vue.component('game' , {
         saveData: function(points) {
             
             let dateNow = new Date();
-            let dataResults = FormData();
+            let dataResults = new FormData();
             dataResults.append('idGame', this.idGame);
             dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('score', points);
@@ -406,7 +406,7 @@ Vue.component('game' , {
         saveGame: function() {
 
             let dateNow = new Date();
-            let dataGame = FormData();
+            let dataGame = new FormData();
             dataGame.append('game', this.questions);
             dataGame.append('category', this.selectedCategory);
             dataGame.append('difficulty', this.selectedDifficulty);
