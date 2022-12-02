@@ -36,7 +36,7 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**
@@ -47,7 +47,6 @@ class GameController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**

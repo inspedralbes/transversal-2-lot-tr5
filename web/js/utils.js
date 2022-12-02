@@ -264,16 +264,6 @@ Vue.component('game' , {
                             <b-col cols="8" sm="6">DEMO 5</b-col>
                             <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
                         </b-row>
-                        </p>
-                        <br>
-                        <br>
-                        <b-row>
-                            <b-col lg="9" class="pb-2">
-                            </b-col>
-                            <b-col lg="3" class="pb-2">
-                                <b-button variant="success" @click="createGame">Continue</b-button>
-                            </b-col>
-                        </b-row>
                     </b-modal>
 
                     <div v-if="showQuestions" v-for="(question, index) in this.questions">
