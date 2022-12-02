@@ -12,17 +12,18 @@ Vue.component('results' , {
     data: function () {
         return {
             correctAnswers: 0,
-            points: 0
+            points: 0,
+            timer: 0
         }
     },
     props: ['results', 'timerRestante'],
     template: ` <div class="game__result">
                     <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
-                    <h1>Time: {{timerRestante + 1}} Puntuacion: {{this.points}}</h1>
+                    <h1>Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
                 </div>`,
     methods: {
         calcularPuntuacion: function() {
-            this.points = this.correctAnswers * this.timerRestante;
+            this.points = this.correctAnswers * this.timer;
         }
     },
     mounted() {
@@ -31,6 +32,8 @@ Vue.component('results' , {
                 this.correctAnswers++;
             }
         }
+
+        this.timer = this.timerRestante;
         this.calcularPuntuacion();
     }
 });
