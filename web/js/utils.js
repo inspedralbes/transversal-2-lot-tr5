@@ -61,8 +61,8 @@ Vue.component('results' , {
                 </div>`,
     methods: {
         calcularPuntuacion: function() {
-            this.points = this.correctAnswers * this.timer;
-        }
+            this.points = (this.correctAnswers * 100) + this.timer;
+        },
     },
     mounted() {
         for (let i = 0; i < this.results.length; i++) {
@@ -73,7 +73,12 @@ Vue.component('results' , {
 
         this.timer = this.timerRestante;
         this.calcularPuntuacion();
-    }
+
+        if(this.isLogged) {
+            this.$emit('saveData', this.points);
+        }
+
+    },
 });
 
 Vue.component('question' , {
@@ -95,18 +100,22 @@ Vue.component('question' , {
                         <div class="game__buttons_selection">
                             <b-row>
                                 <b-col lg="6" class="pb-2">
-                                    <button @click="getAnswerUser(0)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
+                                    <button v-if="isLogged" @click="getAnswerUser(0)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
+                                    <button v-if="!isLogged" @click="getAnswerUser(0)" class="respuestas__body">{{ this.arrayAnswersDesordenada[0].answer }}</button>
                                 </b-col>
                                 <b-col lg="6" class="pb-2">
-                                    <button @click="getAnswerUser(1)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(1), respuesta__incorrecta: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
+                                    <button v-if="isLogged" @click="getAnswerUser(1)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(1), respuesta__incorrecta: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
+                                    <button v-if="!isLogged" @click="getAnswerUser(1)" class="respuestas__body">{{ this.arrayAnswersDesordenada[1].answer }}</button>
                                 </b-col>
                             </b-row>
                             <b-row>
                                 <b-col lg="6" class="pb-2">
-                                    <button @click="getAnswerUser(2)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(2), respuesta__incorrecta: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
+                                    <button v-if="isLogged" @click="getAnswerUser(2)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(2), respuesta__incorrecta: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
+                                    <button v-if="!isLogged" @click="getAnswerUser(2)" class="respuestas__body">{{ this.arrayAnswersDesordenada[2].answer }}</button>
                                 </b-col>
                                 <b-col lg="6" class="pb-2">
-                                    <button @click="getAnswerUser(3)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(3), respuesta__incorrecta: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
+                                    <button v-if="isLogged" @click="getAnswerUser(3)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(3), respuesta__incorrecta: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
+                                    <button v-if="!isLogged" @click="getAnswerUser(3)" class="respuestas__body">{{ this.arrayAnswersDesordenada[3].answer }}</button>
                                 </b-col>
                             </b-row>
                         </div>
@@ -175,6 +184,25 @@ Vue.component('question' , {
         this.arrayAnswersDesordenada.push(a);
         shuffleArray(this.arrayAnswersDesordenada);
         console.log(this.arrayAnswersDesordenada[0].answer);
+    },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
     }
 });
 
@@ -183,6 +211,7 @@ Vue.component('game' , {
         return {
             showButtonPlay: true,
             questions: [],
+            idGame: null,
             selectedDifficulty: "",
             selectedCategory: "",
             showQuestions: null,
@@ -272,7 +301,7 @@ Vue.component('game' , {
                         <question v-show="actualQuestion == index":infoQuestion="question" @userAnswer="addUserAnswer">
                         <br><br>
                         <div v-for="(answer, index) in userAnswers" class="respuestas__footer">
-                            <div v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(index), respuesta__incorrecta: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
+                            <div v-if="isLogged" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(index), respuesta__incorrecta: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
                         </div>
                         <br><br>
                         <h3>Timer: {{timer}}</h3>
@@ -282,7 +311,7 @@ Vue.component('game' , {
                         
                     </div>
                     <div v-if="showResults">
-                        <results :results=userAnswers :timerRestante=timer></results>
+                        <results :results=userAnswers :timerRestante=timer @saveData="saveData"></results>
                     </div>
                 </div>`,
     methods: {
@@ -293,6 +322,7 @@ Vue.component('game' , {
                 rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
             }
             else {
+                console.log(id);
                 rutaFetch = "/trival5/public/demo?id=" + id;
             }
 
@@ -306,6 +336,7 @@ Vue.component('game' , {
                 console.log(this.questions[0]);
                 this.$bvModal.hide("modalSelectGame");
                 this.countDownTimer();
+                this.saveGame();
             });
         },
         incrementQuestion: function() {
@@ -324,16 +355,24 @@ Vue.component('game' , {
             // this.userAnswers.push(userAnswer);
 
             console.log(this.userAnswers);
-            if(userAnswer) {
-                setTimeout(() => {
-                    this.incrementQuestion();
-                  }, "500");
+            if(this.isLogged){
+                if(userAnswer) {
+                    setTimeout(() => {
+                        this.incrementQuestion();
+                      }, "500");
+                }
+                else {
+                    setTimeout(() => {
+                        this.incrementQuestion();
+                      }, "1500");
+                }
             }
             else {
                 setTimeout(() => {
                     this.incrementQuestion();
-                  }, "1500");
+                }, "500");
             }
+            
             
             
         },
@@ -348,6 +387,43 @@ Vue.component('game' , {
                 return !this.userAnswers[index];
             }
         },
+        saveData: function(points) {
+            
+            let dateNow = new Date();
+            let dataResults = FormData();
+            dataResults.append('idGame', this.idGame);
+            dataResults.append('idUser', 'idUser cambiarlo');
+            dataResults.append('score', points);
+            dataResults.append('date', dateNow);
+            fetch('/trival5/public/saveresults', {
+                method: 'POST',
+                body: dataResults
+            })
+            .then(res => res.json())
+            .then(data => {
+            });
+
+        },
+        saveGame: function() {
+
+            let dateNow = new Date();
+            let dataGame = FormData();
+            dataGame.append('game', this.questions);
+            dataGame.append('category', this.selectedCategory);
+            dataGame.append('difficulty', this.selectedDifficulty);
+            dataGame.append('type', 'normal_game');
+            dataGame.append('date', dateNow);
+            fetch('/trival5/public/savegame', {
+                method: 'POST',
+                body: dataGame
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.idGame = data;
+            });
+
+        },
         countDownTimer () {
             if (this.timer > 0 && this.showQuestions == true) {
                 setTimeout(() => {
@@ -360,6 +436,7 @@ Vue.component('game' , {
                 this.showResults = true;
             }
         },
+        
     },
     computed: {
         isLogged() {
@@ -426,7 +503,6 @@ const userStore = Pinia.defineStore('usuario', {
             loginInfo: {
                 success: true,
                 nombre: 'Nombre del almacen',
-                imagen: '',
                 idUser: ''
             }
         }

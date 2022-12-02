@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GameController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,5 +30,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('demo/{id}', [GameController::class, 'index'] );
+Route::post('savegame', [GameController::class, 'store']);
+Route::post('saveresult', [PlayedgameController::class, 'store']);
 
 require __DIR__.'/auth.php';
