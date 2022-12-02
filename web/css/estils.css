@@ -1,3 +1,8 @@
+body{
+    background-color: black;
+    color: white;
+}
+
 .container_button_play{
     /* height: 500px;
     position:relative; */
@@ -36,7 +41,6 @@
 }
 
 .respuestas__body:hover{
-    background-color: darkorange;
     color: white;
     border:0;
 }
