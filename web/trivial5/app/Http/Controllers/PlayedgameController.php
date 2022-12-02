@@ -34,7 +34,13 @@ class PlayedgameController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $playedGames = new PlayedGame();
+        $playedGames -> idUser = $request -> idUser;
+        $playedGames -> idGame = $request -> idGame;
+        $playedGames -> date = $request -> date;
+        $playedGames -> score = $request ->score;
+
+        $playedGames -> save();
     }
 
     /**
