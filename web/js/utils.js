@@ -242,27 +242,27 @@ Vue.component('game' , {
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 1</b-col>
-                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(0)">PLAY</b-button></b-col>
                         </b-row>
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 2</b-col>
-                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(1)">PLAY</b-button></b-col>
                         </b-row>
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 3</b-col>
-                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(2)">PLAY</b-button></b-col>
                         </b-row>
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 4</b-col>
-                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(3)">PLAY</b-button></b-col>
                         </b-row>
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 5</b-col>
-                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(4)">PLAY</b-button></b-col>
                         </b-row>
                     </b-modal>
 
@@ -284,15 +284,16 @@ Vue.component('game' , {
                     </div>
                 </div>`,
     methods: {
-        createGame: function() {
+        createGame: function(id) {
             this.showButtonPlay = false;
             let rutaFetch = "";
             if(this.isLogged){
                 rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
             }
             else {
-                rutaFetch = "pedir al laravel";
+                rutaFetch = "/trival5/public/demo?id=" + id;
             }
+
         
             console.log(rutaFetch);
             fetch(rutaFetch)
