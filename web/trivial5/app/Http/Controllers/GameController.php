@@ -41,7 +41,7 @@ class GameController extends Controller
         $game->type = $request->type;
         $game->difficulty = $request->difficulty;
         $game->date = $request->date;
-        $game->data = $request->data;
+        $game->data = $request->game;
 
         $game->save();
 
