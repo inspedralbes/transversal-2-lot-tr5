@@ -8,6 +8,44 @@ function shuffleArray(array) {
     }
 }
 
+Vue.component('login', {
+    template:`
+        <div>
+            <div v-show="!logged">
+                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
+                <b-form-input v-model="form.password" placeholder="Password" required></b-form-input>
+                <b-button @click="submitLogin">Log In</b-button>
+            </div>
+
+            <div v-show="logged">
+                Estás logueado como: {{infoLogin.name}}
+            </div>  
+        </div>`,
+
+    data: function(){
+        return{
+            form: {
+                username: '',
+                password: ''
+            },
+            infoLogin:{
+                name:'',
+                idUser:'',
+            },
+            
+            logged: false,
+        }
+    },
+    methods: {
+        submitLogin: function(){
+            //AQUI VA EL FETCH PARA EL BACK PARA QUE VALIDE LOS DATOS
+        }
+    }
+        
+});
+
+
+
 Vue.component('results' , {
     data: function () {
         return {
@@ -73,7 +111,6 @@ Vue.component('question' , {
                             </b-row>
                         </div>
                         <br>
-                        <b-button variant="success" @click="isAnswered">Next</b-button>
                         <slot></slot>
                     </b-card>
                    
@@ -100,14 +137,6 @@ Vue.component('question' , {
                 }
                 this.answered = true;
                 this.$emit('userAnswer', this.userAnswer);
-            }
-        },
-        isAnswered: function() {
-            if(this.answered) {
-                this.$emit('incrementQuestion');
-            }
-            else {
-                alert("Answer the question");
             }
         },
         comprobarRespuestaCorrecta: function(index) {
@@ -166,8 +195,8 @@ Vue.component('game' , {
     },
 
     template: ` <div class="container_button_play" >
-                    <div v-if="showButtonPlay" class="button_play"><b-button pill variant="warning" v-b-modal="'modalSelectCategory'">PLAY</b-button></div>
-                    <b-modal id="modalSelectCategory" title="Select your game mode" hide-footer>
+                    <div v-if="showButtonPlay" class="button_play"><b-button pill variant="warning" v-b-modal="'modalSelectGame'">PLAY</b-button></div>
+                    <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer>
                         <p>Difficulty</p>
                         <template>
                             <div>
@@ -209,8 +238,46 @@ Vue.component('game' , {
                         </b-row>
                     </b-modal>
 
+                    <b-modal v-if="!isLogged" id="modalSelectGame" title="Select a DEMO" hide-footer>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 1</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 2</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 3</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 4</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        <br>
+                        <b-row>
+                            <b-col cols="8" sm="6">DEMO 5</b-col>
+                            <b-col cols="4" sm="6"><b-button>PLAY</b-button></b-col>
+                        </b-row>
+                        </p>
+                        <br>
+                        <br>
+                        <b-row>
+                            <b-col lg="9" class="pb-2">
+                            </b-col>
+                            <b-col lg="3" class="pb-2">
+                                <b-button variant="success" @click="createGame">Continue</b-button>
+                            </b-col>
+                        </b-row>
+                    </b-modal>
+
                     <div v-if="showQuestions" v-for="(question, index) in this.questions">
-                        <question v-show="actualQuestion == index":infoQuestion="question" @incrementQuestion="incrementQuestion" @userAnswer="addUserAnswer">
+                        <question v-show="actualQuestion == index":infoQuestion="question" @userAnswer="addUserAnswer">
                         <br><br>
                         <div v-for="(answer, index) in userAnswers" class="respuestas__footer">
                             <div v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(index), respuesta__incorrecta: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
@@ -229,7 +296,14 @@ Vue.component('game' , {
     methods: {
         createGame: function() {
             this.showButtonPlay = false;
-            let rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
+            let rutaFetch = "";
+            if(this.isLogged){
+                rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
+            }
+            else {
+                rutaFetch = "pedir al laravel";
+            }
+        
             console.log(rutaFetch);
             fetch(rutaFetch)
             .then(res => res.json())
@@ -237,7 +311,7 @@ Vue.component('game' , {
                 this.questions = data;
                 this.showQuestions = true;
                 console.log(this.questions[0]);
-                this.$bvModal.hide("modalSelectCategory");
+                this.$bvModal.hide("modalSelectGame");
                 this.countDownTimer();
             });
         },
@@ -257,6 +331,18 @@ Vue.component('game' , {
             // this.userAnswers.push(userAnswer);
 
             console.log(this.userAnswers);
+            if(userAnswer) {
+                setTimeout(() => {
+                    this.incrementQuestion();
+                  }, "500");
+            }
+            else {
+                setTimeout(() => {
+                    this.incrementQuestion();
+                  }, "1500");
+            }
+            
+            
         },
         comprobarRespuestaCorrecta: function(index) {
             return this.userAnswers[index];
@@ -282,6 +368,25 @@ Vue.component('game' , {
             }
         },
     },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    }
  
 });
 
@@ -299,6 +404,9 @@ const Perfil = {
     template: ``,
 }
 
+const Login = {
+    template: `<login></login>`,
+}
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [{
@@ -307,6 +415,10 @@ const routes = [{
 }, {
     path: '/perfil',
     component: Perfil
+},
+{
+    path: '/login',
+    component: Login
 }, ]
 
 // 3. Create the router instance and pass the `routes` option
