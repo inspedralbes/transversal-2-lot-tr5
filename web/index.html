@@ -33,30 +33,16 @@
 </head>
 <body>
     <section class="body-section">
-        <!-- <div class="nav-container">
-            <nav class="navbar"> -->
-                <!-- <h1>League of Trivia</h1> -->
-                <!-- <ul class="nav-links">
-                    <li>Rankings</li>
-                    <li ><b-tab title="Login" to="/login"></b-tab></li>
-                </ul>
-            </nav>
-        </div> -->
-
-        <div id="app" style="margin: 2%">
-            <!-- <b-tabs  card>
-                <b-tab title="Ranking" to="/"></b-tab>
-                <b-tab title="Jugar" to="/" active></b-tab>
-                <b-tab title="Perfil" to="/"></b-tab>
-                <b-tab title="Login" to="/"></b-tab>
-            </b-tabs> -->
-            <b-link to="/">Ranking</b-link>
-            <b-link to="/" active>Jugar</b-link>
-            <b-link to="/">Perfil</b-link>
-            <b-link to="/login">Login</b-link>
-    
+        <div id="app" style="margin: 2%">            
+            <div class="nav-container">
+                <nav class="navbar">
+                    <b-nav-item active to="/">Play</b-nav-item>
+                    <b-nav-item to="/ranking">Ranking</b-nav-item>
+                    <b-nav-item to="/profile">Profile</b-nav-item>
+                    <b-nav-item to="/login">Login</b-nav-item>
+                </nav>
+            </div>
             <router-view></router-view>
-            <p>Try our demo</p>
         </div>
     </section>
     <script src="js/utils.js"></script>

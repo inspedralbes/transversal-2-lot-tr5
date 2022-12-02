@@ -412,7 +412,7 @@ const routes = [{
     path: '/',
     component: Game
 }, {
-    path: '/perfil',
+    path: '/profile',
     component: Perfil
 },
 {
