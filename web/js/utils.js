@@ -39,13 +39,12 @@ Vue.component('routes', {
     }
 });
 
-
 Vue.component('daily', {
     template: ` <div>
                     Esta es la partida diaria
                 </div>`, 
     
-                
+
 });
 
 Vue.component('login', {
