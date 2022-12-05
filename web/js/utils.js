@@ -39,9 +39,17 @@ Vue.component('routes', {
     }
 });
 
+Vue.component('profile', {
+    template: ` <div>
+                    <p style="color:white">Estas logueado</p>
+                </div>`, 
+    
+
+});
+
 Vue.component('daily', {
     template: ` <div>
-                    Esta es la partida diaria
+                    <p style="color:white">Esta es la partida diaria</p>
                 </div>`, 
     
 
@@ -540,7 +548,7 @@ const Game = {
                 </div>`,
 }
 const Perfil = {
-    template: ``,
+    template: `<profile></profile>`,
 }
 
 const Ranking = {
@@ -554,6 +562,7 @@ const Login = {
 const Daily = {
     template:`<daily></daily>`
 }
+
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [{
