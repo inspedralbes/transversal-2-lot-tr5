@@ -106,13 +106,31 @@ Vue.component('ranking', {
         fetch('../trivial5/public/ranking')
         .then(res => res.json())
         .then(data => {
-            console.log("Ranking " + data);
-            this.players = data;
+            console.log("length " + data.length);
+            for (let i = 0; i < data.length; i++) {
+                console.log("Ranking " + data[i].name);
+                this.players.push(data[i]);
+                
+            }
+            console.log(JSON.stringify(this.players));
         });
     },
-    template: ` <b-list-group v-for="(player, index) in players">>
-                    <b-list-group-item>{{index}} {{player.name}} {{player.total_score}}</b-list-group-item>
-                </b-list-group>`,
+    template: ` <div>
+                    <b-row class="mb-3">
+                        <b-col cols="1" md="3" class="p-3"></b-col>
+                        <b-col cols="2" md="3" class="p-3">Rank</b-col>
+                        <b-col cols="5" md="3" class="p-3">Name</b-col>
+                        <b-col cols="4" md="3" class="p-3">Score</b-col>
+                    </b-row>
+                    <b-list-group v-for="(player, index) in this.players">
+                        <b-row class="mb-3">
+                            <b-col cols="1" md="3" class="p-3"></b-col>
+                            <b-col cols="2" md="3" class="p-3">{{index + 1}}</b-col>
+                            <b-col cols="5" md="3" class="p-3">{{player.name}}</b-col>
+                            <b-col cols="4" md="3" class="p-3">{{player.total_score}}</b-col>
+                        </b-row>
+                    </b-list-group>
+                </div>`,
 })
 
 
