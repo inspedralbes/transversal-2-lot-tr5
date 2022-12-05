@@ -43,7 +43,8 @@ class GameController extends Controller
         $game->type = $request->type;
         $game->difficulty = $request->difficulty;
         $game->date = $request->date;
-        $game->data = json_encode($request->data);
+        // $game->data = json_encode($request->data);
+        $game->data = $request->data;
 
         $game->save();
 
