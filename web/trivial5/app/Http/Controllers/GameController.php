@@ -15,9 +15,12 @@ class GameController extends Controller
     public function index($id)
     {
         $games = Game::find($id);
-        $games = json_encode($games);
-        return $games;
-        
+        return $games->data;
+    }
+
+    public function index_jugar($id){
+        $games = Game::find($id);
+        return $games->data;
     }
 
     /**
