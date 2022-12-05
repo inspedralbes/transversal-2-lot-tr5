@@ -14,7 +14,6 @@ Vue.component('routes', {
                         <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
                         <b-nav-item active to="/">Play</b-nav-item>
                         <b-nav-item v-show="this.isLogged" to="/profile">Profile</b-nav-item>
-                        <b-nav-item v-show="this.isLogged" to="/dailyGame">Daily game</b-nav-item>
                         <b-nav-item v-show="!this.isLogged" to="/login">Login</b-nav-item>
                     </nav>
                 </div>`,
