@@ -15,6 +15,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+        // $users->sortBy('total_score',SORT_REGULAR,true);
+        $users = User::orderByRaw('CONVERT(total_score,SIGNED)desc')->get();
         return json_encode($users);
     }
 
