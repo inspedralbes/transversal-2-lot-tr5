@@ -79,6 +79,25 @@ Vue.component('results' , {
         }
 
     },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    }
 });
 
 Vue.component('question' , {
@@ -322,7 +341,7 @@ Vue.component('game' , {
             }
             else {
                 console.log(id);
-                rutaFetch = "/trival5/public/demo?id=" + id;
+                rutaFetch = "http://trivial5.alumnes.inspedralbes.cat/public/demo?id=" + id;
             }
 
         
@@ -394,7 +413,7 @@ Vue.component('game' , {
             dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('score', points);
             dataResults.append('date', dateNow);
-            fetch('../trival5/public/saveresults', {
+            fetch('http://trivial5.alumnes.inspedralbes.cat/public/saveresults', {
                 method: 'POST',
                 body: dataResults
             })
@@ -412,8 +431,8 @@ Vue.component('game' , {
             dataGame.append('difficulty', this.selectedDifficulty);
             dataGame.append('type', 'normal_game');
             dataGame.append('date', dateNow);
-            fetch('../trival5/public/savegame', {
-                method: 'POST',
+            fetch('http://trivial5.alumnes.inspedralbes.cat/../trivial5/public/savegame', {
+                method: 'post',
                 body: dataGame
             })
             .then(res => res.json())

@@ -13,7 +13,7 @@ class GameController extends Controller
      */
     public function index($id)
     {
-        $games = Game::find($id);
+        $games = GameController::find($id);
         $games = json_encode($games);
         return $games;
         
@@ -37,7 +37,7 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        $game = new Game();
+        $game = new GameController();
         $game->category = $request->category;
         $game->type = $request->type;
         $game->difficulty = $request->difficulty;
