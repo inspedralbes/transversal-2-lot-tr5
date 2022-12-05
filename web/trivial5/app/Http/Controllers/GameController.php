@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Game;
 
 class GameController extends Controller
 {
@@ -13,7 +14,7 @@ class GameController extends Controller
      */
     public function index($id)
     {
-        $games = GameController::find($id);
+        $games = Game::find($id);
         $games = json_encode($games);
         return $games;
         
@@ -37,7 +38,7 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        $game = new GameController();
+        $game = new Game();
         $game->category = $request->category;
         $game->type = $request->type;
         $game->difficulty = $request->difficulty;
