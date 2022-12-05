@@ -86,8 +86,9 @@ Vue.component('results' , {
     },
     props: ['results', 'timerRestante'],
     template: ` <div class="game__result">
+                    <br>
                     <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
-                    <h1>Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
+                    <h1 v-show="this.isLogged">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
                 </div>`,
     methods: {
         calcularPuntuacion: function() {
@@ -371,7 +372,7 @@ Vue.component('game' , {
             }
             else {
                 console.log(id);
-                rutaFetch = "../trivial5/public/demo?id=" + id;
+                rutaFetch = "../trivial5/public/demo/{"+id+"}";
             }
 
         
@@ -384,7 +385,9 @@ Vue.component('game' , {
                 console.log(this.questions[0]);
                 this.$bvModal.hide("modalSelectGame");
                 this.countDownTimer();
-                this.saveGame();
+                if(this.isLogged){
+                    this.saveGame();
+                }
             });
         },
         incrementQuestion: function() {
@@ -462,7 +465,7 @@ Vue.component('game' , {
             dataGame.append('type', 'normal_game');
             dataGame.append('date', dateNow);
             fetch('../trivial5/public/savegame', {
-                method: 'post',
+                method: 'POST',
                 body: dataGame
             })
             .then(res => res.json())
@@ -547,7 +550,7 @@ const router = new VueRouter({
 const userStore = Pinia.defineStore('usuario', {
     state() {
         return {
-            logged: true,
+            logged: false,
             loginInfo: {
                 success: true,
                 nombre: 'Nombre del almacen',
