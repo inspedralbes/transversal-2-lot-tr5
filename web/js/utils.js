@@ -451,11 +451,15 @@ Vue.component('game' , {
         saveData: function(points) {
             
             let dateNow = new Date();
+            let day = dateNow.getDate();
+            let month = dateNow.getMonth();
+            let year = dateNow.getFullYear();
+            let date = day+"/"+month+"/"+year;
             let dataResults = new FormData();
             dataResults.append('idGame', this.idGame);
             dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('score', points);
-            dataResults.append('date', dateNow);
+            dataResults.append('date', date);
             fetch('../trivial5/public/saveresults', {
                 method: 'POST',
                 body: dataResults
