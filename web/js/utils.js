@@ -442,7 +442,7 @@ Vue.component('game' , {
             
             let dateNow = new Date();
             let day = dateNow.getDate();
-            let month = dateNow.getMonth();
+            let month = dateNow.getMonth()+1;
             let year = dateNow.getFullYear();
             let date = day+"/"+month+"/"+year;
             let dataResults = new FormData();
@@ -554,7 +554,7 @@ const router = new VueRouter({
 const userStore = Pinia.defineStore('usuario', {
     state() {
         return {
-            logged: false,
+            logged: true,
             loginInfo: {
                 success: true,
                 nombre: 'Nombre del almacen',
