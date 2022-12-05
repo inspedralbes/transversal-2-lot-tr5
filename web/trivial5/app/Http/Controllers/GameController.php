@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Game;
+use Illuminate\Support\Facades\DB;
 
 class GameController extends Controller
 {
@@ -23,15 +24,16 @@ class GameController extends Controller
         return $games->data;
     }
 
-    public function index_jugarDaily($id){
-        $dilyGames = DB::table('games')
-                                ->where('type', 'game_of_day')
-                                ->andWhere('date', '=', timestamps())
-                                ->get();
+    public function index_jugarDaily(){
+        $diaActual = date('d/m/Y');
 
-        foreach ($dilyGames as $dilyGame){
-            return $dilyGame->game;
-        }
+        $dilyGames = DB::table('games')
+            ->where('type', 'game_of_day')
+            ->where('date', '=', $diaActual)
+            ->get();
+
+   
+        return json_encode($dilyGames);
 
     }
 
