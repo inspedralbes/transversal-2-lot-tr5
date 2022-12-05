@@ -36,7 +36,7 @@ Vue.component('routes', {
             }
         }
     }
-})
+});
 
 Vue.component('login', {
     template:`
@@ -440,18 +440,22 @@ Vue.component('game' , {
         },
         saveData: function(points) {
             
+            console.log("guardarPuntuacion");
+
             let dateNow = new Date();
             let dataResults = new FormData();
             dataResults.append('idGame', this.idGame);
-            dataResults.append('idUser', userLogged.loginInfo.idUser);
+            // dataResults.append('idUser', userLogged.loginInfo.idUser);
+            dataResults.append('idUser', 1);
             dataResults.append('score', points);
             dataResults.append('date', dateNow);
-            fetch('../trivial5/public/saveresults', {
+            fetch('../trivial5/public/saveresult', {
                 method: 'POST',
                 body: dataResults
             })
             .then(res => res.json())
             .then(data => {
+                console.log(data);
             });
 
         },
@@ -525,6 +529,10 @@ const Perfil = {
     template: ``,
 }
 
+const Ranking = {
+    template: ``,
+}
+
 const Login = {
     template: `<login></login>`,
 }
@@ -536,6 +544,10 @@ const routes = [{
 }, {
     path: '/profile',
     component: Perfil
+},
+{
+    path: '/ranking',
+    component: Ranking
 },
 {
     path: '/login',
@@ -550,7 +562,7 @@ const router = new VueRouter({
 const userStore = Pinia.defineStore('usuario', {
     state() {
         return {
-            logged: false,
+            logged: true,
             loginInfo: {
                 success: true,
                 nombre: 'Nombre del almacen',
