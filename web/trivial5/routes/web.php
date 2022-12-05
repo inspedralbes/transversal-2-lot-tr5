@@ -28,9 +28,9 @@ use Illuminate\Http\Request;
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
 
-Route::get('/',function(){
-    return view('welcome');
-});
+// Route::get('/',function(){
+//     return view('welcome');
+// });
 
 Route::get('demo/{id}', [GameController::class, 'index_jugar'] );
 
