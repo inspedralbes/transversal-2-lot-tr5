@@ -14,7 +14,6 @@ Vue.component('routes', {
                         <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
                         <b-nav-item active to="/">Play</b-nav-item>
                         <b-nav-item v-show="this.isLogged" to="/profile">Profile</b-nav-item>
-                        <b-nav-item v-show="this.isLogged" to="/dailyGame">Daily game</b-nav-item>
                         <b-nav-item v-show="!this.isLogged" to="/login">Login</b-nav-item>
                     </nav>
                 </div>`,
@@ -334,7 +333,7 @@ Vue.component('game' , {
 
     template: ` <div class="container_button_play" >
                     <div v-if="showButtonPlay" class="div_button_play">
-                        <b-button v-b-modal="'modalSelectGame'" class="button__daily">DAILY</b-button>
+                        <b-button class="button__daily" @click="playDaily">DAILY</b-button>
                         <br>
                         <br>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
@@ -547,6 +546,16 @@ Vue.component('game' , {
                 this.idGame = data;
             });
 
+        },
+
+        playDaily: function() {
+          
+            fetch('../trivial5/public/daily')
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                
+            });
         },
         countDownTimer () {
             if (this.timer > 0 && this.showQuestions == true) {
