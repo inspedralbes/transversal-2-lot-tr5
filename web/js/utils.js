@@ -92,6 +92,25 @@ Vue.component('login', {
 });
 
 
+Vue.component('ranking', {
+    data: function () {
+        return {
+            players: [],
+        }
+    },
+    methods: {
+
+        getPlayersRanking: function () {
+            
+        }
+
+    },
+    template: ` <b-list-group v-for="(player, index) in players">>
+                    <b-list-group-item>{{index}} {{player.name}} {{player.score}}/b-list-group-item>
+                </b-list-group>`,
+})
+
+
 
 Vue.component('results' , {
     data: function () {

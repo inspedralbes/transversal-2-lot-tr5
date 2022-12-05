@@ -34,7 +34,9 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-
+        return response()->json([
+            "message" => "Login exitosa"
+        ]);
     }
 
     public function userProfile(Request $request){

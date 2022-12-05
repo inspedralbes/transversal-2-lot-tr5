@@ -43,8 +43,10 @@ class PlayedgameController extends Controller
         $playedGames -> score = $request ->score;
 
         $playedGames -> save();
-        $user = User::find($playedGames -> $idUser);
+        $user = User::find($playedGames -> idUser);
         $user -> total_score +=  $playedGames -> score;
+
+        $user -> save();
 
         return $playedGames -> idGame;
     }
