@@ -23,6 +23,14 @@ class GameController extends Controller
         return $games->data;
     }
 
+    public function index_jugarDaily($id){
+        $dilyGames = DB::table('games')->where('type', 'game_of_day')->get();
+
+        foreach ($dilyGames as $dilyGame){
+            echo $dilyGame->game;
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
