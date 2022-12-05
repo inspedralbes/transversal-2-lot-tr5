@@ -452,13 +452,9 @@ Vue.component('game' , {
             // dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('idUser', 1);
             dataResults.append('score', points);
-<<<<<<< HEAD
             dataResults.append('date', dateNow);
-            fetch('../trivial5/public/saveresult', {
-=======
             dataResults.append('date', date);
-            fetch('../trivial5/public/saveresults', {
->>>>>>> b7d9fc869ee6ec333600b96673adb73732f9c751
+            fetch('../trivial5/public/saveresult', {
                 method: 'POST',
                 body: dataResults
             })
