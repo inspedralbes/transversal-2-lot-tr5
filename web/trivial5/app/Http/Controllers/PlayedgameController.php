@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PlayedGame;
+use App\Models\User;
 
 class PlayedgameController extends Controller
 {
@@ -42,6 +43,9 @@ class PlayedgameController extends Controller
         $playedGames -> score = $request ->score;
 
         $playedGames -> save();
+        $user = User::find($playedGames -> $idUser);
+        $user -> total_score +=  $playedGames -> score;
+
         return $playedGames -> idGame;
     }
 
