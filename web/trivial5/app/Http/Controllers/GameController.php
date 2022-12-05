@@ -14,6 +14,7 @@ class GameController extends Controller
     public function index($id)
     {
         $games = Game::find($id);
+        $games = json_encode($games);
         return $games;
         
     }
@@ -41,7 +42,7 @@ class GameController extends Controller
         $game->type = $request->type;
         $game->difficulty = $request->difficulty;
         $game->date = $request->date;
-        $game->data = $request->game;
+        $game->data = json_encode($request->data);
 
         $game->save();
 
