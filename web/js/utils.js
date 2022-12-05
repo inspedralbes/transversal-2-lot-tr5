@@ -115,19 +115,19 @@ Vue.component('ranking', {
             console.log(JSON.stringify(this.players));
         });
     },
-    template: ` <div>
+    template: ` <div class="ranking__list">
                     <b-row class="mb-3">
-                        <b-col cols="1" md="3" class="p-3"></b-col>
-                        <b-col cols="2" md="3" class="p-3">Rank</b-col>
-                        <b-col cols="5" md="3" class="p-3">Name</b-col>
-                        <b-col cols="4" md="3" class="p-3">Score</b-col>
+                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
+                        <b-col cols="2" md="3" class="p-3 ranking__text">Rank</b-col>
+                        <b-col cols="5" md="3" class="p-3 ranking__text">Name</b-col>
+                        <b-col cols="4" md="3" class="p-3 ranking__text">Score</b-col>
                     </b-row>
                     <b-list-group v-for="(player, index) in this.players">
                         <b-row class="mb-3">
-                            <b-col cols="1" md="3" class="p-3"></b-col>
-                            <b-col cols="2" md="3" class="p-3">{{index + 1}}</b-col>
-                            <b-col cols="5" md="3" class="p-3">{{player.name}}</b-col>
-                            <b-col cols="4" md="3" class="p-3">{{player.total_score}}</b-col>
+                            <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
+                            <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
+                            <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
+                            <b-col cols="4" md="3" class="p-3 ranking__text">{{player.total_score}}</b-col>
                         </b-row>
                     </b-list-group>
                 </div>`,

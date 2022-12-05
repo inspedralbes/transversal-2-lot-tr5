@@ -236,3 +236,7 @@ body{
     background-color: gainsboro;
     height: 3rem;
 }
+
+.ranking__text{
+    color:white !important;
+}
