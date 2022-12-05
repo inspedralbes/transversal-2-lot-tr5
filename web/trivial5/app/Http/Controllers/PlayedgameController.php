@@ -42,6 +42,7 @@ class PlayedgameController extends Controller
         $playedGames -> score = $request ->score;
 
         $playedGames -> save();
+        return $playedGames -> idGame;
     }
 
     /**
