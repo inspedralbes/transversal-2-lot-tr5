@@ -38,9 +38,6 @@ Vue.component('routes', {
         }
     }
 });
-<<<<<<< HEAD
-=======
-
 
 Vue.component('daily', {
     template: ` <div>
@@ -49,7 +46,6 @@ Vue.component('daily', {
     
 
 });
->>>>>>> a2f6f3b787e3de0ffd704e676416021f763f3b72
 
 Vue.component('login', {
     template:`
