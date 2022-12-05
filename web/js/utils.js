@@ -277,6 +277,7 @@ Vue.component('game' , {
     data: function () {
         return {
             showButtonPlay: true,
+            showButtonDaily: true,
             questions: [],
             idGame: null,
             selectedDifficulty: "",
@@ -291,6 +292,9 @@ Vue.component('game' , {
 
     template: ` <div class="container_button_play" >
                     <div v-if="showButtonPlay" class="div_button_play">
+                        <b-button v-b-modal="'modalSelectGame'" class="button__daily">DAILY</b-button>
+                        <br>
+                        <br>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
                     </div>
                     <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
@@ -334,7 +338,7 @@ Vue.component('game' , {
                             </b-col>
                         </b-row>
                     </b-modal>
-
+                    
                     <b-modal v-if="!isLogged" id="modalSelectGame" title="Select a DEMO" hide-footer>
                         <br>
                         <b-row>
@@ -383,6 +387,7 @@ Vue.component('game' , {
     methods: {
         createGame: function(id) {
             this.showButtonPlay = false;
+            this.showButtonDaily = false;
             let rutaFetch = "";
             if(this.isLogged){
                 rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
