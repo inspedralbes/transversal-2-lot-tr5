@@ -457,7 +457,7 @@ Vue.component('game' , {
 
             let dateNow = new Date();
             let day = dateNow.getDate();
-            let month = dateNow.getMonth();
+            let month = dateNow.getMonth()+1;
             let year = dateNow.getFullYear();
             let date = day+"/"+month+"/"+year;
             let dataResults = new FormData();
