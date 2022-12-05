@@ -100,13 +100,18 @@ Vue.component('ranking', {
     },
     methods: {
 
-        getPlayersRanking: function () {
-            
-        }
+    },
+    mounted() {
 
+        fetch('../trivial5/public/ranking')
+        .then(res => res.json())
+        .then(data => {
+            console.log("Ranking " + data);
+            this.players = data;
+        });
     },
     template: ` <b-list-group v-for="(player, index) in players">>
-                    <b-list-group-item>{{index}} {{player.name}} {{player.score}}/b-list-group-item>
+                    <b-list-group-item>{{index}} {{player.name}} {{player.total_score}}</b-list-group-item>
                 </b-list-group>`,
 })
 
@@ -571,7 +576,7 @@ const Perfil = {
 }
 
 const Ranking = {
-    template: ``,
+    template: `<ranking></ranking>`,
 }
 
 const Login = {
