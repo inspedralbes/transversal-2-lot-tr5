@@ -8,6 +8,36 @@ function shuffleArray(array) {
     }
 }
 
+Vue.component('routes', {
+    template: ` <div class="nav-container">
+                    <nav class="navbar">
+                        <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
+                        <b-nav-item active to="/">Play</b-nav-item>
+                        <b-nav-item v-show="this.isLogged" to="/profile">Profile</b-nav-item>
+                        <b-nav-item v-show="!this.isLogged" to="/login">Login</b-nav-item>
+                    </nav>
+                </div>`,
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    }
+})
+
 Vue.component('login', {
     template:`
         <div>
@@ -341,7 +371,7 @@ Vue.component('game' , {
             }
             else {
                 console.log(id);
-                rutaFetch = "http://trivial5.alumnes.inspedralbes.cat/public/demo?id=" + id;
+                rutaFetch = "../trivial5/public/demo?id=" + id;
             }
 
         
@@ -413,7 +443,7 @@ Vue.component('game' , {
             dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('score', points);
             dataResults.append('date', dateNow);
-            fetch('http://trivial5.alumnes.inspedralbes.cat/public/saveresults', {
+            fetch('../trivial5/public/saveresults', {
                 method: 'POST',
                 body: dataResults
             })
@@ -426,12 +456,12 @@ Vue.component('game' , {
 
             let dateNow = new Date();
             let dataGame = new FormData();
-            dataGame.append('game', this.questions);
+            dataGame.append('data', JSON.stringify(this.questions));
             dataGame.append('category', this.selectedCategory);
             dataGame.append('difficulty', this.selectedDifficulty);
             dataGame.append('type', 'normal_game');
             dataGame.append('date', dateNow);
-            fetch('http://trivial5.alumnes.inspedralbes.cat/../trivial5/public/savegame', {
+            fetch('../trivial5/public/savegame', {
                 method: 'post',
                 body: dataGame
             })
