@@ -13,27 +13,30 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
     public function register(Request $request){
-        // $request->validate([
-        //     'userName'=>'required',
-        //     'userSurname'=>'required',
-        //     'userEmail'=>'required|email|unique:users',
-        //     'userPassword'=>'required'
-        // ])
-
-        // $user = new User();
-        // $user->userName = $request->userName;
-        // $user->userSurname = $request->userSurname;
-        // $user->userPassword = $request->userPassword;
-        // $user->save();
-
-        // return response($user, Response::HTTP_CREATED);
-
-        return response()->json([
-            "message" => "Alta exitosa"
+        $request->validate([
+            'name'=>'required',
+            'email'=>'required|email|unique:users',
+            'password'=>'required'
         ]);
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->save();
+
+        return response($user, Response::HTTP_CREATED);
+
+        // return response()->json([
+        //      "message" => "Alta exitosa"
+        // ]);
     }
 
     public function login(Request $request){
+        $credentials = $request->validate([
+            'email'=>['required','email'],
+            'password'=>['required']
+        ]);
         return response()->json([
             "message" => "Login exitosa"
         ]);

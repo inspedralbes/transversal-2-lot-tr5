@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PlayedgameController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -28,11 +29,13 @@ use Illuminate\Http\Request;
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
 
-Route::get('/',function(){
-    return view('welcome');
-});
+// Route::get('/',function(){
+//     return view('welcome');
+// });
 
 Route::get('demo/{id}', [GameController::class, 'index_jugar'] );
+
+Route::get('ranking', [UserController::class, 'index'] );
 
 Route::post('savegame', [GameController::class, 'store']);
 Route::post('saveresult', [PlayedgameController::class, 'store']);
