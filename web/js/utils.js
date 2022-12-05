@@ -394,7 +394,7 @@ Vue.component('game' , {
             dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('score', points);
             dataResults.append('date', dateNow);
-            fetch('/trival5/public/saveresults', {
+            fetch('../trival5/public/saveresults', {
                 method: 'POST',
                 body: dataResults
             })
@@ -412,7 +412,7 @@ Vue.component('game' , {
             dataGame.append('difficulty', this.selectedDifficulty);
             dataGame.append('type', 'normal_game');
             dataGame.append('date', dateNow);
-            fetch('/trival5/public/savegame', {
+            fetch('../trival5/public/savegame', {
                 method: 'POST',
                 body: dataGame
             })
