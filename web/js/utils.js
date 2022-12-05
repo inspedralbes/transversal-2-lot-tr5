@@ -115,20 +115,19 @@ Vue.component('ranking', {
         });
     },
     template: ` <div class="ranking__list">
+                    <br>
                     <b-row class="mb-3">
                         <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
                         <b-col cols="2" md="3" class="p-3 ranking__text">Rank</b-col>
                         <b-col cols="5" md="3" class="p-3 ranking__text">Name</b-col>
                         <b-col cols="4" md="3" class="p-3 ranking__text">Score</b-col>
                     </b-row>
-                    <b-list-group v-for="(player, index) in this.players">
-                        <b-row class="mb-3">
-                            <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
-                            <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
-                            <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
-                            <b-col cols="4" md="3" class="p-3 ranking__text">{{player.total_score}}</b-col>
-                        </b-row>
-                    </b-list-group>
+                    <b-row class="mb-3" v-for="(player, index) in this.players">
+                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
+                        <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
+                        <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
+                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.total_score}}</b-col>
+                    </b-row>
                 </div>`,
 })
 
@@ -320,6 +319,7 @@ Vue.component('game' , {
             showButtonPlay: true,
             showButtonDaily: true,
             questions: [],
+            daily: false,
             idGame: null,
             selectedDifficulty: "",
             selectedCategory: "",
@@ -430,13 +430,20 @@ Vue.component('game' , {
             this.showButtonPlay = false;
             this.showButtonDaily = false;
             let rutaFetch = "";
-            if(this.isLogged){
-                rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
+            if(!this.daily){
+                if(this.isLogged){
+                    rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
+                }
+                else {
+                    console.log(id);
+                    rutaFetch = "../trivial5/public/demo/{"+id+"}";
+                }
             }
             else {
-                console.log(id);
-                rutaFetch = "../trivial5/public/demo/{"+id+"}";
+                rutaFetch = '../trivial5/public/daily';
             }
+            
+
 
         
             console.log(rutaFetch);
@@ -448,7 +455,7 @@ Vue.component('game' , {
                 console.log(this.questions[0]);
                 this.$bvModal.hide("modalSelectGame");
                 this.countDownTimer();
-                if(this.isLogged){
+                if(this.isLogged && !this.daily){
                     this.saveGame();
                 }
             });
@@ -550,12 +557,8 @@ Vue.component('game' , {
 
         playDaily: function() {
           
-            fetch('../trivial5/public/daily')
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                
-            });
+            this.daily = true;
+            this.createGame();
         },
         countDownTimer () {
             if (this.timer > 0 && this.showQuestions == true) {

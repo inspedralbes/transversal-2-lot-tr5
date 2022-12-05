@@ -37,7 +37,7 @@ Route::get('demo/{id}', [GameController::class, 'index_jugar'] );
 
 Route::get('ranking', [UserController::class, 'index'] );
 
-Route::get('daily', [UserController::class, 'index_jugarDaily'] );
+Route::get('daily', [GameController::class, 'index_jugarDaily'] );
 
 Route::post('savegame', [GameController::class, 'store']);
 Route::post('saveresult', [PlayedgameController::class, 'store']);
