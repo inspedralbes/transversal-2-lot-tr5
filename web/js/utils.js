@@ -14,6 +14,7 @@ Vue.component('routes', {
                         <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
                         <b-nav-item active to="/">Play</b-nav-item>
                         <b-nav-item v-show="this.isLogged" to="/profile">Profile</b-nav-item>
+                        <b-nav-item v-show="this.isLogged" to="/dailyGame">Daily game</b-nav-item>
                         <b-nav-item v-show="!this.isLogged" to="/login">Login</b-nav-item>
                     </nav>
                 </div>`,
@@ -37,6 +38,18 @@ Vue.component('routes', {
         }
     }
 });
+<<<<<<< HEAD
+=======
+
+
+Vue.component('daily', {
+    template: ` <div>
+                    Esta es la partida diaria
+                </div>`, 
+    
+
+});
+>>>>>>> a2f6f3b787e3de0ffd704e676416021f763f3b72
 
 Vue.component('login', {
     template:`
@@ -541,6 +554,10 @@ const Ranking = {
 const Login = {
     template: `<login></login>`,
 }
+
+const Daily = {
+    template:`<daily></daily>`
+}
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [{
@@ -557,6 +574,10 @@ const routes = [{
 {
     path: '/login',
     component: Login
+},
+{
+    path: '/dailyGame',
+    component: Daily
 }, ]
 
 // 3. Create the router instance and pass the `routes` option
