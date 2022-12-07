@@ -42,7 +42,33 @@ Vue.component('routes', {
 Vue.component('profile', {
     template: ` <div>
                     <p style="color:white">Estas logueado</p>
+                    <b-button @click="logoutUser">Logout</b-button>
                 </div>`, 
+    methods: {
+        logoutUser: function() {
+            userStore().logged = false;
+        }
+    },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    }
+
     
 
 });
@@ -86,7 +112,7 @@ Vue.component('register', {
                 <br>
                 <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
                 <br>
-                <b-form-input type="password" v-model="form.comfirmPassword" placeholder="Comfirm password" required></b-form-input>
+                <b-form-input type="password" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
                 <br>
                 <b-button @click="submitRegister">Register</b-button>
             </div>
@@ -98,13 +124,37 @@ Vue.component('register', {
                 username: '',
                 email: '',
                 password: '',
-                comfirmPassword: '',
+                confirmPassword: '',
             },
         }
     },
     methods: {
         submitRegister: function(){
-            //AQUI VA EL FETCH PARA EL BACK PARA QUE VALIDE LOS DATOS
+            console.log("hola register");
+            if(this.form.username != '' && this.form.email != '' && this.form.password != '' && this.form.confirmPassword != '') {
+                if(this.form.password ==  this.form.confirmPassword){
+                    console.log("valido");
+
+                    let userRegister = new FormData();
+                    userRegister.append('name', this.form.username);
+                    userRegister.append('email', this.form.email);
+                    userRegister.append('password', this.form.password);
+                    userRegister.append('password_confirmation', this.form.confirmPassword);
+
+                    fetch('../trivial5/public/api/register2', {
+                        method: 'POST',
+                        headers: {"Accept": "application/json"},
+                        body: userRegister
+                    });
+                    
+                }
+                else{
+                    console.log("contraseñas no cuadran");
+                }
+            }
+            else {
+                console.log("falta algun campo por rellenar");
+            }
         }
     },
     computed: {
@@ -136,7 +186,7 @@ Vue.component('login', {
                 <br>
                 <h1 style="color:white; text-align:center">Log in</h1>
                 <br>
-                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
+                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
                 <br>
                 <b-form-input v-model="form.password" placeholder="Password" required></b-form-input>
                 <br>
@@ -147,7 +197,7 @@ Vue.component('login', {
     data: function(){
         return{
             form: {
-                username: '',
+                email: '',
                 password: ''
             },
         }
