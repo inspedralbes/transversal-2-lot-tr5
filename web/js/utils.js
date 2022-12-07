@@ -13,8 +13,9 @@ Vue.component('routes', {
                     <nav class="navbar">
                         <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
                         <b-nav-item active to="/">Play</b-nav-item>
+                        <b-nav-item active to="/start">Start</b-nav-item>
                         <b-nav-item v-show="this.isLogged" to="/profile">Profile</b-nav-item>
-                        <b-nav-item v-show="!this.isLogged" to="/login">Login</b-nav-item>
+                        <b-nav-item v-show="!this.isLogged" to="/join">Login</b-nav-item>
                     </nav>
                 </div>`,
     computed: {
@@ -54,18 +55,93 @@ Vue.component('daily', {
 
 });
 
+Vue.component('start', {
+    template: ` <div>
+                    <p style="color:white">Welcome to League of Trivial</p>
+                </div>`, 
+    
+
+});
+
+Vue.component('join', {
+    template: ` <div class="nav-container">
+                    <br><br>
+                    <b-tabs content-class="mt-3" align="center">
+                        <b-tab title="Login" active><login></login></b-tab>
+                        <b-tab title="Register"><register></register></b-tab>
+                    </b-tabs>
+                </div>`,
+})
+
+Vue.component('register', {
+    template:`
+        <div>
+            <div>
+                <br>
+                <h1 style="color:white; text-align:center">Register</h1>
+                <br>
+                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
+                <br>
+                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
+                <br>
+                <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
+                <br>
+                <b-form-input type="password" v-model="form.comfirmPassword" placeholder="Comfirm password" required></b-form-input>
+                <br>
+                <b-button @click="submitRegister">Register</b-button>
+            </div>
+        </div>`,
+
+    data: function(){
+        return{
+            form: {
+                username: '',
+                email: '',
+                password: '',
+                comfirmPassword: '',
+            },
+        }
+    },
+    methods: {
+        submitRegister: function(){
+            //AQUI VA EL FETCH PARA EL BACK PARA QUE VALIDE LOS DATOS
+        }
+    },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    }
+        
+});
+
 Vue.component('login', {
     template:`
         <div>
-            <div v-show="!logged">
+            <div>
+                <br>
+                <h1 style="color:white; text-align:center">Log in</h1>
+                <br>
                 <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
+                <br>
                 <b-form-input v-model="form.password" placeholder="Password" required></b-form-input>
-                <b-button @click="submitLogin">Log In</b-button>
+                <br>
+                <b-button @click="submitLogin">Join</b-button>
             </div>
-
-            <div v-show="logged">
-                Estás logueado como: {{infoLogin.name}}
-            </div>  
         </div>`,
 
     data: function(){
@@ -74,17 +150,30 @@ Vue.component('login', {
                 username: '',
                 password: ''
             },
-            infoLogin:{
-                name:'',
-                idUser:'',
-            },
-            
-            logged: false,
         }
     },
     methods: {
         submitLogin: function(){
             //AQUI VA EL FETCH PARA EL BACK PARA QUE VALIDE LOS DATOS
+        }
+    },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
         }
     }
         
@@ -146,6 +235,7 @@ Vue.component('results' , {
                     <br>
                     <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
                     <h1 v-show="this.isLogged">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
+                    <b-button to="/start">Lobby</b-button>
                 </div>`,
     methods: {
         calcularPuntuacion: function() {
@@ -343,7 +433,7 @@ Vue.component('game' , {
 
     template: ` <div class="container_button_play" >
                     <div v-if="showButtonPlay" class="div_button_play">
-                        <b-button class="button__daily" @click="playDaily">DAILY</b-button>
+                        <b-button v-if="isLogged" class="button__daily" @click="playDaily">DAILY</b-button>
                         <br>
                         <br>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
@@ -614,8 +704,8 @@ Vue.component('game' , {
  
 });
 
-const Inicio = {
-    template: ``,
+const Start = {
+    template: `<start></start>`,
 }
 
 const Game = {
@@ -631,9 +721,8 @@ const Perfil = {
 const Ranking = {
     template: `<ranking></ranking>`,
 }
-
-const Login = {
-    template: `<login></login>`,
+const Join = {
+    template: `<join></join>`,
 }
 
 const Daily = {
@@ -654,8 +743,12 @@ const routes = [{
     component: Ranking
 },
 {
-    path: '/login',
-    component: Login
+    path: '/join',
+    component: Join
+},
+{
+    path: '/start',
+    component: Start
 },
 {
     path: '/dailyGame',
