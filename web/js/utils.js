@@ -104,7 +104,33 @@ Vue.component('register', {
     },
     methods: {
         submitRegister: function(){
-            //AQUI VA EL FETCH PARA EL BACK PARA QUE VALIDE LOS DATOS
+            console.log("hola register");
+            if(this.form.username != '' && this.form.email != '' && this.form.password != '' && this.form.comfirmPassword != '') {
+                if(this.form.password ==  this.form.comfirmPassword){
+                    console.log("valido");
+
+                    let userRegister = new FormData();
+                    userRegister.append('name', this.form.username);
+                    userRegister.append('email', this.form.email);
+                    userRegister.append('password', this.form.password);
+
+                    fetch('../trivial5/public/api/register', {
+                        method: 'POST',
+                        body: dataResults
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log("registrado bien");
+                    });
+                    
+                }
+                else{
+                    console.log("contraseñas no cuadran");
+                }
+            }
+            else {
+                console.log("falta algun campo por rellenar");
+            }
         }
     },
     computed: {
@@ -136,7 +162,7 @@ Vue.component('login', {
                 <br>
                 <h1 style="color:white; text-align:center">Log in</h1>
                 <br>
-                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
+                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
                 <br>
                 <b-form-input v-model="form.password" placeholder="Password" required></b-form-input>
                 <br>
@@ -147,7 +173,7 @@ Vue.component('login', {
     data: function(){
         return{
             form: {
-                username: '',
+                email: '',
                 password: ''
             },
         }
