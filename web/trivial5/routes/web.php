@@ -42,6 +42,7 @@ Route::get('daily', [GameController::class, 'index_jugarDaily'] );
 Route::post('savegame', [GameController::class, 'store']);
 Route::post('saveresult', [PlayedgameController::class, 'store']);
 
-Route::get('register',[AuthController::class,'register']);
+// Route::post('register',[AuthController::class,'register']);
+// Route::post('login',[AuthController::class,'login']);
 
 require __DIR__.'/auth.php';

@@ -31,10 +31,7 @@ class GameController extends Controller
             ->where('type', 'game_of_day')
             ->where('date', '=', $diaActual)
             ->first();
-
-   
         return $dailyGames;
-
     }
 
     /**
