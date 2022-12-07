@@ -27,13 +27,13 @@ class GameController extends Controller
     public function index_jugarDaily(){
         $diaActual = date('d/m/Y');
 
-        $dilyGames = DB::table('games')
+        $dailyGames = DB::table('games')
             ->where('type', 'game_of_day')
             ->where('date', '=', $diaActual)
-            ->get();
+            ->first();
 
    
-        return json_encode($dilyGames);
+        return $dailyGames;
 
     }
 

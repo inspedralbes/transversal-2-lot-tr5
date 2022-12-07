@@ -141,7 +141,7 @@ Vue.component('results' , {
             timer: 0
         }
     },
-    props: ['results', 'timerRestante'],
+    props: ['results', 'timerRestante', 'difficulty'],
     template: ` <div class="game__result">
                     <br>
                     <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
@@ -150,6 +150,15 @@ Vue.component('results' , {
     methods: {
         calcularPuntuacion: function() {
             this.points = (this.correctAnswers * 100) + this.timer;
+            if(this.difficulty == 'medium') {
+                this.points = this.points * 2;
+            }
+            else if (this.difficulty == 'hard'){
+                this.points = this.points * 3;
+            }
+            else {
+                console.log('level easy');
+            }
         },
     },
     mounted() {
@@ -274,6 +283,7 @@ Vue.component('question' , {
         }
     },
     beforeMount() {
+        console.log("hola" + this.infoQuestion);
         this.infoQuestion.incorrectAnswers.forEach(element => {
             let a = {
                 answer: element,
@@ -290,7 +300,7 @@ Vue.component('question' , {
         };
         this.arrayAnswersDesordenada.push(a);
         shuffleArray(this.arrayAnswersDesordenada);
-        console.log(this.arrayAnswersDesordenada[0].answer);
+        // console.log(this.arrayAnswersDesordenada[0].answer);
     },
     computed: {
         isLogged() {
@@ -409,7 +419,7 @@ Vue.component('game' , {
                     </b-modal>
 
                     <div v-if="showQuestions" v-for="(question, index) in this.questions">
-                        <question v-show="actualQuestion == index":infoQuestion="question" @userAnswer="addUserAnswer">
+                        <question v-show="actualQuestion == index" :infoQuestion="question" @userAnswer="addUserAnswer">
                         <br><br>
                         <div v-for="(answer, index) in userAnswers" class="respuestas__footer">
                             <div v-if="isLogged" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(index), respuesta__incorrecta: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
@@ -422,7 +432,7 @@ Vue.component('game' , {
                         
                     </div>
                     <div v-if="showResults">
-                        <results :results=userAnswers :timerRestante=timer @saveData="saveData"></results>
+                        <results :results=userAnswers :timerRestante=timer :difficulty=selectedDifficulty @saveData="saveData"></results>
                     </div>
                 </div>`,
     methods: {
@@ -450,10 +460,18 @@ Vue.component('game' , {
             fetch(rutaFetch)
             .then(res => res.json())
             .then(data => {
-                this.questions = data;
+                if(this.daily) {
+                    console.log(data.id);
+                    this.questions = JSON.parse(data.data);
+                    this.idGame = data.id;
+                    this.selectedDifficulty = data.difficulty;
+                    this.selectedCategory = data.selectedCategory;
+                }
+                else {
+                    this.questions = data;
+                    this.$bvModal.hide("modalSelectGame");
+                }
                 this.showQuestions = true;
-                console.log(this.questions[0]);
-                this.$bvModal.hide("modalSelectGame");
                 this.countDownTimer();
                 if(this.isLogged && !this.daily){
                     this.saveGame();
