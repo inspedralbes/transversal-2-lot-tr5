@@ -235,7 +235,6 @@ Vue.component('login', {
                 fetch('../trivial5/public/api/login2', {
                     method: 'POST',
                     headers: {"Accept": "application/json"},
-                    // credentials:"same-origin",
                     body: userLogin
                 }); 
                 console.log("fetch funciona");
