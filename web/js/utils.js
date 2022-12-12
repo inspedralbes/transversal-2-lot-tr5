@@ -242,6 +242,8 @@ Vue.component('login', {
                     console.log(data);
                     if(data.message == "Credentials valid"){
                         userStore().logged = true;
+                        userStore().loginInfo.idUser = data.user_id;
+                        userStore().loginInfo.nombre = data.username;
                         console.log("valid");
                     }
                     
@@ -702,7 +704,7 @@ Vue.component('game' , {
             let dataResults = new FormData();
             dataResults.append('idGame', this.idGame);
             // dataResults.append('idUser', userLogged.loginInfo.idUser);
-            dataResults.append('idUser', 1);
+            dataResults.append('idUser', this.userLogged.idUser);
             dataResults.append('score', points);
             dataResults.append('date', dateNow);
             dataResults.append('date', date);
@@ -831,10 +833,9 @@ const router = new VueRouter({
 const userStore = Pinia.defineStore('usuario', {
     state() {
         return {
-            logged: true,
+            logged: false,
             loginInfo: {
-                success: true,
-                nombre: 'Nombre del almacen',
+                nombre: '',
                 idUser: ''
             }
         }
