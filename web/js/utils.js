@@ -595,7 +595,7 @@ Vue.component('game' , {
                 }
             }
             else {
-                rutaFetch = '../trivial5/public/daily';
+                rutaFetch = "../trivial5/public/daily/{"+ this.userLogged.idUser +"}";
             }
             console.log(rutaFetch);
             fetch(rutaFetch)
