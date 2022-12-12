@@ -67,19 +67,11 @@ Vue.component('profile', {
     template: ` <div v-show="this.isLogged">
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
-                    <canvas id="userStatistics"></canvas>
+                    <canvas id="userStatistics">estadistica</canvas>
                 </div>`, 
     methods: {
         logoutUser: function() {
             userStore().logged = false;
-        },
-        userStatistics:function(){
-            let userStatistics = new CharacterData("userStatistics",{
-                type:'doughnut',
-                data:statisticsData,
-                options:{}
-            })
-            router.push("/");
         }
     },
     computed: {
@@ -99,6 +91,16 @@ Vue.component('profile', {
                     }
                 }
             }
+        }
+    },
+    mounted:{
+        userStatistics:function(){
+            let userStatistics = new CharacterData("userStatistics",{
+                type:'doughnut',
+                data:statisticsData,
+                options:{}
+            })
+            router.push("/");
         }
     }
 });
@@ -635,21 +637,23 @@ Vue.component('game' , {
             fetch(rutaFetch)
             .then(res => res.json())
             .then(data => {
-                if(this.daily) {
-                    console.log(data.id);
-                    this.questions = JSON.parse(data.data);
-                    this.idGame = data.id;
-                    this.selectedDifficulty = data.difficulty;
-                    this.selectedCategory = data.selectedCategory;
-                }
-                else {
-                    this.questions = data;
-                    this.$bvModal.hide("modalSelectGame");
-                }
-                this.showQuestions = true;
-                this.countDownTimer();
-                if(this.isLogged && !this.daily){
-                    this.saveGame();
+                if(data != null){
+                    if(this.daily) {
+                        console.log(data.id);
+                        this.questions = JSON.parse(data.data);
+                        this.idGame = data.id;
+                        this.selectedDifficulty = data.difficulty;
+                        this.selectedCategory = data.selectedCategory;
+                    }
+                    else {
+                        this.questions = data;
+                        this.$bvModal.hide("modalSelectGame");
+                    }
+                    this.showQuestions = true;
+                    this.countDownTimer();
+                    if(this.isLogged && !this.daily){
+                        this.saveGame();
+                    }
                 }
             });
         },
