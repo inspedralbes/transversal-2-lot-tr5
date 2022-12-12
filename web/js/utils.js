@@ -236,6 +236,16 @@ Vue.component('login', {
                     method: 'POST',
                     headers: {"Accept": "application/json"},
                     body: userLogin
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    if(data.message == "Credentials valid"){
+                        userStore().logged = true;
+                        console.log("valid");
+                    }
+                    
+                    
                 }); 
                 console.log("fetch funciona");
             }else {
@@ -258,7 +268,6 @@ Vue.component('login', {
                 return {
                     user: {
                         nombre: "",
-                        imagen: ""
                     }
                 }
             }
