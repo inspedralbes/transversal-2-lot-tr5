@@ -240,3 +240,12 @@ body{
 .ranking__text{
     color:white !important;
 }
+
+.errorsFields{
+    color: white;
+
+}
+
+.form__control:focus{
+    border-color:#C724B1 !important;
+}

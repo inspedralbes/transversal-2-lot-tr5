@@ -101,82 +101,47 @@ Vue.component('register', {
                 password: '',
                 confirmPassword: '',
             },
+            everythingValids: false,
+            emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
         }
     },
     template:`
-        <div>
             <div>
                 <br>
                 <h1 style="color:white; text-align:center">Register</h1>
                 <br>
-                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
-                <h1 v-if="this.form.username == null" style="color:white;">Username{{form.username}} null</h1>
+                <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
+                <p v-if = "form.username === ''" class="errorsFields">Username{{form.username}} null</p>
                 <br>
-                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
+                <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+                <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
+                <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
                 <br>
-                <p v-if="form.email == null" style="color:white;">Email{{form.email}} null</p>
-                <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
+                <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
+                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
                 <br>
-                <p v-if="form.password == null" style="color:white;">Password{{form.password}} null</p>
-                <b-form-input type="password" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                <p v-if = "form.confirmPassword ===''" class="errorsFields">Paswword confirmation  null</p>
+                <p v-if = "form.confirmPassword !== form.password" class="errorsFields">Confirm password is not the same as password</p>
                 <br>
-                <p v-if="form.confirmPassword == null" style="color:white;">Paswword confirmation{{form.confirmPassword}} null</p>
                 <b-button @click="submitRegister">Register</b-button>
-            </div>
-        </div>`,
+            </div>`
+            ,
     methods: {
-        validateRegister:function(){
-            let everythingValids = false;
-            let usernameValid = false;
-            let emailValid = false;
-            let passwordValid = false;
-            let confirmPasswordValid = false;
-
-            let emailRegex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
-
-            if(this.form.username == ''){
-                console.log("username null");
-            }else{usernameValid = true;}
-            
-            if(this.form.email == ''){
-                console.log("email null");
-            }else if((emailRegex.test(this.form.email)) === false){
-                console.log("not valid email, the email should includes a domain with @");
-            }else{emailValid = true;}  
-            
-            if(this.form.password ==''){
-                console.log("password null");
-            }else{passwordValid = true;}
-            
-            if(this.form.confirmPassword == ''){
-                console.log("confirm password null");
-            }else if(this.form.confirmPassword != this.form.password){
-                console.log("the confirm password is not the same as the password");
-            }else{confirmPasswordValid = true;}
-
-            if(usernameValid&&emailValid&&passwordValid&&confirmPasswordValid){
-                everythingValids = true;
-            }
-
-            return everythingValids;
-        },
         submitRegister: function(){
             console.log("hola register");
-            // if(this.form.username != '' && this.form.email != '' && this.form.password != '' && this.form.confirmPassword != '') {
-            if(this.validateRegister()) {
-                console.log("valido");
-                let userRegister = new FormData();
-                userRegister.append('name', this.form.username);
-                userRegister.append('email', this.form.email);
-                userRegister.append('password', this.form.password);
-                userRegister.append('password_confirmation', this.form.confirmPassword);
+            console.log("valido");
+            let userRegister = new FormData();
+            userRegister.append('name', this.form.username);
+            userRegister.append('email', this.form.email);
+            userRegister.append('password', this.form.password);
+            userRegister.append('password_confirmation', this.form.confirmPassword);
 
-                fetch('../trivial5/public/api/register2', {
-                    method: 'POST',
-                    headers: {"Accept": "application/json"},
-                    body: userRegister
-                }); 
-            }
+            fetch('../trivial5/public/api/register2', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: userRegister
+            }); 
         },
     },
     computed: {
@@ -195,33 +160,39 @@ Vue.component('register', {
                     }
                 }
             }
+        },
+        validateRegister(){
+            return this.everythingValids;
         }
     },
 });
 
 Vue.component('login', {
-    template:`
-        <div>
-            <div>
-                <br>
-                <h1 style="color:white; text-align:center">Log in</h1>
-                <br>
-                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
-                <br>
-                <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
-                <br>
-                <b-button @click="submitLogin">Join</b-button>
-            </div>
-        </div>`,
-
     data: function(){
         return{
             form: {
                 email: '',
                 password: ''
             },
+            emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
         }
     },
+    template:`
+        <div>
+            <div>
+                <br>
+                <h1 style="color:white; text-align:center">Log in</h1>
+                <br>
+                <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+                <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
+                <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
+                <br>
+                <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
+                <br>
+                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+                <b-button @click="submitLogin">Join</b-button>
+            </div>
+        </div>`,
     methods: {
         submitLogin: function(){
             if(this.form.email != '' && this.form.password != '' ) {
@@ -243,9 +214,7 @@ Vue.component('login', {
                         userStore().loginInfo.idUser = data.user_id;
                         userStore().loginInfo.nombre = data.username;
                         console.log("valid");
-                    }
-                    
-                    
+                    }  
                 }); 
                 console.log("fetch funciona");
             }else {
