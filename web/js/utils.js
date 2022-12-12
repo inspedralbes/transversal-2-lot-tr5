@@ -79,6 +79,7 @@ Vue.component('profile', {
                 data:statisticsData,
                 options:{}
             })
+            router.push("/");
         }
     },
     computed: {
@@ -246,6 +247,7 @@ Vue.component('login', {
                         userStore().loginInfo.idUser = data.user_id;
                         userStore().loginInfo.nombre = data.username;
                         console.log("valid");
+                        router.push("/")
                     }  
                 }); 
                 console.log("fetch funciona");
@@ -627,7 +629,7 @@ Vue.component('game' , {
                 }
             }
             else {
-                rutaFetch = '../trivial5/public/daily';
+                rutaFetch = "../trivial5/public/daily/{"+ this.userLogged.idUser +"}";
             }
             console.log(rutaFetch);
             fetch(rutaFetch)
