@@ -40,13 +40,45 @@ Vue.component('routes', {
 });
 
 Vue.component('profile', {
+    data: function(){
+        return{
+            statisticsData:{
+                labels:["arts_and_literature","film_and_tv","food_and_drink","general_knowledge",
+                "geography","history","music","science","society_and_culture","sport_and_leisure"],
+                datasets:[{
+                    data:[300,200,300,400,500,600,700,800,900,1000],
+                    backgroundColor:[
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(54, 100, 235)',
+                        'rgb(54, 16, 235)',
+                        'rgb(54, 12, 235)',
+                        'rgb(54, 262, 235)',
+                        'rgb(54, 362, 235)',
+                        'rgb(54, 462, 235)',
+                        'rgb(54, 562, 235)',
+                    ],
+                    hoverOffset:4
+                }]
+            }
+        }
+    },
     template: ` <div v-show="this.isLogged">
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
+                    <canvas id="userStatistics"></canvas>
                 </div>`, 
     methods: {
         logoutUser: function() {
             userStore().logged = false;
+        },
+        userStatistics:function(){
+            let userStatistics = new CharacterData("userStatistics",{
+                type:'doughnut',
+                data:statisticsData,
+                options:{}
+            })
         }
     },
     computed: {
