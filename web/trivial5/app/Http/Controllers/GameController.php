@@ -24,15 +24,26 @@ class GameController extends Controller
         return $games->data;
     }
 
-    public function index_jugarDaily(){
-        
+    public function index_jugarDaily($idUser){
         $diaActual = date('d/m/Y');
+        $buscarDailyJugada;
+        //$dailyJugada = false;
 
-        $dailyGames = DB::table('games')
+        $dailyGame = DB::table('games')
             ->where('type', 'game_of_day')
             ->where('date', '=', $diaActual)
             ->first();
-        return $dailyGames;
+
+        $buscarDailyJugada = DB::table('played_games')
+            ->where('idUser', $idUser)
+            ->where('idGame', '=', $dailyGame->id);
+        
+
+        if($buscarDailyJugada =! NULL){
+            return $dailyGames;
+        }else{
+
+        }
 
     }
     
