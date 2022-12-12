@@ -25,6 +25,7 @@ class GameController extends Controller
     }
 
     public function index_jugarDaily(){
+        
         $diaActual = date('d/m/Y');
 
         $dailyGames = DB::table('games')
@@ -32,7 +33,9 @@ class GameController extends Controller
             ->where('date', '=', $diaActual)
             ->first();
         return $dailyGames;
+
     }
+    
 
     /**
      * Show the form for creating a new resource.
