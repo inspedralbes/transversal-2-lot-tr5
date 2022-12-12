@@ -1,8 +1,8 @@
 /* Randomize array in-place using Durstenfeld shuffle algorithm */
 function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
@@ -40,7 +40,7 @@ Vue.component('routes', {
 });
 
 Vue.component('profile', {
-    template: ` <div>
+    template: ` <div v-show="this.isLogged">
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
                 </div>`, 
@@ -68,25 +68,18 @@ Vue.component('profile', {
             }
         }
     }
-
-    
-
 });
 
 Vue.component('daily', {
     template: ` <div>
                     <p style="color:white">Esta es la partida diaria</p>
                 </div>`, 
-    
-
 });
 
 Vue.component('start', {
     template: ` <div>
                     <p style="color:white">Welcome to League of Trivial</p>
                 </div>`, 
-    
-
 });
 
 Vue.component('join', {
@@ -100,24 +93,6 @@ Vue.component('join', {
 })
 
 Vue.component('register', {
-    template:`
-        <div>
-            <div>
-                <br>
-                <h1 style="color:white; text-align:center">Register</h1>
-                <br>
-                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
-                <br>
-                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
-                <br>
-                <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
-                <br>
-                <b-form-input type="password" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
-                <br>
-                <b-button @click="submitRegister">Register</b-button>
-            </div>
-        </div>`,
-
     data: function(){
         return{
             form: {
@@ -128,41 +103,87 @@ Vue.component('register', {
             },
         }
     },
+    template:`
+        <div>
+            <div>
+                <br>
+                <h1 style="color:white; text-align:center">Register</h1>
+                <br>
+                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
+                <h1 v-if="this.form.username == null" style="color:white;">Username{{form.username}} null</h1>
+                <br>
+                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
+                <br>
+                <p v-if="form.email == null" style="color:white;">Email{{form.email}} null</p>
+                <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
+                <br>
+                <p v-if="form.password == null" style="color:white;">Password{{form.password}} null</p>
+                <b-form-input type="password" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                <br>
+                <p v-if="form.confirmPassword == null" style="color:white;">Paswword confirmation{{form.confirmPassword}} null</p>
+                <b-button @click="submitRegister">Register</b-button>
+            </div>
+        </div>`,
     methods: {
+        validateRegister:function(){
+            let everythingValids = false;
+            let usernameValid = false;
+            let emailValid = false;
+            let passwordValid = false;
+            let confirmPasswordValid = false;
+
+            let emailRegex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+
+            if(this.form.username == ''){
+                console.log("username null");
+            }else{usernameValid = true;}
+            
+            if(this.form.email == ''){
+                console.log("email null");
+            }else if((emailRegex.test(this.form.email)) === false){
+                console.log("not valid email, the email should includes a domain with @");
+            }else{emailValid = true;}  
+            
+            if(this.form.password ==''){
+                console.log("password null");
+            }else{passwordValid = true;}
+            
+            if(this.form.confirmPassword == ''){
+                console.log("confirm password null");
+            }else if(this.form.confirmPassword != this.form.password){
+                console.log("the confirm password is not the same as the password");
+            }else{confirmPasswordValid = true;}
+
+            if(usernameValid&&emailValid&&passwordValid&&confirmPasswordValid){
+                everythingValids = true;
+            }
+
+            return everythingValids;
+        },
         submitRegister: function(){
             console.log("hola register");
-            if(this.form.username != '' && this.form.email != '' && this.form.password != '' && this.form.confirmPassword != '') {
-                if(this.form.password ==  this.form.confirmPassword){
-                    console.log("valido");
+            // if(this.form.username != '' && this.form.email != '' && this.form.password != '' && this.form.confirmPassword != '') {
+            if(this.validateRegister()) {
+                console.log("valido");
+                let userRegister = new FormData();
+                userRegister.append('name', this.form.username);
+                userRegister.append('email', this.form.email);
+                userRegister.append('password', this.form.password);
+                userRegister.append('password_confirmation', this.form.confirmPassword);
 
-                    let userRegister = new FormData();
-                    userRegister.append('name', this.form.username);
-                    userRegister.append('email', this.form.email);
-                    userRegister.append('password', this.form.password);
-                    userRegister.append('password_confirmation', this.form.confirmPassword);
-
-                    fetch('../trivial5/public/api/register2', {
-                        method: 'POST',
-                        headers: {"Accept": "application/json"},
-                        body: userRegister
-                    });
-                    
-                }
-                else{
-                    console.log("contraseñas no cuadran");
-                }
+                fetch('../trivial5/public/api/register2', {
+                    method: 'POST',
+                    headers: {"Accept": "application/json"},
+                    body: userRegister
+                }); 
             }
-            else {
-                console.log("falta algun campo por rellenar");
-            }
-        }
+        },
     },
     computed: {
         isLogged() {
             return userStore().logged;
         },
         userLogged() {
-            
             if(userStore().logged){
                 return userStore().loginInfo;
             }
@@ -175,8 +196,7 @@ Vue.component('register', {
                 }
             }
         }
-    }
-        
+    },
 });
 
 Vue.component('login', {
@@ -188,7 +208,7 @@ Vue.component('login', {
                 <br>
                 <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
                 <br>
-                <b-form-input v-model="form.password" placeholder="Password" required></b-form-input>
+                <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
                 <br>
                 <b-button @click="submitLogin">Join</b-button>
             </div>
@@ -204,7 +224,36 @@ Vue.component('login', {
     },
     methods: {
         submitLogin: function(){
-            //AQUI VA EL FETCH PARA EL BACK PARA QUE VALIDE LOS DATOS
+            if(this.form.email != '' && this.form.password != '' ) {
+                console.log("valido");
+                let userLogin = new FormData();
+                userLogin.append('email', this.form.email);
+                userLogin.append('password', this.form.password);
+
+                fetch('../trivial5/public/api/login2', {
+                    method: 'POST',
+                    headers: {"Accept": "application/json"},
+                    body: userLogin
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    if(data.message == "Credentials valid"){
+                        userStore().logged = true;
+                        userStore().loginInfo.idUser = data.user_id;
+                        userStore().loginInfo.nombre = data.username;
+                        console.log("valid");
+                    }
+                    
+                    
+                }); 
+                console.log("fetch funciona");
+            }else {
+                console.log("falta algun campo por rellenar");
+            }
+        },
+        validateLogin:function(){
+
         }
     },
     computed: {
@@ -212,7 +261,6 @@ Vue.component('login', {
             return userStore().logged;
         },
         userLogged() {
-            
             if(userStore().logged){
                 return userStore().loginInfo;
             }
@@ -220,13 +268,11 @@ Vue.component('login', {
                 return {
                     user: {
                         nombre: "",
-                        imagen: ""
                     }
                 }
             }
         }
     }
-        
 });
 
 
@@ -235,9 +281,6 @@ Vue.component('ranking', {
         return {
             players: [],
         }
-    },
-    methods: {
-
     },
     mounted() {
 
@@ -269,8 +312,6 @@ Vue.component('ranking', {
                     </b-row>
                 </div>`,
 })
-
-
 
 Vue.component('results' , {
     data: function () {
@@ -307,21 +348,18 @@ Vue.component('results' , {
                 this.correctAnswers++;
             }
         }
-
         this.timer = this.timerRestante;
         this.calcularPuntuacion();
 
         if(this.isLogged) {
             this.$emit('saveData', this.points);
         }
-
     },
     computed: {
         isLogged() {
             return userStore().logged;
         },
         userLogged() {
-            
             if(userStore().logged){
                 return userStore().loginInfo;
             }
@@ -411,7 +449,6 @@ Vue.component('question' , {
             else {
                 return false;
             }
-            
         },
         comprobarRespuestaIncorrecta: function(index) {
             if(this.arrayAnswersDesordenada[index].incorrecto) {
@@ -432,7 +469,6 @@ Vue.component('question' , {
             };
             this.arrayAnswersDesordenada.push(a);
         });
-
         let a = {
             answer: this.infoQuestion.correctAnswer,
             correcto: null,
@@ -592,10 +628,6 @@ Vue.component('game' , {
             else {
                 rutaFetch = '../trivial5/public/daily';
             }
-            
-
-
-        
             console.log(rutaFetch);
             fetch(rutaFetch)
             .then(res => res.json())
@@ -629,10 +661,8 @@ Vue.component('game' , {
             console.log(this.actualQuestion);
         },
         addUserAnswer: function(userAnswer) {
-
             this.userAnswers[this.actualQuestion] = userAnswer;
             // this.userAnswers.push(userAnswer);
-
             console.log(this.userAnswers);
             if(this.isLogged){
                 if(userAnswer) {
@@ -651,15 +681,11 @@ Vue.component('game' , {
                     this.incrementQuestion();
                 }, "500");
             }
-            
-            
-            
         },
         comprobarRespuestaCorrecta: function(index) {
             return this.userAnswers[index];
         },
         comprobarRespuestaIncorrecta: function(index) {
-
             if(this.userAnswers[index] == null) {
                 return false;
             }else {
@@ -667,9 +693,7 @@ Vue.component('game' , {
             }
         },
         saveData: function(points) {
-            
             console.log("guardarPuntuacion");
-
             let dateNow = new Date();
             let day = dateNow.getDate();
             let month = dateNow.getMonth()+1;
@@ -678,7 +702,7 @@ Vue.component('game' , {
             let dataResults = new FormData();
             dataResults.append('idGame', this.idGame);
             // dataResults.append('idUser', userLogged.loginInfo.idUser);
-            dataResults.append('idUser', 1);
+            dataResults.append('idUser', this.userLogged.idUser);
             dataResults.append('score', points);
             dataResults.append('date', dateNow);
             dataResults.append('date', date);
@@ -690,10 +714,8 @@ Vue.component('game' , {
             .then(data => {
                 console.log(data);
             });
-
         },
         saveGame: function() {
-
             let dateNow = new Date();
             let dataGame = new FormData();
             dataGame.append('data', JSON.stringify(this.questions));
@@ -710,9 +732,7 @@ Vue.component('game' , {
                 console.log(data);
                 this.idGame = data;
             });
-
         },
-
         playDaily: function() {
           
             this.daily = true;
@@ -730,7 +750,6 @@ Vue.component('game' , {
                 this.showResults = true;
             }
         },
-        
     },
     computed: {
         isLogged() {
@@ -751,7 +770,6 @@ Vue.component('game' , {
             }
         }
     }
- 
 });
 
 const Start = {
@@ -813,10 +831,9 @@ const router = new VueRouter({
 const userStore = Pinia.defineStore('usuario', {
     state() {
         return {
-            logged: true,
+            logged: false,
             loginInfo: {
-                success: true,
-                nombre: 'Nombre del almacen',
+                nombre: '',
                 idUser: ''
             }
         }
@@ -837,7 +854,6 @@ let app = new Vue({
     router,
     pinia,
     data: {
-
     },
     computed: {
         ...Pinia.mapState(userStore, ['loginInfo', 'logged']),

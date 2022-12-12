@@ -26,10 +26,6 @@ class AuthController extends Controller
         $user->save();
 
         return response($user, Response::HTTP_CREATED);
-
-        // return response()->json([
-        //     "message" => "Alta exitosa"
-        // ]);
     }
 
     public function login(Request $request){
@@ -42,15 +38,11 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken('token')->plainTextToken;
             $cookie = cookie('cookie_token', $token, 60 * 24);
-            return response(["token"=>$token], Response::HTTP_OK)->withoutCookie($cookie);
+            // return 1;
+            return response(["token"=>$token,"message"=> "Credentials valid","user_id"=>$user->id,'username'=>$user->name], Response::HTTP_OK)->withoutCookie($cookie);
         } else {
-            // return response(Response::HTTP_UNAUTHORIZED);
             return response(["message"=> "Credentials not valid"],Response::HTTP_UNAUTHORIZED);
         } 
-
-        // return response()->json([
-        //     "message" => "Login exitosa"
-        // ]);
     }
 
     public function userProfile(Request $request){
