@@ -40,7 +40,7 @@ class GameController extends Controller
         
 
         if($buscarDailyJugada =! NULL){
-            return $dailyGames;
+            return $dailyGame;
         }else{
 
         }
