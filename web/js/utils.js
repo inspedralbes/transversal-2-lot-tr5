@@ -93,23 +93,6 @@ Vue.component('join', {
 })
 
 Vue.component('register', {
-    template:`
-        <div>
-            <div>
-                <br>
-                <h1 style="color:white; text-align:center">Register</h1>
-                <br>
-                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
-                <br>
-                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
-                <br>
-                <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
-                <br>
-                <b-form-input type="password" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
-                <br>
-                <b-button @click="submitRegister">Register</b-button>
-            </div>
-        </div>`,
     data: function(){
         return{
             form: {
@@ -120,31 +103,28 @@ Vue.component('register', {
             },
         }
     },
+    template:`
+        <div>
+            <div>
+                <br>
+                <h1 style="color:white; text-align:center">Register</h1>
+                <br>
+                <b-form-input v-model="form.username" placeholder="Username" required></b-form-input>
+                <h1 v-if="this.form.username == null" style="color:white;">Username{{form.username}} null</h1>
+                <br>
+                <b-form-input v-model="form.email" placeholder="Email" required></b-form-input>
+                <br>
+                <p v-if="form.email == null" style="color:white;">Email{{form.email}} null</p>
+                <b-form-input type="password" v-model="form.password" placeholder="Password" required></b-form-input>
+                <br>
+                <p v-if="form.password == null" style="color:white;">Password{{form.password}} null</p>
+                <b-form-input type="password" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                <br>
+                <p v-if="form.confirmPassword == null" style="color:white;">Paswword confirmation{{form.confirmPassword}} null</p>
+                <b-button @click="submitRegister">Register</b-button>
+            </div>
+        </div>`,
     methods: {
-        submitRegister: function(){
-            console.log("hola register");
-            if(this.form.username != '' && this.form.email != '' && this.form.password != '' && this.form.confirmPassword != '') {
-                if(this.form.password ==  this.form.confirmPassword){
-                    console.log("valido");
-                    let userRegister = new FormData();
-                    userRegister.append('name', this.form.username);
-                    userRegister.append('email', this.form.email);
-                    userRegister.append('password', this.form.password);
-                    userRegister.append('password_confirmation', this.form.confirmPassword);
-
-                    fetch('../trivial5/public/api/register2', {
-                        method: 'POST',
-                        headers: {"Accept": "application/json"},
-                        body: userRegister
-                    }); 
-                }else{
-                    console.log("contraseñas no cuadran");
-                }
-            }
-            else {
-                console.log("falta algun campo por rellenar");
-            }
-        },
         validateRegister:function(){
             let everythingValids = false;
             let usernameValid = false;
@@ -179,7 +159,25 @@ Vue.component('register', {
             }
 
             return everythingValids;
-        }
+        },
+        submitRegister: function(){
+            console.log("hola register");
+            // if(this.form.username != '' && this.form.email != '' && this.form.password != '' && this.form.confirmPassword != '') {
+            if(this.validateRegister()) {
+                console.log("valido");
+                let userRegister = new FormData();
+                userRegister.append('name', this.form.username);
+                userRegister.append('email', this.form.email);
+                userRegister.append('password', this.form.password);
+                userRegister.append('password_confirmation', this.form.confirmPassword);
+
+                fetch('../trivial5/public/api/register2', {
+                    method: 'POST',
+                    headers: {"Accept": "application/json"},
+                    body: userRegister
+                }); 
+            }
+        },
     },
     computed: {
         isLogged() {
