@@ -47,6 +47,7 @@ Vue.component('profile', {
     methods: {
         logoutUser: function() {
             userStore().logged = false;
+            router.push("/");
         }
     },
     computed: {
@@ -214,6 +215,7 @@ Vue.component('login', {
                         userStore().loginInfo.idUser = data.user_id;
                         userStore().loginInfo.nombre = data.username;
                         console.log("valid");
+                        router.push("/")
                     }  
                 }); 
                 console.log("fetch funciona");
