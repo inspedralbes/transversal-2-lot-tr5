@@ -635,21 +635,23 @@ Vue.component('game' , {
             fetch(rutaFetch)
             .then(res => res.json())
             .then(data => {
-                if(this.daily) {
-                    console.log(data.id);
-                    this.questions = JSON.parse(data.data);
-                    this.idGame = data.id;
-                    this.selectedDifficulty = data.difficulty;
-                    this.selectedCategory = data.selectedCategory;
-                }
-                else {
-                    this.questions = data;
-                    this.$bvModal.hide("modalSelectGame");
-                }
-                this.showQuestions = true;
-                this.countDownTimer();
-                if(this.isLogged && !this.daily){
-                    this.saveGame();
+                if(data != null){
+                    if(this.daily) {
+                        console.log(data.id);
+                        this.questions = JSON.parse(data.data);
+                        this.idGame = data.id;
+                        this.selectedDifficulty = data.difficulty;
+                        this.selectedCategory = data.selectedCategory;
+                    }
+                    else {
+                        this.questions = data;
+                        this.$bvModal.hide("modalSelectGame");
+                    }
+                    this.showQuestions = true;
+                    this.countDownTimer();
+                    if(this.isLogged && !this.daily){
+                        this.saveGame();
+                    }
                 }
             });
         },
