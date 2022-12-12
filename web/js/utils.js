@@ -67,19 +67,11 @@ Vue.component('profile', {
     template: ` <div v-show="this.isLogged">
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
-                    <canvas id="userStatistics"></canvas>
+                    <canvas id="userStatistics">estadistica</canvas>
                 </div>`, 
     methods: {
         logoutUser: function() {
             userStore().logged = false;
-        },
-        userStatistics:function(){
-            let userStatistics = new CharacterData("userStatistics",{
-                type:'doughnut',
-                data:statisticsData,
-                options:{}
-            })
-            router.push("/");
         }
     },
     computed: {
@@ -99,6 +91,16 @@ Vue.component('profile', {
                     }
                 }
             }
+        }
+    },
+    mounted:{
+        userStatistics:function(){
+            let userStatistics = new CharacterData("userStatistics",{
+                type:'doughnut',
+                data:statisticsData,
+                options:{}
+            })
+            router.push("/");
         }
     }
 });
