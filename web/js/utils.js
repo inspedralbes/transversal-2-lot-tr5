@@ -370,10 +370,8 @@ Vue.component('login', {
                     <b-icon icon="lock"></b-icon>
                 </b-input-group-prepend>
                 <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
-                <br>
-                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
-                <b-button @click="submitLogin">Join</b-button>
-            </div>
+            </b-input-group>
+            <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
             <b-button @click="submitLogin">Join</b-button>
         </div>`,
     methods: {
