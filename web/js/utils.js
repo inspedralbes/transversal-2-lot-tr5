@@ -776,7 +776,7 @@ Vue.component('game' , {
             fetch(rutaFetch)
             .then(res => res.json())
             .then(data => {
-                if(data != false){
+                if(data != null && data != false){
                     if(this.daily) {
                         console.log(data.id);
                         this.questions = JSON.parse(data.data);
@@ -793,6 +793,8 @@ Vue.component('game' , {
                     if(this.isLogged && !this.daily){
                         this.saveGame();
                     }
+                }else{
+                    this.showButtonDaily = false;
                 }
                 else {
                     this.showButtonDaily = false;
