@@ -108,15 +108,15 @@ Vue.component('send_friend_request', {
         return{
             email: "",
             mailValido: true,
-            sendRequestAccepted: "",
+            sendRequestAccepted: null,
             emailRegex: new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
         }
     },
     //hacer verificacion mail para agregar
     template: ` <div class="nav-container">
                     <br>
-                    <p v-if="!sendRequestAccepted" style="color:red;">Anyone uses this email</p>
-                    <p v-if="sendRequestAccepted" style="color:green;">Friend request correctly sended</p>
+                    <p v-if="sendRequestAccepted == 0" style="color:red;">Anyone uses this email</p>
+                    <p v-if="sendRequestAccepted == 1" style="color:green;">Friend request correctly sended</p>
                     <b-input-group class="mt-3">
                         <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
                         <b-input-group-append>
@@ -147,12 +147,11 @@ Vue.component('send_friend_request', {
             friendRequest.append('id', userStore().loginInfo.idUser);
             friendRequest.append('email', this.email);
 
-            fetch('../trivial5/public/api/sendfriend', {
+            fetch('../trivial5/public/sendfriend', {
                 method: 'POST',
                 headers: {"Accept": "application/json"},
                 body: friendRequest
             })
-            .then(res => res.json())
             .then(data => {
                 this.sendRequestAccepted = data;
             }); 
@@ -777,7 +776,7 @@ Vue.component('game' , {
             fetch(rutaFetch)
             .then(res => res.json())
             .then(data => {
-                if(data != null){
+                if(data != false){
                     if(this.daily) {
                         console.log(data.id);
                         this.questions = JSON.parse(data.data);
@@ -794,6 +793,9 @@ Vue.component('game' , {
                     if(this.isLogged && !this.daily){
                         this.saveGame();
                     }
+                }
+                else {
+                    this.showButtonDaily = false;
                 }
             });
         },
