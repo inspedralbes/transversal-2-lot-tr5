@@ -142,27 +142,6 @@ Vue.component('friends', {
 Vue.component('profile', {
     data: function(){
         return{
-            record: [],
-            statisticsData:{
-                labels:["arts_and_literature","film_and_tv","food_and_drink","general_knowledge",
-                "geography","history","music","science","society_and_culture","sport_and_leisure"],
-                datasets:[{
-                    data:[300,200,300,400,500,600,700,800,900,1000],
-                    backgroundColor:[
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)',
-                        'rgb(54, 100, 235)',
-                        'rgb(54, 16, 235)',
-                        'rgb(54, 12, 235)',
-                        'rgb(54, 262, 235)',
-                        'rgb(54, 362, 235)',
-                        'rgb(54, 462, 235)',
-                        'rgb(54, 562, 235)',
-                    ],
-                    hoverOffset:4
-                }]
-            }
         }
     },
     template: ` <div v-show="this.isLogged">
@@ -200,14 +179,7 @@ Vue.component('profile', {
         }
     },
     mounted:{
-        userStatistics:function(){
-            let userStatistics = new CharacterData("userStatistics",{
-                type:'doughnut',
-                data:statisticsData,
-                options:{}
-            })
-            router.push("/");
-        }
+       
     }
 });
 
@@ -242,7 +214,6 @@ Vue.component('register', {
                 password: '',
                 confirmPassword: '',
             },
-            everythingValids: false,
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
         }
     },
@@ -302,9 +273,7 @@ Vue.component('register', {
                 }
             }
         },
-        validateRegister(){
-            return this.everythingValids;
-        }
+
     },
 });
 
@@ -316,6 +285,7 @@ Vue.component('login', {
                 password: ''
             },
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
+            processing:false,
         }
     },
     template:`
@@ -331,11 +301,15 @@ Vue.component('login', {
                 <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
                 <br>
                 <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+                <div v-show="processing" style="text-align:center">
+                    <b-spinner small></b-spinner>
+                </div>
                 <b-button @click="submitLogin">Join</b-button>
             </div>
         </div>`,
     methods: {
         submitLogin: function(){
+            this.processing=true;
             if(this.form.email != '' && this.form.password != '' ) {
                 console.log("valido");
                 let userLogin = new FormData();
@@ -363,9 +337,6 @@ Vue.component('login', {
                 console.log("falta algun campo por rellenar");
             }
         },
-        validateLogin:function(){
-
-        }
     },
     computed: {
         isLogged() {

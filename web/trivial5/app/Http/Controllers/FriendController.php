@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\PlayedGame;
+use App\Models\Friend;
 use App\Models\User;
-use App\Models\Game;
-use Illuminate\Support\Facades\DB;
+use \stdClass;
 
-class PlayedgameController extends Controller
+class FriendController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,15 +17,6 @@ class PlayedgameController extends Controller
     public function index()
     {
         //
-    }
-
-    public function index_record($id)
-    {
-        $record = DB::table('played_games')->where('idUser','=',$id)->limit(10)->get();
-        //devolver tambien por id la categoria i dificultat del juego
-        // $recordDetailed = Game::select('category','difficulty')->where('id','=',PlayedGame::value('idGame'));
-
-        return json_encode($record);
     }
 
     /**
@@ -47,19 +37,24 @@ class PlayedgameController extends Controller
      */
     public function store(Request $request)
     {
-        $playedGames = new PlayedGame();
-        $playedGames -> idUser = $request -> idUser;
-        $playedGames -> idGame = $request -> idGame;
-        $playedGames -> date = $request -> date;
-        $playedGames -> score = $request ->score;
+        $friend = new Friend();
+        $sent = 0;
+        //si existe email del usuario
+        $requestedID = User::where('email',$request->email)->value('id');
+        if(User::where('email',$request->email)->exists()){
+            if(!(Friend::where('idUserRequested',$request -> id)->exists()&&Friend::where('idUserRequest',$requestedID)->exists())){
+                if(!(Friend::where('idUserRequested',$requestedID)->exists()&&Friend::where('idUserRequest',$request -> id)->exists())){
+                    $friend -> idUserRequested = $requestedID;
+                    $friend -> idUserRequest = $request -> id;
+                    $friend -> save();
+                    $sent = 1;
+                }
+            }
+        }
 
-        $playedGames -> save();
-        $user = User::find($playedGames -> idUser);
-        $user -> total_score +=  $playedGames -> score;
-
-        $user -> save();
-
-        return $playedGames -> idGame;
+        $ret = new stdClass();
+        $ret->data = $sent;
+        return json_encode($ret);
     }
 
     /**
