@@ -107,22 +107,55 @@ Vue.component('send_friend_request', {
     data: function(){
         return{
             email: "",
-            emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
+            mailValido: true,
+            sendRequestAccepted: null,
+            emailRegex: new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
         }
     },
     //hacer verificacion mail para agregar
     template: ` <div class="nav-container">
                     <br>
+                    <p v-if="sendRequestAccepted == 0" style="color:red;">Anyone uses this email</p>
+                    <p v-if="sendRequestAccepted == 1" style="color:green;">Friend request correctly sended</p>
                     <b-input-group class="mt-3">
                         <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
                         <b-input-group-append>
-                            <b-button variant="danger" @click="sendRequest">Send</b-button>
+                            <b-button variant="danger" @click="validarEmail">Send</b-button>
                         </b-input-group-append>
                     </b-input-group>
+                    <p v-if="!mailValido" style="color:red;">*Email address incorrect</p>
                 </div>`,
     methods: {
+        validarEmail: function() {
+
+            if(this.emailRegex.test(this.email)) {
+                this.mailValido = true;
+                this.sendRequest();
+                console.log("true")
+            }
+            else {
+                this.mailValido = false;
+                console.log("false")
+            }
+            
+        },
         sendRequest: function() {
+                        
             //hacer fetch al back enviandole el email para que se cree la peticion
+
+            friendRequest = new FormData();
+            friendRequest.append('id', userStore().loginInfo.idUser);
+            friendRequest.append('email', this.email);
+
+            fetch('../trivial5/public/sendfriend', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: friendRequest
+            })
+            .then(data => {
+                this.sendRequestAccepted = data;
+            }); 
+
         }
     }
 });
@@ -585,7 +618,7 @@ Vue.component('game' , {
     data: function () {
         return {
             showButtonPlay: true,
-            showButtonDaily: true,
+            showButtonDaily: false,
             questions: [],
             daily: false,
             idGame: null,
@@ -601,7 +634,7 @@ Vue.component('game' , {
 
     template: ` <div class="container_button_play" >
                     <div v-if="showButtonPlay" class="div_button_play">
-                        <b-button v-if="isLogged" class="button__daily" @click="playDaily">DAILY</b-button>
+                        <b-button v-if="isLogged && showButtonDaily" class="button__daily" @click="playDaily">DAILY</b-button>
                         <br>
                         <br>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
@@ -708,29 +741,27 @@ Vue.component('game' , {
                 }
             }
             else {
-                rutaFetch = "../trivial5/public/daily/{"+ this.userLogged.idUser +"}";
+                rutaFetch = "../trivial5/public/daily";
             }
             console.log(rutaFetch);
             fetch(rutaFetch)
             .then(res => res.json())
             .then(data => {
-                if(data != null){
-                    if(this.daily) {
-                        console.log(data.id);
-                        this.questions = JSON.parse(data.data);
-                        this.idGame = data.id;
-                        this.selectedDifficulty = data.difficulty;
-                        this.selectedCategory = data.selectedCategory;
-                    }
-                    else {
-                        this.questions = data;
-                        this.$bvModal.hide("modalSelectGame");
-                    }
-                    this.showQuestions = true;
-                    this.countDownTimer();
-                    if(this.isLogged && !this.daily){
-                        this.saveGame();
-                    }
+                if(this.daily) {
+                    console.log(data.id);
+                    this.questions = JSON.parse(data.data);
+                    this.idGame = data.id;
+                    this.selectedDifficulty = data.difficulty;
+                    this.selectedCategory = data.selectedCategory;
+                }
+                else {
+                    this.questions = data;
+                    this.$bvModal.hide("modalSelectGame");
+                }
+                this.showQuestions = true;
+                this.countDownTimer();
+                if(this.isLogged && !this.daily){
+                    this.saveGame();
                 }
             });
         },
@@ -820,6 +851,7 @@ Vue.component('game' , {
         playDaily: function() {
           
             this.daily = true;
+
             this.createGame();
         },
         countDownTimer () {
@@ -834,6 +866,24 @@ Vue.component('game' , {
                 this.showResults = true;
             }
         },
+    },
+    beforeMount () {
+
+        if(this.isLogged) {
+            fetch("../trivial5/public/comprobardaily/"+ this.userLogged.idUser +"")
+            .then(res => res.json())
+            .then(data => {
+                console.log("json" + data);
+                if(data) {
+                    this.showButtonDaily = false;
+                }
+                else {
+                    this.showButtonDaily = true;
+                }
+                
+             });
+        }
+        
     },
     computed: {
         isLogged() {
