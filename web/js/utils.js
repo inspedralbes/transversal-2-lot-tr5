@@ -40,26 +40,32 @@ Vue.component('routes', {
 });
 
 Vue.component('record', {
-    props: ['games'],
+    data: function(){
+        return{
+            gamesPlayed: [],
+        }
+    },
     template: ` <div class="nav-container">
-                    <b-card>
-                        <b-card-text>
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </b-card-text>
-
-                        <b-button href="#" variant="primary">Go somewhere</b-button>
-                    </b-card>
+                    <div v-for="(game, index) in gamesPlayed">
+                        <b-card class="mb-3">
+                            <b-card-text class="fa fa-trophy"  style="font-size:48px; float:left" ></b-card-text>
+                            <b-card-text>
+                                {{game.idUser}}
+                            </b-card-text>
+                        </b-card>
+                    
+                    </div>
                 </div>`,
     methods: {
         
     },
     mounted() {
-        console.log(this.userLogged.idUser);
-        fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
+        console.log("hola id " + this.userLogged.idUser);
+        fetch("../trivial5/public/record/"+ this.userLogged.idUser +"")
             .then(res => res.json())
             .then(data => {
                 console.log("json" + data);
-                // this.record = data;
+                this.gamesPlayed = data;
         });
     },
     computed: {
@@ -97,6 +103,36 @@ Vue.component('challenges', {
     }
 });
 
+Vue.component('send_friend_request', {
+
+    template: ` <div class="nav-container">
+                    <br>
+                    <b-input-group class="mt-3">
+                        <b-form-input placeholder="Write your friend Email"></b-form-input>
+                        <b-input-group-append>
+                            <b-button variant="danger" @click="sendRequest">Send</b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+                </div>`,
+    methods: {
+        sendRequest: function() {
+
+        }
+    }
+});
+
+Vue.component('friends', {
+    template: ` <div class="nav-container">
+                    <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
+                        <b-tab title="List" active></b-tab>
+                        <b-tab title="Send"><send_friend_request></send_friend_request></b-tab>
+                        <b-tab title="Pending"></b-tab>
+                    </b-tabs>
+                </div>`,
+    methods: {
+    }
+});
+
 Vue.component('profile', {
     data: function(){
         return{
@@ -127,31 +163,16 @@ Vue.component('profile', {
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
                     <canvas id="userStatistics">estadistica</canvas>
-                    <b-tabs content-class="mt-3" align="center">
+                    <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="Record" active><record :games=this.record></record></b-tab>
                         <b-tab title="Challenges"><challenges></challenges></b-tab>
+                        <b-tab title="Friends"><friends></friends></b-tab>
                     </b-tabs>
                 </div>`, 
     methods: {
         logoutUser: function() {
             userStore().logged = false;
         },
-        // getRecord: function() {
-        //     fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log(data);
-        //         // this.record = data;
-        //     });
-        // },
-    },
-    mounted() {
-        fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
-            .then(res => res.json())
-            .then(data => {
-                console.log("json" + data);
-                // this.record = data;
-        });
     },
     computed: {
         isLogged() {
