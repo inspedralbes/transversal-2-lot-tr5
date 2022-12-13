@@ -4,12 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Http\playedGame;
 
-class Game extends Model
+class Friend extends Model
 {
     use HasFactory;
-    public function playedGame(){
-        return $this->hasOne('App\Game');
-    }
 }

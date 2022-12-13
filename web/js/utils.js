@@ -39,15 +39,34 @@ Vue.component('routes', {
     }
 });
 
-Vue.component('profile', {
-    template: ` <div v-show="this.isLogged">
-                    <p style="color:white">Estas logueado</p>
-                    <b-button @click="logoutUser">Logout</b-button>
-                </div>`, 
-    methods: {
-        logoutUser: function() {
-            userStore().logged = false;
+Vue.component('record', {
+    data: function(){
+        return{
+            gamesPlayed: [],
         }
+    },
+    template: ` <div class="nav-container">
+                    <div v-for="(game, index) in gamesPlayed">
+                        <b-card class="mb-3">
+                            <b-card-text class="fa fa-trophy"  style="font-size:56px; float:left" ></b-card-text>
+                            <b-card-text>
+                                {{game.idUser}}
+                            </b-card-text>
+                        </b-card>
+                    
+                    </div>
+                </div>`,
+    methods: {
+        
+    },
+    mounted() {
+        console.log("hola id " + this.userLogged.idUser);
+        fetch("../trivial5/public/record/"+ this.userLogged.idUser +"")
+            .then(res => res.json())
+            .then(data => {
+                console.log("json" + data);
+                this.gamesPlayed = data;
+        });
     },
     computed: {
         isLogged() {
@@ -66,6 +85,140 @@ Vue.component('profile', {
                     }
                 }
             }
+        }
+    },
+});
+
+Vue.component('challenges', {
+    template: ` <div class="nav-container">
+                    <b-card>
+                        <b-card-text>
+                            challenges
+                        </b-card-text>
+
+                        <b-button href="#" variant="primary">Go somewhere</b-button>
+                    </b-card>
+                </div>`,
+    methods: {
+    }
+});
+
+Vue.component('send_friend_request', {
+    data: function(){
+        return{
+            email: "",
+            mailValido: true,
+            mssgIncorrecto: "",
+            sendRequestAccepted: 2,
+            emailRegex: new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
+        }
+    },
+    //hacer verificacion mail para agregar
+    template: ` <div class="nav-container">
+                    <br>
+                    
+                    <b-input-group class="mt-3">
+                        <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
+                        <b-input-group-append>
+                            <b-button variant="danger" @click="validarEmail">Send</b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+                    <p v-if="!mailValido" style="color:red;">*Email address incorrect</p>
+                    <p v-if="sendRequestAccepted == 0" style="color:red;">*{{mssgIncorrecto}}</p>
+                    <p v-if="sendRequestAccepted == 1" style="color:green;">Friend request correctly sent</p>
+                </div>`,
+    methods: {
+        validarEmail: function() {
+
+            if(this.emailRegex.test(this.email)) {
+                this.mailValido = true;
+                this.sendRequest();
+            }
+            else {
+                this.mailValido = false;
+            }
+            
+        },
+        sendRequest: function() {
+                        
+            //hacer fetch al back enviandole el email para que se cree la peticion
+
+            friendRequest = new FormData();
+            friendRequest.append('id', userStore().loginInfo.idUser);
+            friendRequest.append('email', this.email);
+
+            fetch('../trivial5/public/sendfriend', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: friendRequest
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.data);
+                this.sendRequestAccepted = data.data;
+                this.mssgIncorrecto = data.message;
+
+                console.log("accepted " +this.sendRequestAccepted );
+            }); 
+
+        }
+    }
+});
+
+Vue.component('friends', {
+    template: ` <div class="nav-container">
+                    <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
+                        <b-tab title="List" active></b-tab>
+                        <b-tab title="Send"><send_friend_request></send_friend_request></b-tab>
+                        <b-tab title="Pending"></b-tab>
+                    </b-tabs>
+                </div>`,
+    methods: {
+    }
+});
+
+Vue.component('profile', {
+    data: function(){
+        return{
+        }
+    },
+    template: ` <div v-show="this.isLogged">
+                    <p style="color:white">Estas logueado</p>
+                    <b-button @click="logoutUser">Logout</b-button>
+                    <canvas id="userStatistics">estadistica</canvas>
+                </div>`, 
+    methods: {
+        logoutUser: function() {
+            userStore().logged = false;
+        },
+    },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    },
+    mounted:{
+        userStatistics:function(){
+            let userStatistics = new CharacterData("userStatistics",{
+                type:'doughnut',
+                data:statisticsData,
+                options:{}
+            })
+            router.push("/");
         }
     }
 });
@@ -101,6 +254,7 @@ Vue.component('register', {
                 password: '',
                 confirmPassword: '',
             },
+            everythingValids: false,
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
         }
     },
@@ -181,9 +335,7 @@ Vue.component('register', {
                 }
             }
         },
-        validateRegister(){
-            return this.everythingValids;
-        }
+
     },
 });
 
@@ -195,6 +347,7 @@ Vue.component('login', {
                 password: ''
             },
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
+            processing:false,
         }
     },
     template:`
@@ -217,16 +370,15 @@ Vue.component('login', {
                     <b-icon icon="lock"></b-icon>
                 </b-input-group-prepend>
                 <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
-            </b-input-group>
-            <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
-
-            <div v-show="processing" style="text-align:center;color:white;">
-                <b-spinner small></b-spinner>
+                <br>
+                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+                <b-button @click="submitLogin">Join</b-button>
             </div>
             <b-button @click="submitLogin">Join</b-button>
         </div>`,
     methods: {
         submitLogin: function(){
+            this.processing=true;
             if(this.form.email != '' && this.form.password != '' ) {
                 console.log("valido");
                 let userLogin = new FormData();
@@ -254,9 +406,6 @@ Vue.component('login', {
                 console.log("falta algun campo por rellenar");
             }
         },
-        validateLogin:function(){
-
-        }
     },
     computed: {
         isLogged() {
@@ -505,7 +654,7 @@ Vue.component('game' , {
     data: function () {
         return {
             showButtonPlay: true,
-            showButtonDaily: true,
+            showButtonDaily: false,
             questions: [],
             daily: false,
             idGame: null,
@@ -521,7 +670,7 @@ Vue.component('game' , {
 
     template: ` <div class="container_button_play" >
                     <div v-if="showButtonPlay" class="div_button_play">
-                        <b-button v-if="isLogged" class="button__daily" @click="playDaily">DAILY</b-button>
+                        <b-button v-if="isLogged && showButtonDaily" class="button__daily" @click="playDaily">DAILY</b-button>
                         <br>
                         <br>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
@@ -628,29 +777,27 @@ Vue.component('game' , {
                 }
             }
             else {
-                rutaFetch = "../trivial5/public/daily/{"+ this.userLogged.idUser +"}";
+                rutaFetch = "../trivial5/public/daily";
             }
             console.log(rutaFetch);
             fetch(rutaFetch)
             .then(res => res.json())
             .then(data => {
-                if(data != null){
-                    if(this.daily) {
-                        console.log(data.id);
-                        this.questions = JSON.parse(data.data);
-                        this.idGame = data.id;
-                        this.selectedDifficulty = data.difficulty;
-                        this.selectedCategory = data.selectedCategory;
-                    }
-                    else {
-                        this.questions = data;
-                        this.$bvModal.hide("modalSelectGame");
-                    }
-                    this.showQuestions = true;
-                    this.countDownTimer();
-                    if(this.isLogged && !this.daily){
-                        this.saveGame();
-                    }
+                if(this.daily) {
+                    console.log(data.id);
+                    this.questions = JSON.parse(data.data);
+                    this.idGame = data.id;
+                    this.selectedDifficulty = data.difficulty;
+                    this.selectedCategory = data.selectedCategory;
+                }
+                else {
+                    this.questions = data;
+                    this.$bvModal.hide("modalSelectGame");
+                }
+                this.showQuestions = true;
+                this.countDownTimer();
+                if(this.isLogged && !this.daily){
+                    this.saveGame();
                 }
             });
         },
@@ -740,6 +887,7 @@ Vue.component('game' , {
         playDaily: function() {
           
             this.daily = true;
+
             this.createGame();
         },
         countDownTimer () {
@@ -754,6 +902,24 @@ Vue.component('game' , {
                 this.showResults = true;
             }
         },
+    },
+    beforeMount () {
+
+        if(this.isLogged) {
+            fetch("../trivial5/public/comprobardaily/"+ this.userLogged.idUser +"")
+            .then(res => res.json())
+            .then(data => {
+                console.log("json" + data);
+                if(data) {
+                    this.showButtonDaily = false;
+                }
+                else {
+                    this.showButtonDaily = true;
+                }
+                
+             });
+        }
+        
     },
     computed: {
         isLogged() {

@@ -20,6 +20,11 @@ class UserController extends Controller
         return json_encode($users);
     }
 
+    public function indexPerfil($id){
+        $users = User::select('name','email')->where('id','=',$id)->get();
+        return json_encode($users);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

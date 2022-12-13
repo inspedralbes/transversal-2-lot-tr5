@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
     
             $game->save();
               
-        })->dailyAt('00:00');
+        })->dailyAt('23:00');
     }
 
     /**
