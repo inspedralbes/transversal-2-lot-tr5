@@ -39,9 +39,68 @@ Vue.component('routes', {
     }
 });
 
+Vue.component('record', {
+    props: ['games'],
+    template: ` <div class="nav-container">
+                    <b-card>
+                        <b-card-text>
+                        Some quick example text to build on the card title and make up the bulk of the card's content.
+                        </b-card-text>
+
+                        <b-button href="#" variant="primary">Go somewhere</b-button>
+                    </b-card>
+                </div>`,
+    methods: {
+        
+    },
+    mounted() {
+        console.log(this.userLogged.idUser);
+        fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
+            .then(res => res.json())
+            .then(data => {
+                console.log("json" + data);
+                // this.record = data;
+        });
+    },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    },
+});
+
+Vue.component('challenges', {
+    template: ` <div class="nav-container">
+                    <b-card>
+                        <b-card-text>
+                            challenges
+                        </b-card-text>
+
+                        <b-button href="#" variant="primary">Go somewhere</b-button>
+                    </b-card>
+                </div>`,
+    methods: {
+    }
+});
+
 Vue.component('profile', {
     data: function(){
         return{
+            record: [],
             statisticsData:{
                 labels:["arts_and_literature","film_and_tv","food_and_drink","general_knowledge",
                 "geography","history","music","science","society_and_culture","sport_and_leisure"],
@@ -68,11 +127,31 @@ Vue.component('profile', {
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
                     <canvas id="userStatistics">estadistica</canvas>
+                    <b-tabs content-class="mt-3" align="center">
+                        <b-tab title="Record" active><record :games=this.record></record></b-tab>
+                        <b-tab title="Challenges"><challenges></challenges></b-tab>
+                    </b-tabs>
                 </div>`, 
     methods: {
         logoutUser: function() {
             userStore().logged = false;
-        }
+        },
+        // getRecord: function() {
+        //     fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         // this.record = data;
+        //     });
+        // },
+    },
+    mounted() {
+        fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
+            .then(res => res.json())
+            .then(data => {
+                console.log("json" + data);
+                // this.record = data;
+        });
     },
     computed: {
         isLogged() {

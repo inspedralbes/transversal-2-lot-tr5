@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PlayedGame;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class PlayedgameController extends Controller
 {
@@ -16,6 +17,17 @@ class PlayedgameController extends Controller
     public function index()
     {
         //
+    }
+
+    public function index_record($id)
+    {
+        // $record = DB::table('played_games')
+        //         ->where('idUser', '=', $id)
+        //         ->paginate(10);
+
+        $record = DB::table('played_games')->where('idUser', '=', $id)->get();
+
+        return json_encode($record);
     }
 
     /**
