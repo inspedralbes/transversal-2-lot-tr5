@@ -40,34 +40,9 @@ Vue.component('routes', {
 });
 
 Vue.component('profile', {
-    data: function(){
-        return{
-            statisticsData:{
-                labels:["arts_and_literature","film_and_tv","food_and_drink","general_knowledge",
-                "geography","history","music","science","society_and_culture","sport_and_leisure"],
-                datasets:[{
-                    data:[300,200,300,400,500,600,700,800,900,1000],
-                    backgroundColor:[
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)',
-                        'rgb(54, 100, 235)',
-                        'rgb(54, 16, 235)',
-                        'rgb(54, 12, 235)',
-                        'rgb(54, 262, 235)',
-                        'rgb(54, 362, 235)',
-                        'rgb(54, 462, 235)',
-                        'rgb(54, 562, 235)',
-                    ],
-                    hoverOffset:4
-                }]
-            }
-        }
-    },
     template: ` <div v-show="this.isLogged">
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
-                    <canvas id="userStatistics">estadistica</canvas>
                 </div>`, 
     methods: {
         logoutUser: function() {
@@ -92,16 +67,6 @@ Vue.component('profile', {
                 }
             }
         }
-    },
-    mounted:{
-        userStatistics:function(){
-            let userStatistics = new CharacterData("userStatistics",{
-                type:'doughnut',
-                data:statisticsData,
-                options:{}
-            })
-            router.push("/");
-        }
     }
 });
 
@@ -120,9 +85,9 @@ Vue.component('start', {
 Vue.component('join', {
     template: ` <div class="nav-container">
                     <br><br>
-                    <b-tabs content-class="mt-3" align="center">
-                        <b-tab title="Login" active><login></login></b-tab>
-                        <b-tab title="Register"><register></register></b-tab>
+                    <b-tabs pills cardcontent-class="mt-3" align="center">
+                        <b-tab title="Login" active active title-item-class="w-25 login__tab"><br><login></login></b-tab>
+                        <b-tab title="Register" title-item-class="w-25 register__tab"><br><register></register></b-tab>
                     </b-tabs>
                 </div>`,
 })
@@ -136,7 +101,6 @@ Vue.component('register', {
                 password: '',
                 confirmPassword: '',
             },
-            everythingValids: false,
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
         }
     },
@@ -145,17 +109,38 @@ Vue.component('register', {
                 <br>
                 <h1 style="color:white; text-align:center">Register</h1>
                 <br>
-                <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="person-fill"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
+                </b-input-group>
                 <p v-if = "form.username === ''" class="errorsFields">Username{{form.username}} null</p>
-                <br>
-                <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+                
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="envelope"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+                </b-input-group>
                 <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
                 <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
-                <br>
-                <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
+                
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="lock"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
+                </b-input-group>
                 <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
-                <br>
-                <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="shield-lock"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                </b-input-group>
+
                 <p v-if = "form.confirmPassword ===''" class="errorsFields">Paswword confirmation  null</p>
                 <p v-if = "form.confirmPassword !== form.password" class="errorsFields">Confirm password is not the same as password</p>
                 <br>
@@ -214,19 +199,31 @@ Vue.component('login', {
     },
     template:`
         <div>
-            <div>
-                <br>
-                <h1 style="color:white; text-align:center">Log in</h1>
-                <br>
-                <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
-                <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
-                <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
-                <br>
+            <br>
+            <h1 style="color:white; text-align:center">Log in</h1>
+            <br>
+            <b-input-group class="mb-2" size="sm">
+                <b-input-group-prepend is-text>
+                    <b-icon icon="envelope"></b-icon>
+                </b-input-group-prepend>
+                <b-form-input type="email" class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+            </b-input-group>
+
+            <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
+            <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
+            
+            <b-input-group class="mb-2" size="sm">
+                <b-input-group-prepend is-text>
+                    <b-icon icon="lock"></b-icon>
+                </b-input-group-prepend>
                 <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
-                <br>
-                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
-                <b-button @click="submitLogin">Join</b-button>
+            </b-input-group>
+            <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+
+            <div v-show="processing" style="text-align:center;color:white;">
+                <b-spinner small></b-spinner>
             </div>
+            <b-button @click="submitLogin">Join</b-button>
         </div>`,
     methods: {
         submitLogin: function(){
