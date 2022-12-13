@@ -108,15 +108,15 @@ Vue.component('send_friend_request', {
         return{
             email: "",
             mailValido: true,
-            sendRequestAccepted: null,
+            mssgIncorrecto: "",
+            sendRequestAccepted: 2,
             emailRegex: new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
         }
     },
     //hacer verificacion mail para agregar
     template: ` <div class="nav-container">
                     <br>
-                    <p v-if="sendRequestAccepted == 0" style="color:red;">Anyone uses this email</p>
-                    <p v-if="sendRequestAccepted == 1" style="color:green;">Friend request correctly sended</p>
+                    
                     <b-input-group class="mt-3">
                         <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
                         <b-input-group-append>
@@ -124,6 +124,8 @@ Vue.component('send_friend_request', {
                         </b-input-group-append>
                     </b-input-group>
                     <p v-if="!mailValido" style="color:red;">*Email address incorrect</p>
+                    <p v-if="sendRequestAccepted == 0" style="color:red;">*{{mssgIncorrecto}}</p>
+                    <p v-if="sendRequestAccepted == 1" style="color:green;">Friend request correctly sent</p>
                 </div>`,
     methods: {
         validarEmail: function() {
@@ -131,11 +133,9 @@ Vue.component('send_friend_request', {
             if(this.emailRegex.test(this.email)) {
                 this.mailValido = true;
                 this.sendRequest();
-                console.log("true")
             }
             else {
                 this.mailValido = false;
-                console.log("false")
             }
             
         },
@@ -152,8 +152,13 @@ Vue.component('send_friend_request', {
                 headers: {"Accept": "application/json"},
                 body: friendRequest
             })
+            .then(res => res.json())
             .then(data => {
-                this.sendRequestAccepted = data;
+                console.log(data.data);
+                this.sendRequestAccepted = data.data;
+                this.mssgIncorrecto = data.message;
+
+                console.log("accepted " +this.sendRequestAccepted );
             }); 
 
         }
