@@ -671,7 +671,7 @@ Vue.component('game' , {
                         <b-button v-if="isLogged && showButtonDaily" class="button__daily" @click="playDaily">DAILY</b-button>
                         <br>
                         <br>
-                        <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
+                        <b-button v-b-modal="'modalSelectGame'" class="button__play"><span>PLAY</span></b-button>
                     </div>
                     <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
                         <p>Difficulty</p>
