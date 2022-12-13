@@ -27,7 +27,6 @@ class GameController extends Controller
     public function index_jugarDaily($idUser){
         $diaActual = date('d/m/Y');
         $buscarDailyJugada;
-        //$dailyJugada = false;
 
         $dailyGame = DB::table('games')
             ->where('type', 'game_of_day')
@@ -42,7 +41,7 @@ class GameController extends Controller
         if($buscarDailyJugada =! NULL){
             return $dailyGame;
         }else{
-
+            return false;
         }
 
     }
