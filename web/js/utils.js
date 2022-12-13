@@ -107,22 +107,56 @@ Vue.component('send_friend_request', {
     data: function(){
         return{
             email: "",
-            emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
+            mailValido: true,
+            sendRequestAccepted: "",
+            emailRegex: new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
         }
     },
     //hacer verificacion mail para agregar
     template: ` <div class="nav-container">
                     <br>
+                    <p v-if="!sendRequestAccepted" style="color:red;">Anyone uses this email</p>
+                    <p v-if="sendRequestAccepted" style="color:green;">Friend request correctly sended</p>
                     <b-input-group class="mt-3">
                         <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
                         <b-input-group-append>
-                            <b-button variant="danger" @click="sendRequest">Send</b-button>
+                            <b-button variant="danger" @click="validarEmail">Send</b-button>
                         </b-input-group-append>
                     </b-input-group>
+                    <p v-if="!mailValido" style="color:red;">*Email address incorrect</p>
                 </div>`,
     methods: {
+        validarEmail: function() {
+
+            if(this.emailRegex.test(this.email)) {
+                this.mailValido = true;
+                this.sendRequest();
+                console.log("true")
+            }
+            else {
+                this.mailValido = false;
+                console.log("false")
+            }
+            
+        },
         sendRequest: function() {
+                        
             //hacer fetch al back enviandole el email para que se cree la peticion
+
+            friendRequest = new FormData();
+            friendRequest.append('id', userStore().loginInfo.idUser);
+            friendRequest.append('email', this.email);
+
+            fetch('../trivial5/public/api/sendfriend', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: friendRequest
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.sendRequestAccepted = data;
+            }); 
+
         }
     }
 });
