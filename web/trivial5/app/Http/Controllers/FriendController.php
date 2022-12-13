@@ -39,21 +39,37 @@ class FriendController extends Controller
     {
         $friend = new Friend();
         $sent = 0;
+        $message = "";
         //si existe email del usuario
         $requestedID = User::where('email',$request->email)->value('id');
         if(User::where('email',$request->email)->exists()){
-            if(!(Friend::where('idUserRequested',$request -> id)->exists()&&Friend::where('idUserRequest',$requestedID)->exists())){
+            error_log("entra if");
+            if(!(Friend::where('idUserRequested',$request->id)->exists()&&Friend::where('idUserRequest',$requestedID)->exists())){
                 if(!(Friend::where('idUserRequested',$requestedID)->exists()&&Friend::where('idUserRequest',$request -> id)->exists())){
                     $friend -> idUserRequested = $requestedID;
                     $friend -> idUserRequest = $request -> id;
                     $friend -> save();
                     $sent = 1;
+                    $message = "Request sent successfully";
+                }else{
+                    $message = "You have already sent the request to this email";
                 }
+            }else{
+                $message = "This user has already sent the request to you";
             }
+        }else{
+            $message = "Email not exists";
         }
 
+        // if(Friend::where('idUserRequested',$request -> id)->exists()&&Friend::where('idUserRequest',$requestedID)->exists()){
+        //     $message = "This user has already sent the request to you";
+        // }elseif(Friend::where('idUserRequested',$requestedID)->exists()&&Friend::where('idUserRequest',$request -> id)->exists()){
+        //     $message = "You have already sent the request to this email";
+        // }
+        
         $ret = new stdClass();
         $ret->data = $sent;
+        $ret->message = $message;
         return json_encode($ret);
     }
 
