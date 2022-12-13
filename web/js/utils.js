@@ -48,7 +48,7 @@ Vue.component('record', {
     template: ` <div class="nav-container">
                     <div v-for="(game, index) in gamesPlayed">
                         <b-card class="mb-3">
-                            <b-card-text class="fa fa-trophy"  style="font-size:48px; float:left" ></b-card-text>
+                            <b-card-text class="fa fa-trophy"  style="font-size:56px; float:left" ></b-card-text>
                             <b-card-text>
                                 {{game.idUser}}
                             </b-card-text>
@@ -104,11 +104,17 @@ Vue.component('challenges', {
 });
 
 Vue.component('send_friend_request', {
-
+    data: function(){
+        return{
+            email: "",
+            emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
+        }
+    },
+    //hacer verificacion mail para agregar
     template: ` <div class="nav-container">
                     <br>
                     <b-input-group class="mt-3">
-                        <b-form-input placeholder="Write your friend Email"></b-form-input>
+                        <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
                         <b-input-group-append>
                             <b-button variant="danger" @click="sendRequest">Send</b-button>
                         </b-input-group-append>
@@ -116,7 +122,7 @@ Vue.component('send_friend_request', {
                 </div>`,
     methods: {
         sendRequest: function() {
-
+            //hacer fetch al back enviandole el email para que se cree la peticion
         }
     }
 });
