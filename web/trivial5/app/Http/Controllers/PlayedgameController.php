@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PlayedGame;
 use App\Models\User;
+use App\Models\Game;
 use Illuminate\Support\Facades\DB;
 
 class PlayedgameController extends Controller
@@ -22,9 +23,10 @@ class PlayedgameController extends Controller
     public function index_record($id)
     {
         $record = DB::table('played_games')->where('idUser','=',$id)->limit(10)->get();
-        
+        //devolver tambien por id la categoria i dificultat del juego
+        // $recordDetailed = Game::select('category','difficulty')->where('id','=',PlayedGame::value('idGame'));
+
         return json_encode($record);
-        // return $record;
     }
 
     /**
