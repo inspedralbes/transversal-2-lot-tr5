@@ -40,26 +40,32 @@ Vue.component('routes', {
 });
 
 Vue.component('record', {
-    props: ['games'],
+    data: function(){
+        return{
+            gamesPlayed: [],
+        }
+    },
     template: ` <div class="nav-container">
-                    <b-card>
-                        <b-card-text>
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </b-card-text>
-
-                        <b-button href="#" variant="primary">Go somewhere</b-button>
-                    </b-card>
+                    <div v-for="(game, index) in gamesPlayed">
+                        <b-card class="mb-3">
+                            <b-card-text class="fa fa-trophy"  style="font-size:56px; float:left" ></b-card-text>
+                            <b-card-text>
+                                {{game.idUser}}
+                            </b-card-text>
+                        </b-card>
+                    
+                    </div>
                 </div>`,
     methods: {
         
     },
     mounted() {
-        console.log(this.userLogged.idUser);
-        fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
+        console.log("hola id " + this.userLogged.idUser);
+        fetch("../trivial5/public/record/"+ this.userLogged.idUser +"")
             .then(res => res.json())
             .then(data => {
                 console.log("json" + data);
-                // this.record = data;
+                this.gamesPlayed = data;
         });
     },
     computed: {
@@ -97,6 +103,76 @@ Vue.component('challenges', {
     }
 });
 
+Vue.component('send_friend_request', {
+    data: function(){
+        return{
+            email: "",
+            mailValido: true,
+            sendRequestAccepted: "",
+            emailRegex: new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
+        }
+    },
+    //hacer verificacion mail para agregar
+    template: ` <div class="nav-container">
+                    <br>
+                    <p v-if="!sendRequestAccepted" style="color:red;">Anyone uses this email</p>
+                    <p v-if="sendRequestAccepted" style="color:green;">Friend request correctly sended</p>
+                    <b-input-group class="mt-3">
+                        <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
+                        <b-input-group-append>
+                            <b-button variant="danger" @click="validarEmail">Send</b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+                    <p v-if="!mailValido" style="color:red;">*Email address incorrect</p>
+                </div>`,
+    methods: {
+        validarEmail: function() {
+
+            if(this.emailRegex.test(this.email)) {
+                this.mailValido = true;
+                this.sendRequest();
+                console.log("true")
+            }
+            else {
+                this.mailValido = false;
+                console.log("false")
+            }
+            
+        },
+        sendRequest: function() {
+                        
+            //hacer fetch al back enviandole el email para que se cree la peticion
+
+            friendRequest = new FormData();
+            friendRequest.append('id', userStore().loginInfo.idUser);
+            friendRequest.append('email', this.email);
+
+            fetch('../trivial5/public/api/sendfriend', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: friendRequest
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.sendRequestAccepted = data;
+            }); 
+
+        }
+    }
+});
+
+Vue.component('friends', {
+    template: ` <div class="nav-container">
+                    <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
+                        <b-tab title="List" active></b-tab>
+                        <b-tab title="Send"><send_friend_request></send_friend_request></b-tab>
+                        <b-tab title="Pending"></b-tab>
+                    </b-tabs>
+                </div>`,
+    methods: {
+    }
+});
+
 Vue.component('profile', {
     data: function(){
         return{
@@ -127,31 +203,16 @@ Vue.component('profile', {
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
                     <canvas id="userStatistics">estadistica</canvas>
-                    <b-tabs content-class="mt-3" align="center">
+                    <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="Record" active><record :games=this.record></record></b-tab>
                         <b-tab title="Challenges"><challenges></challenges></b-tab>
+                        <b-tab title="Friends"><friends></friends></b-tab>
                     </b-tabs>
                 </div>`, 
     methods: {
         logoutUser: function() {
             userStore().logged = false;
         },
-        // getRecord: function() {
-        //     fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log(data);
-        //         // this.record = data;
-        //     });
-        // },
-    },
-    mounted() {
-        fetch("../trivial5/public/record/{"+ this.userLogged.idUser +"}")
-            .then(res => res.json())
-            .then(data => {
-                console.log("json" + data);
-                // this.record = data;
-        });
     },
     computed: {
         isLogged() {

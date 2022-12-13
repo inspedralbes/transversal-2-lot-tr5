@@ -21,13 +21,10 @@ class PlayedgameController extends Controller
 
     public function index_record($id)
     {
-        // $record = DB::table('played_games')
-        //         ->where('idUser', '=', $id)
-        //         ->paginate(10);
-
-        $record = DB::table('played_games')->where('idUser', '=', $id)->get();
-
+        $record = DB::table('played_games')->where('idUser','=',$id)->limit(10)->get();
+        
         return json_encode($record);
+        // return $record;
     }
 
     /**
