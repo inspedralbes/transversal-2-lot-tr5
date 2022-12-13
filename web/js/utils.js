@@ -647,7 +647,7 @@ Vue.component('game' , {
     data: function () {
         return {
             showButtonPlay: true,
-            showButtonDaily: true,
+            showButtonDaily: false,
             questions: [],
             daily: false,
             idGame: null,
@@ -663,7 +663,7 @@ Vue.component('game' , {
 
     template: ` <div class="container_button_play" >
                     <div v-if="showButtonPlay" class="div_button_play">
-                        <b-button v-if="isLogged" class="button__daily" @click="playDaily">DAILY</b-button>
+                        <b-button v-if="isLogged && showButtonDaily" class="button__daily" @click="playDaily">DAILY</b-button>
                         <br>
                         <br>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
@@ -770,34 +770,27 @@ Vue.component('game' , {
                 }
             }
             else {
-                rutaFetch = "../trivial5/public/daily/{"+ this.userLogged.idUser +"}";
+                rutaFetch = "../trivial5/public/daily";
             }
             console.log(rutaFetch);
             fetch(rutaFetch)
             .then(res => res.json())
             .then(data => {
-                if(data != null && data != false){
-                    if(this.daily) {
-                        console.log(data.id);
-                        this.questions = JSON.parse(data.data);
-                        this.idGame = data.id;
-                        this.selectedDifficulty = data.difficulty;
-                        this.selectedCategory = data.selectedCategory;
-                    }
-                    else {
-                        this.questions = data;
-                        this.$bvModal.hide("modalSelectGame");
-                    }
-                    this.showQuestions = true;
-                    this.countDownTimer();
-                    if(this.isLogged && !this.daily){
-                        this.saveGame();
-                    }
-                }else{
-                    this.showButtonDaily = false;
+                if(this.daily) {
+                    console.log(data.id);
+                    this.questions = JSON.parse(data.data);
+                    this.idGame = data.id;
+                    this.selectedDifficulty = data.difficulty;
+                    this.selectedCategory = data.selectedCategory;
                 }
                 else {
-                    this.showButtonDaily = false;
+                    this.questions = data;
+                    this.$bvModal.hide("modalSelectGame");
+                }
+                this.showQuestions = true;
+                this.countDownTimer();
+                if(this.isLogged && !this.daily){
+                    this.saveGame();
                 }
             });
         },
@@ -887,6 +880,7 @@ Vue.component('game' , {
         playDaily: function() {
           
             this.daily = true;
+
             this.createGame();
         },
         countDownTimer () {
@@ -901,6 +895,24 @@ Vue.component('game' , {
                 this.showResults = true;
             }
         },
+    },
+    beforeMount () {
+
+        if(this.isLogged) {
+            fetch("../trivial5/public/comprobardaily/"+ this.userLogged.idUser +"")
+            .then(res => res.json())
+            .then(data => {
+                console.log("json" + data);
+                if(data) {
+                    this.showButtonDaily = false;
+                }
+                else {
+                    this.showButtonDaily = true;
+                }
+                
+             });
+        }
+        
     },
     computed: {
         isLogged() {

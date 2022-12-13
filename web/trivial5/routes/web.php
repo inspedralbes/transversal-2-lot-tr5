@@ -13,9 +13,11 @@ Route::get('demo/{id}', [GameController::class, 'index_jugar'] );
 
 Route::get('ranking', [UserController::class, 'index'] );
 
+Route::get('comprobardaily/{id}', [GameController::class, 'comprobarDaily'] );
+
 Route::get('record/{idUser}', [PlayedgameController::class, 'index_record'] );
 
-Route::get('daily/{id}', [GameController::class, 'index_jugarDaily'] );
+Route::get('daily', [GameController::class, 'index_jugarDaily'] );
 
 Route::post('sendfriend', [FriendController::class, 'store']);
 Route::post('savegame', [GameController::class, 'store']);

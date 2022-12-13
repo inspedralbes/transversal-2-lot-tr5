@@ -54,14 +54,7 @@ class GameController extends Controller
             ->where('idGame', '=', $dailyGame->id)
             ->exists();
 
-            // if($buscarDailyJugada){
-            //     return json_encode($existe);
-            // }else{
-            //     $existe = false;
-            //     return json_encode($existe);
-            // }
-            return json_encode($buscarDailyJugada);
-            
+        return json_encode($buscarDailyJugada); 
             
     }
     
