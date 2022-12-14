@@ -22,5 +22,6 @@ Route::get('daily', [GameController::class, 'index_jugarDaily'] );
 Route::post('sendfriend', [FriendController::class, 'store']);
 Route::post('savegame', [GameController::class, 'store']);
 Route::post('saveresult', [PlayedgameController::class, 'store']);
+Route::post('updatescore', [PlayedgameController::class, 'update']);
 
 require __DIR__.'/auth.php';
