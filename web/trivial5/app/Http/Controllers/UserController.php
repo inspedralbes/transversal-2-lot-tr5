@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use \stdClass;
 
 class UserController extends Controller
 {
@@ -44,14 +45,23 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $users = new User();
-        $users -> id = $request -> id;
-        $users -> name = $request -> name;
-        $users -> email = $request -> email;
-        $users -> password = $request -> password;
-        $users -> total_score = $request -> total_score;
+        $message = "";
+        if(User::where('email',$request->email)->exists()){
+            $message = "This account has already been registered";
+        }else{
+            $users -> id = $request -> id;
+            $users -> name = $request -> name;
+            $users -> email = $request -> email;
+            $users -> password = $request -> password;
+            $users -> total_score = $request -> total_score;
 
-        $users -> save();
+            $users -> save();
+            $message = "Account resgistered succcessfully";
+        }
 
+        $ret = new stdClass();
+        $ret->message = $message;
+        return json_encode($ret);
     }
 
     /**
