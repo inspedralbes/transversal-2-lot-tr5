@@ -7,8 +7,6 @@ use App\Models\Friend;
 use App\Models\User;
 use \stdClass;
 
-use Illuminate\Support\Facades\DB;
-
 class FriendController extends Controller
 {
     /**
@@ -16,49 +14,11 @@ class FriendController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        $acceptedRequests = DB::table('friends')
-                    ->distinct()
-                    ->leftJoin('users', function($join) 
-                    {
-                        $join->on('friends.idUserRequested', '=', 'users.id');
-                    })
-            ->where('idUserRequest', '=', $id)
-            ->where('status', '=', 'accepted')
-            ->get();
-
-        if(count($acceptedRequests) > 0) {
-            return json_encode($acceptedRequests);
-        } 
-        else {
-            return json_encode('sin amigos');
-        }
+        //
     }
 
-
-    public function index_pending($id) {
-        
-        $pendingRequests = DB::table('friends')
-                    ->distinct()
-                    ->leftJoin('users', function($join) 
-                    {
-                        $join->on('friends.idUserRequested', '=', 'users.id');
-                    })
-            ->where('idUserRequest', '=', $id)
-            ->where('status', '=', 'pending')
-            ->get();
-
-        if(count($pendingRequests) > 0) {
-            return json_encode($pendingRequests);
-        } 
-        else {
-            return json_encode('sense peticions');
-        }
-        
-
-    }
-    
     /**
      * Show the form for creating a new resource.
      *
@@ -142,17 +102,9 @@ class FriendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        
-        $changeRequestStatus = DB::table('friends')
-            ->where('idUserRequest', '=', $request -> idUserRequest)
-            ->where('idUserRequested', '=', $request -> idUserRequested)
-            ->update(['status' => $request -> status]);
-
-        
-        return $changeRequestStatus;
-        
+        //
     }
 
     /**
