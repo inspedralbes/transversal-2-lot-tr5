@@ -17,7 +17,11 @@ class PlayedgameController extends Controller
      */
     public function index()
     {
-        //
+        $diaActual = date('d/m/Y');
+
+        $todayGames = DB::table('played_games')
+            ->where('date', '=', $diaActual)
+            ->get();
     }
 
     public function index_record($id)
@@ -60,6 +64,24 @@ class PlayedgameController extends Controller
         $user -> save();
 
         return $playedGames -> idGame;
+
+        penalizarJugador($idUser, $idGame);
+    }
+
+    public function update(Request $request){
+
+        $updateScore = DB::table('played_games')
+            ->where('idUser', '=', $request -> idUser)
+            ->where('idGame', '=', $request -> idGame)
+            ->update(['score' => $request -> score]);
+
+        $user = User::find($request -> idUser);
+        $user -> total_score +=  $request -> score;
+        $user -> total_score +=  300;
+
+        $user -> save();
+
+        return $user -> id;
     }
 
     /**
@@ -80,18 +102,6 @@ class PlayedgameController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
     {
         //
     }

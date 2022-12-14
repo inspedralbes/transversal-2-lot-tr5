@@ -103,20 +103,143 @@ Vue.component('challenges', {
     }
 });
 
+Vue.component('list_friends', {
+    data: function(){
+        return{
+            friends: [],
+            withFriends: false,
+        }
+    },
+    template:`  <div class="nav-container">
+                    <div v-if="withFriends" v-for="(friend, index) in friends">
+                        <b-card class="mb-3">
+                            <b-card-text>
+                                {{friend.name}}
+                            </b-card-text>
+                        </b-card>
+                    </div>
+                    <div v-if="!withFriends">
+                        <b-card class="mb-3">
+                            <b-card-text>
+                                Without friends
+                            </b-card-text>
+                        </b-card>
+                    </div>
+                </div>`,
+    methods: {
+
+    },
+    beforeMount() {
+        fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if(data != "sin amigos") {
+                this.friends = data;
+                this.withFriends = true;
+            }
+            else {
+                this.withFriends = false;
+            }
+        }); 
+    }
+
+});
+
+Vue.component('pending_requests', {
+    data: function(){
+        return{
+            requests: [],
+            withRequests: false,
+        }
+    },
+    template:`  <div class="nav-container">
+                    <div v-if="withRequests" v-for="(request, index) in requests">
+                        <b-card class="mb-3">
+                            <b-card-text>
+                                {{request.name}} 
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeStatusRequest('rejected', request.idUserRequested)"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeStatusRequest('accepted', request.idUserRequested)"></i>
+                            </b-card-text>
+                            
+                        </b-card>
+                    </div>
+                    <div v-if="!withRequests">
+                        <b-card class="mb-3">
+                            <b-card-text>
+                                Without friend request pending
+                            </b-card-text>
+                        </b-card>
+                    </div>
+                </div>`,
+    methods: {
+
+        changeStatusRequest: function (status, idUserRequested) {
+
+            console.log(status + " " + idUserRequested);
+
+            changeRequestStatus = new FormData();
+            changeRequestStatus.append('idUserRequest', userStore().loginInfo.idUser);
+            changeRequestStatus.append('idUserRequested', idUserRequested);
+            changeRequestStatus.append('status', status);
+
+            fetch('../trivial5/public/changerequeststatus', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: changeRequestStatus
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                let borrar = 0;
+                
+                for (let i = 0; i < this.requests.length; i++) {
+                    console.log(this.requests[i].idUserRequested + " idUserRequested");
+                    if(this.requests[i].idUserRequested == idUserRequested) {
+                        borrar = i;
+                    }
+                }
+                console.log("antes de " + borrar + " " + this.requests);
+                this.requests.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.requests);
+            }); 
+
+        },
+    },
+    beforeMount() {
+        fetch('../trivial5/public/pendingrequest/' + userStore().loginInfo.idUser)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if(data != "sense peticions") {
+                this.requests = data;
+                console.log("hay peticiones")
+                this.withRequests = true;
+            }
+            else {
+                console.log("no hay peticiones")
+                this.withRequests = false;
+            }
+            
+        }); 
+    }
+
+});
+
 Vue.component('send_friend_request', {
     data: function(){
         return{
             email: "",
             mailValido: true,
-            sendRequestAccepted: null,
+            mssgIncorrecto: "",
+            sendRequestAccepted: 2,
             emailRegex: new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
         }
     },
     //hacer verificacion mail para agregar
     template: ` <div class="nav-container">
                     <br>
-                    <p v-if="sendRequestAccepted == 0" style="color:red;">Anyone uses this email</p>
-                    <p v-if="sendRequestAccepted == 1" style="color:green;">Friend request correctly sended</p>
+                    
                     <b-input-group class="mt-3">
                         <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
                         <b-input-group-append>
@@ -124,6 +247,8 @@ Vue.component('send_friend_request', {
                         </b-input-group-append>
                     </b-input-group>
                     <p v-if="!mailValido" style="color:red;">*Email address incorrect</p>
+                    <p v-if="sendRequestAccepted == 0" style="color:red;">*{{mssgIncorrecto}}</p>
+                    <p v-if="sendRequestAccepted == 1" style="color:green;">Friend request correctly sent</p>
                 </div>`,
     methods: {
         validarEmail: function() {
@@ -131,11 +256,9 @@ Vue.component('send_friend_request', {
             if(this.emailRegex.test(this.email)) {
                 this.mailValido = true;
                 this.sendRequest();
-                console.log("true")
             }
             else {
                 this.mailValido = false;
-                console.log("false")
             }
             
         },
@@ -152,8 +275,13 @@ Vue.component('send_friend_request', {
                 headers: {"Accept": "application/json"},
                 body: friendRequest
             })
+            .then(res => res.json())
             .then(data => {
-                this.sendRequestAccepted = data;
+                console.log(data.data);
+                this.sendRequestAccepted = data.data;
+                this.mssgIncorrecto = data.message;
+
+                console.log("accepted " +this.sendRequestAccepted );
             }); 
 
         }
@@ -163,9 +291,9 @@ Vue.component('send_friend_request', {
 Vue.component('friends', {
     template: ` <div class="nav-container">
                     <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
-                        <b-tab title="List" active></b-tab>
+                        <b-tab title="List" active><list_friends></list_friends></b-tab>
                         <b-tab title="Send"><send_friend_request></send_friend_request></b-tab>
-                        <b-tab title="Pending"></b-tab>
+                        <b-tab title="Pending"><pending_requests></pending_requests></b-tab>
                     </b-tabs>
                 </div>`,
     methods: {
@@ -212,7 +340,14 @@ Vue.component('profile', {
         }
     },
     mounted:{
-       
+        userStatistics:function(){
+            let userStatistics = new CharacterData("userStatistics",{
+                type:'doughnut',
+                data:statisticsData,
+                options:{}
+            })
+            router.push("/");
+        }
     }
 });
 
@@ -231,9 +366,9 @@ Vue.component('start', {
 Vue.component('join', {
     template: ` <div class="nav-container">
                     <br><br>
-                    <b-tabs content-class="mt-3" align="center">
-                        <b-tab title="Login" active><login></login></b-tab>
-                        <b-tab title="Register"><register></register></b-tab>
+                    <b-tabs pills cardcontent-class="mt-3" align="center">
+                        <b-tab title="Login" active active title-item-class="w-25 login__tab"><br><login></login></b-tab>
+                        <b-tab title="Register" title-item-class="w-25 register__tab"><br><register></register></b-tab>
                     </b-tabs>
                 </div>`,
 })
@@ -247,6 +382,8 @@ Vue.component('register', {
                 password: '',
                 confirmPassword: '',
             },
+            registerCorrect: false,
+            everythingValids: false,
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
         }
     },
@@ -255,21 +392,44 @@ Vue.component('register', {
                 <br>
                 <h1 style="color:white; text-align:center">Register</h1>
                 <br>
-                <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="person-fill"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
+                </b-input-group>
                 <p v-if = "form.username === ''" class="errorsFields">Username{{form.username}} null</p>
-                <br>
-                <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+                
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="envelope"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+                </b-input-group>
                 <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
                 <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
-                <br>
-                <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
+                
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="lock"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
+                </b-input-group>
                 <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
-                <br>
-                <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="shield-lock"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                </b-input-group>
+
                 <p v-if = "form.confirmPassword ===''" class="errorsFields">Paswword confirmation  null</p>
                 <p v-if = "form.confirmPassword !== form.password" class="errorsFields">Confirm password is not the same as password</p>
                 <br>
                 <b-button @click="submitRegister">Register</b-button>
+
+                <p v-if="this.registerCorrect" style="color:white;">Thank you for your registration {{this.form.username}}</p>
             </div>`
             ,
     methods: {
@@ -286,7 +446,20 @@ Vue.component('register', {
                 method: 'POST',
                 headers: {"Accept": "application/json"},
                 body: userRegister
-            }); 
+            })
+            .then(function(response) {
+                console.log(response.status);
+                if(response.status == 201) {
+                    console.log("funciona");
+                    this.registerCorrect = true;
+                    console.log(this.registerCorrect);
+                }
+                else {
+                    console.log("no funciona");
+
+                }
+            });
+            
         },
     },
     computed: {
@@ -323,22 +496,27 @@ Vue.component('login', {
     },
     template:`
         <div>
-            <div>
-                <br>
-                <h1 style="color:white; text-align:center">Log in</h1>
-                <br>
-                <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
-                <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
-                <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
-                <br>
+            <br>
+            <h1 style="color:white; text-align:center">Log in</h1>
+            <br>
+            <b-input-group class="mb-2" size="sm">
+                <b-input-group-prepend is-text>
+                    <b-icon icon="envelope"></b-icon>
+                </b-input-group-prepend>
+                <b-form-input type="email" class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+            </b-input-group>
+
+            <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
+            <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
+            
+            <b-input-group class="mb-2" size="sm">
+                <b-input-group-prepend is-text>
+                    <b-icon icon="lock"></b-icon>
+                </b-input-group-prepend>
                 <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
-                <br>
-                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
-                <div v-show="processing" style="text-align:center">
-                    <b-spinner small></b-spinner>
-                </div>
-                <b-button @click="submitLogin">Join</b-button>
-            </div>
+            </b-input-group>
+            <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+            <b-button @click="submitLogin">Join</b-button>
         </div>`,
     methods: {
         submitLogin: function(){
@@ -637,7 +815,13 @@ Vue.component('game' , {
                         <b-button v-if="isLogged && showButtonDaily" class="button__daily" @click="playDaily">DAILY</b-button>
                         <br>
                         <br>
-                        <b-button v-b-modal="'modalSelectGame'" class="button__play">PLAY</b-button>
+                        <b-button v-b-modal="'modalSelectGame'" class="button__play"><span>PLAY</span></b-button>
+                        <br>
+                        <br>
+                        <div v-if="!isLogged" style="color:white;">
+                            <p>If you want to see the correct answer LOG IN</p>
+                            <p>If you want to play the daily game LOG IN</p>
+                        </div>
                     </div>
                     <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
                         <p>Difficulty</p>
@@ -723,7 +907,7 @@ Vue.component('game' , {
                         
                     </div>
                     <div v-if="showResults">
-                        <results :results=userAnswers :timerRestante=timer :difficulty=selectedDifficulty @saveData="saveData"></results>
+                        <results :results=userAnswers :timerRestante=timer :difficulty=selectedDifficulty @saveData="updateScore"></results>
                     </div>
                 </div>`,
     methods: {
@@ -807,8 +991,24 @@ Vue.component('game' , {
                 return !this.userAnswers[index];
             }
         },
+        updateScore: function(points) {
+            console.log("update score " + points);
+
+            let dataResults = new FormData();
+            dataResults.append('idGame', this.idGame);
+            dataResults.append('idUser', this.userLogged.idUser);
+            dataResults.append('score', points);
+            fetch('../trivial5/public/updatescore', {
+                method: 'POST',
+                body: dataResults
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            });
+        },
         saveData: function(points) {
-            console.log("guardarPuntuacion");
+            console.log("guardarPuntuacion " + points);
             let dateNow = new Date();
             let day = dateNow.getDate();
             let month = dateNow.getMonth()+1;
@@ -819,7 +1019,6 @@ Vue.component('game' , {
             // dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('idUser', this.userLogged.idUser);
             dataResults.append('score', points);
-            dataResults.append('date', dateNow);
             dataResults.append('date', date);
             fetch('../trivial5/public/saveresult', {
                 method: 'POST',
@@ -827,7 +1026,7 @@ Vue.component('game' , {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                console.log("return " + data);
             });
         },
         saveGame: function() {
@@ -846,6 +1045,7 @@ Vue.component('game' , {
             .then(data => {
                 console.log(data);
                 this.idGame = data;
+                this.saveData(-300);
             });
         },
         playDaily: function() {
