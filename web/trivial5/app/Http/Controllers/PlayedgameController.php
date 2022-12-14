@@ -60,6 +60,12 @@ class PlayedgameController extends Controller
         $user -> save();
 
         return $playedGames -> idGame;
+
+        penalizarJugador($idUser, $idGame);
+    }
+
+    public function penalizarJugador($idUser, $idGame){
+        
     }
 
     /**
