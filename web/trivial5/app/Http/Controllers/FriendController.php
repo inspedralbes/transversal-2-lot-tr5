@@ -17,6 +17,42 @@ class FriendController extends Controller
     public function index()
     {
         //
+        $friendsRequested = DB::table('friends')
+                    ->distinct()
+                    ->leftJoin('users', function($join) 
+                    {
+                        $join->on('friends.idUserRequested', '=', 'users.id');
+                    })
+            ->where('idUserRequest', '=', $id)
+            ->where('status', '=', 'accepted')
+            ->get();
+
+        $friendsRequest = DB::table('friends')
+            ->distinct()
+            ->leftJoin('users', function($join) 
+            {
+                $join->on('friends.idUserRequest', '=', 'users.id');
+            })
+            ->where('idUserRequested', '=', $id)
+            ->where('status', '=', 'accepted')
+            ->get();
+
+        $allFriends = [];
+        
+        for ($i=0; $i < count($friendsRequest); $i++) { 
+            array_push($allFriends, $friendsRequest[$i]);
+        }
+
+        for ($i=0; $i < count($friendsRequested); $i++) { 
+            array_push($allFriends, $friendsRequested[$i]);
+        }
+        
+        if(count($allFriends) > 0) {
+            return json_encode($allFriends);
+        } 
+        else {
+            return json_encode('sin amigos');
+        }
     }
 
     /**
