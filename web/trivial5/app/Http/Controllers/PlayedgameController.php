@@ -17,7 +17,11 @@ class PlayedgameController extends Controller
      */
     public function index()
     {
-        //
+        $diaActual = date('d/m/Y');
+
+        $todayGames = DB::table('played_games')
+            ->where('date', '=', $diaActual)
+            ->get();
     }
 
     public function index_record($id)
