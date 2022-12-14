@@ -142,9 +142,17 @@ class FriendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        
+        $changeRequestStatus = DB::table('friends')
+            ->where('idUserRequest', '=', $request -> idUserRequest)
+            ->where('idUserRequested', '=', $request -> idUserRequested)
+            ->update(['status' => $request -> status]);
+
+        
+        return $changeRequestStatus;
+        
     }
 
     /**
