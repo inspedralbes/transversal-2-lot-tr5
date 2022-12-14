@@ -28,15 +28,15 @@ class FriendController extends Controller
             ->where('status', '=', 'accepted')
             ->get();
 
-        if(count($pendingRequests) > 0) {
-            return json_encode($pendingRequests);
+        if(count($acceptedRequests) > 0) {
+            return json_encode($acceptedRequests);
         } 
         else {
-            return json_encode('sense peticions');
+            return json_encode('sin amigos');
         }
     }
 
-    
+
     public function index_pending($id) {
         
         $pendingRequests = DB::table('friends')
