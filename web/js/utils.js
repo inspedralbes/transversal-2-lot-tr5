@@ -102,21 +102,125 @@ Vue.component('challenges', {
     methods: {
     }
 });
-Vue.component('pending_requests', {
+
+Vue.component('list_friends', {
     data: function(){
         return{
+            friends: [],
+            withFriends: false,
         }
     },
-    template:`  <div>
+    template:`  <div class="nav-container">
+                    <div v-if="withFriends" v-for="(friend, index) in friends">
+                        <b-card class="mb-3">
+                            <b-card-text>
+                                {{friend.name}}
+                            </b-card-text>
+                        </b-card>
+                    </div>
+                    <div v-if="!withFriends">
+                        <b-card class="mb-3">
+                            <b-card-text>
+                                Without friends
+                            </b-card-text>
+                        </b-card>
+                    </div>
                 </div>`,
     methods: {
 
+    },
+    beforeMount() {
+        fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if(data != "sin amigos") {
+                this.friends = data;
+                this.withFriends = true;
+            }
+            else {
+                this.withFriends = false;
+            }
+        }); 
+    }
+
+});
+
+Vue.component('pending_requests', {
+    data: function(){
+        return{
+            requests: [],
+            withRequests: false,
+        }
+    },
+    template:`  <div class="nav-container">
+                    <div v-if="withRequests" v-for="(request, index) in requests">
+                        <b-card class="mb-3">
+                            <b-card-text>
+                                {{request.name}} 
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeStatusRequest('rejected', request.idUserRequested)"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeStatusRequest('accepted', request.idUserRequested)"></i>
+                            </b-card-text>
+                            
+                        </b-card>
+                    </div>
+                    <div v-if="!withRequests">
+                        <b-card class="mb-3">
+                            <b-card-text>
+                                Without friend request pending
+                            </b-card-text>
+                        </b-card>
+                    </div>
+                </div>`,
+    methods: {
+
+        changeStatusRequest: function (status, idUserRequested) {
+
+            console.log(status + " " + idUserRequested);
+
+            changeRequestStatus = new FormData();
+            changeRequestStatus.append('idUserRequest', userStore().loginInfo.idUser);
+            changeRequestStatus.append('idUserRequested', idUserRequested);
+            changeRequestStatus.append('status', status);
+
+            fetch('../trivial5/public/changerequeststatus', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: changeRequestStatus
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                let borrar = 0;
+                
+                for (let i = 0; i < this.requests.length; i++) {
+                    console.log(this.requests[i].idUserRequested + " idUserRequested");
+                    if(this.requests[i].idUserRequested == idUserRequested) {
+                        borrar = i;
+                    }
+                }
+                console.log("antes de " + borrar + " " + this.requests);
+                this.requests.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.requests);
+            }); 
+
+        },
     },
     beforeMount() {
         fetch('../trivial5/public/pendingrequest/' + userStore().loginInfo.idUser)
         .then(res => res.json())
         .then(data => {
             console.log(data);
+            if(data != "sense peticions") {
+                this.requests = data;
+                console.log("hay peticiones")
+                this.withRequests = true;
+            }
+            else {
+                console.log("no hay peticiones")
+                this.withRequests = false;
+            }
+            
         }); 
     }
 
@@ -187,7 +291,7 @@ Vue.component('send_friend_request', {
 Vue.component('friends', {
     template: ` <div class="nav-container">
                     <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
-                        <b-tab title="List" active></b-tab>
+                        <b-tab title="List" active><list_friends></list_friends></b-tab>
                         <b-tab title="Send"><send_friend_request></send_friend_request></b-tab>
                         <b-tab title="Pending"><pending_requests></pending_requests></b-tab>
                     </b-tabs>
@@ -278,6 +382,7 @@ Vue.component('register', {
                 password: '',
                 confirmPassword: '',
             },
+            registerCorrect: false,
             everythingValids: false,
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
         }
@@ -323,6 +428,8 @@ Vue.component('register', {
                 <p v-if = "form.confirmPassword !== form.password" class="errorsFields">Confirm password is not the same as password</p>
                 <br>
                 <b-button @click="submitRegister">Register</b-button>
+
+                <p v-if="this.registerCorrect" style="color:white;">Thank you for your registration {{this.form.username}}</p>
             </div>`
             ,
     methods: {
@@ -339,7 +446,20 @@ Vue.component('register', {
                 method: 'POST',
                 headers: {"Accept": "application/json"},
                 body: userRegister
-            }); 
+            })
+            .then(function(response) {
+                console.log(response.status);
+                if(response.status == 201) {
+                    console.log("funciona");
+                    this.registerCorrect = true;
+                    console.log(this.registerCorrect);
+                }
+                else {
+                    console.log("no funciona");
+
+                }
+            });
+            
         },
     },
     computed: {
@@ -696,6 +816,12 @@ Vue.component('game' , {
                         <br>
                         <br>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play"><span>PLAY</span></b-button>
+                        <br>
+                        <br>
+                        <div v-if="!isLogged" style="color:white;">
+                            <p>If you want to see the correct answer LOG IN</p>
+                            <p>If you want to play the daily game LOG IN</p>
+                        </div>
                     </div>
                     <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
                         <p>Difficulty</p>

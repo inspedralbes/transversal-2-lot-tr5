@@ -23,10 +23,14 @@ Route::get('daily', [GameController::class, 'index_jugarDaily'] );
 
 Route::get('pendingrequest/{id}', [FriendController::class, 'index_pending'] );
 
+Route::get('listfriends/{id}', [FriendController::class, 'index'] );
+
 
 //POST
 
 Route::post('sendfriend', [FriendController::class, 'store']);
+
+Route::post('changerequeststatus', [FriendController::class, 'update']);
 
 Route::post('savegame', [GameController::class, 'store']);
 
