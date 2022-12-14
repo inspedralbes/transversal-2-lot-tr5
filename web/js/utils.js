@@ -384,6 +384,7 @@ Vue.component('register', {
             },
             registerCorrect: false,
             everythingValids: false,
+            fetchReceivedMessage:"",
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
         }
     },
@@ -447,17 +448,22 @@ Vue.component('register', {
                 headers: {"Accept": "application/json"},
                 body: userRegister
             })
-            .then(function(response) {
-                console.log(response.status);
-                if(response.status == 201) {
-                    console.log("funciona");
-                    this.registerCorrect = true;
-                    console.log(this.registerCorrect);
-                }
-                else {
-                    console.log("no funciona");
+            // .then(function(response) {
+            //     console.log(response.status);
+            //     if(response.status == 201) {
+            //         console.log("funciona");
+            //         this.registerCorrect = true;
+            //         console.log(this.registerCorrect);
+            //     }
+            //     else {
+            //         console.log("no funciona");
 
-                }
+            //     }
+            // })
+            .then(res=>res.json())
+            .then(data=>{
+                this.fetchReceivedMessage = data.message;
+                console.log(this.fetchReceivedMessage);
             });
             
         },
