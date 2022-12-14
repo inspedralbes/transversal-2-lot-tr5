@@ -16,10 +16,27 @@ class FriendController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $acceptedRequests = DB::table('friends')
+                    ->distinct()
+                    ->leftJoin('users', function($join) 
+                    {
+                        $join->on('friends.idUserRequested', '=', 'users.id');
+                    })
+            ->where('idUserRequest', '=', $id)
+            ->where('status', '=', 'accepted')
+            ->get();
+
+        if(count($pendingRequests) > 0) {
+            return json_encode($pendingRequests);
+        } 
+        else {
+            return json_encode('sense peticions');
+        }
     }
+
+    
     public function index_pending($id) {
         
         $pendingRequests = DB::table('friends')
