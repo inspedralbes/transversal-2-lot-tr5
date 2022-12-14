@@ -65,15 +65,19 @@ class PlayedgameController extends Controller
     }
 
     public function update(Request $request){
+
         $updateScore = DB::table('played_games')
             ->where('idUser', '=', $request -> idUser)
             ->where('idGame', '=', $request -> idGame)
-            ->first();
+            ->update(['score' => $request -> score]);
 
-        $updateScore -> score = $request -> score + 300;
-        $updateScore -> save();
+        $user = User::find($request -> idUser);
+        $user -> total_score +=  $request -> score;
+        $user -> total_score +=  300;
 
-        return $updateScore -> idUser;
+        $user -> save();
+
+        return $user -> id;
     }
 
     /**
