@@ -21,7 +21,7 @@ class UserController extends Controller
     }
 
     public function indexPerfil($id){
-        $users = User::select('name','email')->where('id','=',$id)->get();
+        $users = User::select('name','email','total_score')->where('id','=',$id)->get();
         return json_encode($users);
     }
 
