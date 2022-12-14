@@ -42,12 +42,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store2(Request $request)
     {
         $users = new User();
-        $message = "";
+        
         if(User::where('email',$request->email)->exists()){
-            $message = "This account has already been registered";
+            $data = 0;
         }else{
             $users -> id = $request -> id;
             $users -> name = $request -> name;
@@ -56,11 +56,11 @@ class UserController extends Controller
             $users -> total_score = $request -> total_score;
 
             $users -> save();
-            $message = "Account resgistered succcessfully";
+            $data = 1;
         }
 
         $ret = new stdClass();
-        $ret->message = $message;
+        $ret->data = $data;
         return json_encode($ret);
     }
 

@@ -340,14 +340,14 @@ Vue.component('profile', {
         }
     },
     mounted() {
-        // userStatistics:function(){
-            //     //     let userStatistics = new CharacterData("userStatistics",{
-            //     //         type:'doughnut',
-            //     //         data:statisticsData,
-            //     //         options:{}
-            //     //     })
-            //     //     router.push("/");
-            //     // }
+       
+        // let userStatistics = new CharacterData("userStatistics",{
+        //     type:'doughnut',
+        //     data:statisticsData,
+        //     options:{}
+        // })
+        // router.push("/");
+                
     },
 });
 
@@ -430,7 +430,8 @@ Vue.component('register', {
                 <br>
                 <b-button @click="submitRegister">Register</b-button>
 
-                <p v-if="this.registerCorrect" style="color:white;">Thank you for your registration {{this.form.username}}</p>
+                <p v-if="this.registerCorrect === true"  style="color:green;">Thank you for your registration {{this.form.username}}</p>
+                <p v-if="this.registerCorrect === false" style="color:red;">{{this.fetchReceivedMessage}}</p>
             </div>`
             ,
     methods: {
@@ -448,21 +449,20 @@ Vue.component('register', {
                 headers: {"Accept": "application/json"},
                 body: userRegister
             })
-            // .then(function(response) {
-            //     console.log(response.status);
-            //     if(response.status == 201) {
-            //         console.log("funciona");
-            //         this.registerCorrect = true;
-            //         console.log(this.registerCorrect);
-            //     }
-            //     else {
-            //         console.log("no funciona");
-
-            //     }
-            // })
             .then(res=>res.json())
             .then(data=>{
-                this.fetchReceivedMessage = data.message;
+                console.log(data.value);
+                console.log(data.message);
+                if(data.value == 1) {
+                    this.fetchReceivedMessage = "";
+                    this.registerCorrect = true;
+                }
+                else {
+                    console.log("no deberia")
+                    this.registerCorrect = false;
+                    this.fetchReceivedMessage = "*" + data.message;
+                }
+                console.log(data.value);
                 console.log(this.fetchReceivedMessage);
             });
             
@@ -498,6 +498,7 @@ Vue.component('login', {
             },
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
             processing:false,
+            credentialsIncorrect: false,
         }
     },
     template:`
@@ -523,6 +524,8 @@ Vue.component('login', {
             </b-input-group>
             <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
             <b-button @click="submitLogin">Join</b-button>
+            <p v-if="credentialsIncorrect" style="color:red;">Credentials incorrect</p>
+
         </div>`,
     methods: {
         submitLogin: function(){
@@ -547,7 +550,10 @@ Vue.component('login', {
                         userStore().loginInfo.nombre = data.username;
                         console.log("valid");
                         router.push("/")
-                    }  
+                    }
+                    else {
+                        this.credentialsIncorrect = true;
+                    }
                 }); 
                 console.log("fetch funciona");
             }else {
@@ -574,8 +580,19 @@ Vue.component('login', {
     }
 });
 
-
 Vue.component('ranking', {
+
+    template: ` <div class="nav-container">
+                    <br><br>
+                    <b-tabs pills cardcontent-class="mt-3" align="center">
+                        <b-tab title="Global" active active title-item-class="w-25 login__tab"><br><global></global></b-tab>
+                        <b-tab title="Daily" title-item-class="w-25 register__tab"><br>Daily</b-tab>
+                    </b-tabs>
+                </div>`,
+
+});
+
+Vue.component('global', {
     data: function () {
         return {
             players: [],
@@ -583,7 +600,7 @@ Vue.component('ranking', {
     },
     mounted() {
 
-        fetch('../trivial5/public/ranking')
+        fetch('../trivial5/public/rankingglobal')
         .then(res => res.json())
         .then(data => {
             console.log("length " + data.length);
