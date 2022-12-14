@@ -121,7 +121,7 @@ Vue.component('list_friends', {
                     <div v-if="!withFriends">
                         <b-card class="mb-3">
                             <b-card-text>
-                                Without friends
+                                No friends
                             </b-card-text>
                         </b-card>
                     </div>
@@ -167,7 +167,7 @@ Vue.component('pending_requests', {
                     <div v-if="!withRequests">
                         <b-card class="mb-3">
                             <b-card-text>
-                                Without friend request pending
+                                No pending requests
                             </b-card-text>
                         </b-card>
                     </div>
