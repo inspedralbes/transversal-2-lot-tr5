@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProfileController extends Controller
 {
+
+    public function index(Request $request){
+        $profileData = DB::table('users')
+            ->where('idUser', '=', $request -> idUser)
+            ->get();
+
+        return $profileData;
+    }
+
+    
     /**
      * Display the user's profile form.
      *
