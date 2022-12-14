@@ -339,16 +339,16 @@ Vue.component('profile', {
             }
         }
     },
-    mounted:{
-        userStatistics:function(){
-            let userStatistics = new CharacterData("userStatistics",{
-                type:'doughnut',
-                data:statisticsData,
-                options:{}
-            })
-            router.push("/");
-        }
-    }
+    mounted() {
+        // userStatistics:function(){
+            //     //     let userStatistics = new CharacterData("userStatistics",{
+            //     //         type:'doughnut',
+            //     //         data:statisticsData,
+            //     //         options:{}
+            //     //     })
+            //     //     router.push("/");
+            //     // }
+    },
 });
 
 Vue.component('daily', {
