@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 Route::get('demo/{id}', [GameController::class, 'index_jugar'] );
 
-Route::get('ranking', [UserController::class, 'index'] );
+Route::get('rankingglobal', [UserController::class, 'index'] );
 
 Route::get('comprobardaily/{id}', [GameController::class, 'comprobarDaily'] );
 
