@@ -13,7 +13,10 @@ class ChallengeController extends Controller
      */
     public function index()
     {
-        //
+
+        $completedChallenges = DB::table('played_games')
+            ->where('status', '=', 'accepted')
+            ->get();
     }
 
     /**
@@ -34,7 +37,17 @@ class ChallengeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $challenge = new Challenge();
+        $challenge -> idChallenger = $request -> idChallenger;
+        $challenge -> idChallenged = $request -> idChallenged;
+        $challenge -> idGame = $request -> idGame;
+        $challenge -> idWinner = $request -> idWinner;
+        $challenge -> date = $request -> date;
+        $challenge -> status = $request -> status;
+
+        $challenge -> save();
+
+        return $challenge;
     }
 
     /**
