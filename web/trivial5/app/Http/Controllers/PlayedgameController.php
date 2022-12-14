@@ -64,8 +64,16 @@ class PlayedgameController extends Controller
         penalizarJugador($idUser, $idGame);
     }
 
-    public function penalizarJugador($idUser, $idGame){
-        
+    public function update(Request $request){
+        $updateScore = DB::table('played_games')
+            ->where('idUser', '=', $request -> idUser)
+            ->where('idGame', '=', $request -> idGame)
+            ->first();
+
+        $updateScore -> score = $request -> score + 300;
+        $updateScore -> save();
+
+        return $updateScore -> idUser;
     }
 
     /**
@@ -86,18 +94,6 @@ class PlayedgameController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
     {
         //
     }
