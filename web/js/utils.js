@@ -102,6 +102,21 @@ Vue.component('challenges', {
     methods: {
     }
 });
+Vue.component('pending_requests', {
+    data: function(){
+        return{
+        }
+    },
+    template:`  <div>
+                </div>`,
+    methods: {
+
+    },
+    beforeMount() {
+
+    }
+
+});
 
 Vue.component('send_friend_request', {
     data: function(){
@@ -170,7 +185,7 @@ Vue.component('friends', {
                     <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="List" active></b-tab>
                         <b-tab title="Send"><send_friend_request></send_friend_request></b-tab>
-                        <b-tab title="Pending"></b-tab>
+                        <b-tab title="Pending"><pending_requests></pending_requests></b-tab>
                     </b-tabs>
                 </div>`,
     methods: {
@@ -762,7 +777,7 @@ Vue.component('game' , {
                         
                     </div>
                     <div v-if="showResults">
-                        <results :results=userAnswers :timerRestante=timer :difficulty=selectedDifficulty @saveData="saveData"></results>
+                        <results :results=userAnswers :timerRestante=timer :difficulty=selectedDifficulty @saveData="updateScore"></results>
                     </div>
                 </div>`,
     methods: {
@@ -846,8 +861,24 @@ Vue.component('game' , {
                 return !this.userAnswers[index];
             }
         },
+        updateScore: function(points) {
+            console.log("update score " + points);
+
+            let dataResults = new FormData();
+            dataResults.append('idGame', this.idGame);
+            dataResults.append('idUser', this.userLogged.idUser);
+            dataResults.append('score', points);
+            fetch('../trivial5/public/updatescore', {
+                method: 'POST',
+                body: dataResults
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            });
+        },
         saveData: function(points) {
-            console.log("guardarPuntuacion");
+            console.log("guardarPuntuacion " + points);
             let dateNow = new Date();
             let day = dateNow.getDate();
             let month = dateNow.getMonth()+1;
@@ -858,7 +889,6 @@ Vue.component('game' , {
             // dataResults.append('idUser', userLogged.loginInfo.idUser);
             dataResults.append('idUser', this.userLogged.idUser);
             dataResults.append('score', points);
-            dataResults.append('date', dateNow);
             dataResults.append('date', date);
             fetch('../trivial5/public/saveresult', {
                 method: 'POST',
@@ -866,7 +896,7 @@ Vue.component('game' , {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                console.log("return " + data);
             });
         },
         saveGame: function() {
@@ -885,6 +915,7 @@ Vue.component('game' , {
             .then(data => {
                 console.log(data);
                 this.idGame = data;
+                this.saveData(-300);
             });
         },
         playDaily: function() {
