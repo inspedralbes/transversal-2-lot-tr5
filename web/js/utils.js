@@ -186,6 +186,11 @@ Vue.component('profile', {
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
                     <canvas id="userStatistics">estadistica</canvas>
+                    <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
+                        <b-tab title="Record" active><record :games=this.record></record></b-tab>
+                        <b-tab title="Challenges"><challenges></challenges></b-tab>
+                        <b-tab title="Friends"><friends></friends></b-tab>
+                    </b-tabs>
                 </div>`, 
     methods: {
         logoutUser: function() {
