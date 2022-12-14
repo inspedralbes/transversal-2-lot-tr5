@@ -113,7 +113,11 @@ Vue.component('pending_requests', {
 
     },
     beforeMount() {
-
+        fetch('../trivial5/public/pendingrequest/' + userStore().loginInfo.idUser)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        }); 
     }
 
 });

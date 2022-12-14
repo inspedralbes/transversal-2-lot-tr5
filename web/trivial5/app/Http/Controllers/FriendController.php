@@ -7,6 +7,8 @@ use App\Models\Friend;
 use App\Models\User;
 use \stdClass;
 
+use Illuminate\Support\Facades\DB;
+
 class FriendController extends Controller
 {
     /**
@@ -18,7 +20,28 @@ class FriendController extends Controller
     {
         //
     }
+    public function index_pending($id) {
+        
+        $pendingRequests = DB::table('friends')
+                    ->distinct()
+                    ->leftJoin('users', function($join) 
+                    {
+                        $join->on('friends.idUserRequested', '=', 'users.id');
+                    })
+            ->where('idUserRequest', '=', $id)
+            ->where('status', '=', 'pending')
+            ->get();
 
+        if(count($pendingRequests) > 0) {
+            return json_encode($pendingRequests);
+        } 
+        else {
+            return json_encode('sense peticions');
+        }
+        
+
+    }
+    
     /**
      * Show the form for creating a new resource.
      *
