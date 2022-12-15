@@ -115,7 +115,7 @@ Vue.component('list_friends', {
                         <b-card class="mb-3">
                             <b-card-text>
                                 <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
-                                <b-button variant="danger" @click="deleteFriend">Delete</b-button>
+                                <b-button variant="danger" @click="deleteFriend(friend.idUserRequested, friend.idUserRequest)">Delete</b-button>
                             </b-card-text>
                         </b-card>
                     </div>
@@ -127,7 +127,33 @@ Vue.component('list_friends', {
                         </b-card>
                     </div>
                 </div>`,
-    // methods: {
+    methods: {
+        deleteFriend: function(idUserRequested, idUserRequest) {
+            deleteF = new FormData();
+            deleteF.append('idUserRequest', idUserRequest);
+            deleteF.append('idUserRequested', idUserRequested);
+
+            fetch('../trivial5/public/deletefriend', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: deleteF
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                let borrar = 0;
+                for (let i = 0; i < this.friends.length; i++) {
+                    console.log(this.friends[i].idUserRequested + " idUserRequested");
+                    if(this.friends[i].idUserRequested == idUserRequested) {
+                        borrar = i;
+                    }
+                }
+                console.log("antes de " + borrar + " " + this.friends);
+                this.friends.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.friends);
+            }); 
+            
+        }
         // showUser(userId){
         //     fetch('../trivial5/public/indexPerfil/'+this.friend.id)
         //     .then(res=>res.json())
@@ -136,7 +162,7 @@ Vue.component('list_friends', {
                 
         //     })
         // }
-    // },
+    },
     beforeMount() {
         fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser,{
             headers:{"Accept":"application/json"},
