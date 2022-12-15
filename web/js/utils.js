@@ -216,13 +216,11 @@ Vue.component('pending_requests', {
         },
     },
     beforeMount() {
-        fetch('../trivial5/public/pendingrequest/' + userStore().loginInfo.idUser,{
-            headers:{"Accept":"application/json"},
-        })
+        fetch('../trivial5/public/pendingrequest/' + userStore().loginInfo.idUser)
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            if(data != "sense peticions") {
+            if(data != "no existing requests") {
                 this.requests = data;
                 console.log("hay peticiones")
                 this.withRequests = true;
@@ -536,7 +534,7 @@ Vue.component('login', {
             </b-input-group>
             <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
             <b-button @click="submitLogin">Join</b-button>
-            <p v-if="credentialsIncorrect" style="color:red;">Credentials incorrect</p>
+            <p v-if="credentialsIncorrect" style="color:red;">*Credentials incorrect</p>
 
         </div>`,
     methods: {
@@ -597,14 +595,51 @@ Vue.component('ranking', {
     template: ` <div class="nav-container">
                     <br><br>
                     <b-tabs pills cardcontent-class="mt-3" align="center">
-                        <b-tab title="Global" active active title-item-class="w-25 login__tab"><br><global></global></b-tab>
-                        <b-tab title="Daily" title-item-class="w-25 register__tab"><br>Daily</b-tab>
+                        <b-tab title="Global" active active title-item-class="w-25 login__tab"><globalranking></globalranking></b-tab>
+                        <b-tab title="Daily" title-item-class="w-25 register__tab"><dailyranking></dailyranking></b-tab>
                     </b-tabs>
                 </div>`,
 
 });
 
-Vue.component('global', {
+Vue.component('dailyranking', {
+    data: function () {
+        return {
+            players: [],
+        }
+    },
+    mounted() {
+
+        fetch('../trivial5/public/dailyranking')
+        .then(res => res.json())
+        .then(data => {
+            console.log("length " + data.length);
+            for (let i = 0; i < data.length; i++) {
+                console.log("Ranking " + data[i].name);
+                this.players.push(data[i]);
+                
+            }
+            console.log(JSON.stringify(this.players));
+        });
+    },
+    template: ` <div class="ranking__list">
+                    <br>
+                    <b-row class="mb-3">
+                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
+                        <b-col cols="2" md="3" class="p-3 ranking__text">Rank</b-col>
+                        <b-col cols="5" md="3" class="p-3 ranking__text">Name</b-col>
+                        <b-col cols="4" md="3" class="p-3 ranking__text">Score</b-col>
+                    </b-row>
+                    <b-row class="mb-3" v-for="(player, index) in this.players">
+                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
+                        <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
+                        <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
+                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.total_score}}</b-col>
+                    </b-row>
+                </div>`,
+});
+
+Vue.component('globalranking', {
     data: function () {
         return {
             players: [],
@@ -649,12 +684,13 @@ Vue.component('results' , {
             timer: 0
         }
     },
-    props: ['results', 'timerRestante', 'difficulty'],
+    props: ['results', 'timerRestante', 'difficulty', 'daily'],
     template: ` <div class="game__result">
                     <br>
                     <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
                     <h1 v-show="this.isLogged">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
                     <b-button to="/start">Lobby</b-button>
+                    <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
                 </div>`,
     methods: {
         calcularPuntuacion: function() {
@@ -942,7 +978,7 @@ Vue.component('game' , {
                         
                     </div>
                     <div v-if="showResults">
-                        <results :results=userAnswers :timerRestante=timer :difficulty=selectedDifficulty @saveData="updateScore"></results>
+                        <results :results=userAnswers :timerRestante=timer :daily=daily :difficulty=selectedDifficulty @saveData="updateScore" @playagain="playagain"></results>
                     </div>
                 </div>`,
     methods: {
@@ -983,6 +1019,18 @@ Vue.component('game' , {
                     this.saveGame();
                 }
             });
+        },
+        playagain: function() {
+            this.$bvModal.show("modalSelectGame");
+            this.idGame = null;
+            this.selectedDifficulty = "";
+            this.selectedCategory = "";
+            this.showQuestions = null;
+            this.showResults = null;
+            this.actualQuestion = 0;
+            this.timer = 150;
+            this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
+            
         },
         incrementQuestion: function() {
             if(this.actualQuestion < 9) {

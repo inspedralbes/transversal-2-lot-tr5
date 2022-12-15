@@ -33,6 +33,22 @@ class PlayedgameController extends Controller
         return json_encode($record);
     }
 
+    public function  index_dailyranking()
+    {
+
+        $diaActual = date('d/m/Y');
+
+        $dailyGame = DB::table('games')
+            ->where('type', 'game_of_day')
+            ->where('date', '=', $diaActual)
+            ->first();
+            
+        $users = User::all();
+        // $users->sortBy('total_score',SORT_REGULAR,true);
+        $users = User::orderByRaw('CONVERT(total_score,SIGNED)desc')->get();
+        return json_encode($users);
+    } 
+
     /**
      * Show the form for creating a new resource.
      *

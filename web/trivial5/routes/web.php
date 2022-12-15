@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 
 Route::get('demo/{id}', [GameController::class, 'index_jugar'] );
 
+Route::get('dailyranking', [PlayedgameController::class, 'index_dailyranking'] );
+
 Route::get('rankingglobal', [UserController::class, 'index'] );
 
 Route::get('comprobardaily/{id}', [GameController::class, 'comprobarDaily'] );
