@@ -13,7 +13,7 @@ class ProfileController extends Controller
     public function index(Request $request){
         $profileData = DB::table('users')
             ->where('idUser', '=', $request -> idUser)
-            ->get();
+            ->first();
 
         return $profileData;
     }

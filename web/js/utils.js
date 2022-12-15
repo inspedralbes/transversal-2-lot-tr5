@@ -50,7 +50,12 @@ Vue.component('record', {
                         <b-card class="mb-3">
                             <b-card-text class="fa fa-trophy"  style="font-size:56px; float:left" ></b-card-text>
                             <b-card-text>
-                                {{game.idUser}}
+                                Game: {{index+1}}
+                                Difficulty: {{game.difficulty}}
+                                Category: {{game.category}}
+                                Score: {{game.score}}
+                                <br>
+                                Date: {{game.created_at}}
                             </b-card-text>
                         </b-card>
                     
@@ -64,7 +69,7 @@ Vue.component('record', {
         fetch("../trivial5/public/record/"+ this.userLogged.idUser +"")
             .then(res => res.json())
             .then(data => {
-                console.log("json" + data);
+                console.log("json" + data[0]);
                 this.gamesPlayed = data;
         });
     },
@@ -338,12 +343,25 @@ Vue.component('friends', {
 Vue.component('profile', {
     data: function(){
         return{
+            infoUser: "",
         }
     },
     template: ` <div v-show="this.isLogged">
-                    <p style="color:white">Estas logueado</p>
-                    <b-button @click="logoutUser">Logout</b-button>
-                    <b-button @click="editProfile">Edit my profile</b-button>
+                    <br>
+                    <b-container class="bv-example-row">
+                        <b-row>
+                            <b-col cols="9"><b-button @click="editProfile">Edit my profile</b-button></b-col>
+                            <b-col cols="3"><b-button @click="logoutUser">Logout</b-button></b-col>
+                        </b-row>
+                    </b-container>
+                    <br>
+                    <div style="text-align: center;">
+                        <p style="color:white">{{infoUser.name}}</p>
+                        <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
+                        <br>
+                        <p style="color:white">Total Score -> {{infoUser.total_score}}</p>
+                    </div>
+                    <br>
                     <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="Record" active><record :games=this.record></record></b-tab>
                         <b-tab title="Challenges"><challenges></challenges></b-tab>
@@ -376,6 +394,14 @@ Vue.component('profile', {
         }
     },
     mounted() {
+
+        fetch('../trivial5/public/indexPerfil/' + userStore().loginInfo.idUser)
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data[0]);
+            this.infoUser = data[0];
+        });
+
        
         // let userStatistics = new CharacterData("userStatistics",{
         //     type:'doughnut',
