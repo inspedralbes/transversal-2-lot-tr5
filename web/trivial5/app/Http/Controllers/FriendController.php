@@ -27,6 +27,16 @@ class FriendController extends Controller
             ->where('status', '=', 'accepted')
             ->get();
 
+        // $friendsRequested = DB::table('users')
+        //     ->distinct()
+        //     ->leftJoin('friends', function($join) 
+        //     {
+        //         $join->on('users.id', '=', 'friends.idUserRequested');
+        //     })
+        //     ->where('idUserRequest', '=', $id)
+        //     ->where('status', '=', 'accepted')
+        //     ->get();
+
         $friendsRequest = DB::table('friends')
             ->distinct()
             ->leftJoin('users', function($join) 
@@ -36,6 +46,16 @@ class FriendController extends Controller
             ->where('idUserRequested', '=', $id)
             ->where('status', '=', 'accepted')
             ->get();
+
+        // $friendsRequest = DB::table('users')
+        //     ->distinct()
+        //     ->leftJoin('friends', function($join) 
+        //     {
+        //         $join->on('users.id', '=', 'friends.idUserRequest');
+        //     })
+        //     ->where('idUserRequested', '=', $id)
+        //     ->where('status', '=', 'accepted')
+        //     ->get();
 
         $allFriends = [];
         
@@ -59,7 +79,7 @@ class FriendController extends Controller
         //get the list of people who sent you friend request   
         //SELECT users.name FROM `users` LEFT JOIN `friends` ON users.id = friends.idUserRequest 
         //WHERE friends.idUserRequested =13 AND friends.status = 'pending';
-             
+
         $listOfRequestsreceived = DB::table('users')
         ->distinct()
         ->leftJoin('friends', function($join) 
@@ -70,13 +90,13 @@ class FriendController extends Controller
         ->where('status', '=', 'pending')
         ->get();
 
-        // $listOfRequestsreceived = User::where(Friend::where('idUserRequested', '=', $idUser)
-        //     ->where('status', '=', 'pending'))->get();
         $requestedPeople = [];
         
         for ($i=0; $i < count($listOfRequestsreceived); $i++) { 
             array_push($requestedPeople, $listOfRequestsreceived[$i]);
         }
+        
+        $ret = new stdClass();
         
         if(count($requestedPeople) > 0) {
             return json_encode($requestedPeople);
@@ -158,15 +178,15 @@ class FriendController extends Controller
     {
         $message="";
         //if the request is rejected, the record will be deleted from the database.
-        if($request->status == "rejected"){
-            $recordToDelete = Friend::where('idUserRequest','=', $request->idUserRequest )
-                    ->where('idUserRequested','=',$request->idUserRequested);
-            $recordToDelete->delete();
+        if(strcmp($request->status,'rejected')==0){
+            Friend::where('idUserRequest','=', $request->idUserRequest )
+                    ->where('idUserRequested','=',$request->idUserRequested)
+                    ->delete();
             $message = "the friend request has been rejected";
-        }else if($request->status="accepted"){
-            $recordToUpdate = Friend::where('idUserRequest','=',$request->idUserRequest)
-                    ->where('idUserRequested','=',$request->idUserRequested);
-            $recordToUpdate -> status = "accepted";
+        }else{
+            Friend::where('idUserRequest','=',$request->idUserRequest)
+                    ->where('idUserRequested','=',$request->idUserRequested)
+                    ->update(['status'=>'accepted']);
             $message = "the friend request has been accepted";
         }
 

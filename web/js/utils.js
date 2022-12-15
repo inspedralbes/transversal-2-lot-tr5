@@ -111,7 +111,7 @@ Vue.component('list_friends', {
         }
     },
     template:`  <div class="nav-container">
-                    <div v-if="withFriends" v-for="(friend, index) in friends">
+                    <div v-if="withFriends === true" v-for="(friend, index) in friends">
                         <b-card class="mb-3">
                             <b-card-text>
                                 <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
@@ -119,7 +119,7 @@ Vue.component('list_friends', {
                             </b-card-text>
                         </b-card>
                     </div>
-                    <div v-if="!withFriends">
+                    <div v-if="withFriends === false">
                         <b-card class="mb-3">
                             <b-card-text>
                                 No friends
@@ -145,10 +145,10 @@ Vue.component('list_friends', {
         .then(data => {
             console.log(data);
             if(data != "sin amigos") {
+                console.log("tiene amigos");
                 this.friends = data;
                 this.withFriends = true;
-            }
-            else {
+            }else{
                 this.withFriends = false;
                 console.log(this.withFriends);
             }
@@ -187,7 +187,7 @@ Vue.component('pending_requests', {
         changeStatusRequest: function (status, idUserRequested) {
 
             console.log(status + " " + idUserRequested);
-
+            console.log("entra fetch");
             changeRequestStatus = new FormData();
             changeRequestStatus.append('idUserRequest', userStore().loginInfo.idUser);
             changeRequestStatus.append('idUserRequested', idUserRequested);
@@ -201,7 +201,6 @@ Vue.component('pending_requests', {
             .then(res => res.json())
             .then(data => {
                 console.log(data);
-                console.log(data.message);
                 let borrar = 0;
                 for (let i = 0; i < this.requests.length; i++) {
                     console.log(this.requests[i].idUserRequested + " idUserRequested");
