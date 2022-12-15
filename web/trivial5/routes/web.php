@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 
 Route::get('demo/{id}', [GameController::class, 'index_jugar'] );
 
+Route::get('dailyranking', [PlayedgameController::class, 'index_dailyranking'] );
+
 Route::get('rankingglobal', [UserController::class, 'index'] );
 
 Route::get('comprobardaily/{id}', [GameController::class, 'comprobarDaily'] );
@@ -24,6 +26,8 @@ Route::get('daily', [GameController::class, 'index_jugarDaily'] );
 Route::get('pendingrequest/{id}', [FriendController::class, 'index_pending'] );
 
 Route::get('listfriends/{id}', [FriendController::class, 'index'] );
+
+Route::get('indexPerfil/{id}', [UserController::class, 'indexPerfil']);
 
 
 //POST
@@ -37,5 +41,8 @@ Route::post('savegame', [GameController::class, 'store']);
 Route::post('saveresult', [PlayedgameController::class, 'store']);
 
 Route::post('updatescore', [PlayedgameController::class, 'update']);
+
+Route::post('deleteFriend', [FriendController::class, 'deleteFriend']);
+
 
 require __DIR__.'/auth.php';

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Friend;
 use App\Models\User;
 use \stdClass;
+use Illuminate\Support\Facades\DB;
 
 class FriendController extends Controller
 {
@@ -14,18 +15,27 @@ class FriendController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
         $friendsRequested = DB::table('friends')
-                    ->distinct()
-                    ->leftJoin('users', function($join) 
-                    {
-                        $join->on('friends.idUserRequested', '=', 'users.id');
-                    })
+            ->distinct()
+            ->leftJoin('users', function($join) 
+            {
+                $join->on('friends.idUserRequested', '=', 'users.id');
+            })
             ->where('idUserRequest', '=', $id)
             ->where('status', '=', 'accepted')
             ->get();
+
+        // $friendsRequested = DB::table('users')
+        //     ->distinct()
+        //     ->leftJoin('friends', function($join) 
+        //     {
+        //         $join->on('users.id', '=', 'friends.idUserRequested');
+        //     })
+        //     ->where('idUserRequest', '=', $id)
+        //     ->where('status', '=', 'accepted')
+        //     ->get();
 
         $friendsRequest = DB::table('friends')
             ->distinct()
@@ -36,6 +46,16 @@ class FriendController extends Controller
             ->where('idUserRequested', '=', $id)
             ->where('status', '=', 'accepted')
             ->get();
+
+        // $friendsRequest = DB::table('users')
+        //     ->distinct()
+        //     ->leftJoin('friends', function($join) 
+        //     {
+        //         $join->on('users.id', '=', 'friends.idUserRequest');
+        //     })
+        //     ->where('idUserRequested', '=', $id)
+        //     ->where('status', '=', 'accepted')
+        //     ->get();
 
         $allFriends = [];
         
@@ -55,14 +75,35 @@ class FriendController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function index_pending($idUser){
+        //get the list of people who sent you friend request   
+        //SELECT users.name FROM `users` LEFT JOIN `friends` ON users.id = friends.idUserRequest 
+        //WHERE friends.idUserRequested =13 AND friends.status = 'pending';
+
+        $listOfRequestsreceived = DB::table('users')
+        ->distinct()
+        ->leftJoin('friends', function($join) 
+        {
+            $join->on('users.id', '=', 'friends.idUserRequest');
+        })
+        ->where('idUserRequested', '=', $idUser)
+        ->where('status', '=', 'pending')
+        ->get();
+
+        $requestedPeople = [];
+        
+        for ($i=0; $i < count($listOfRequestsreceived); $i++) { 
+            array_push($requestedPeople, $listOfRequestsreceived[$i]);
+        }
+        
+        $ret = new stdClass();
+        
+        if(count($requestedPeople) > 0) {
+            return json_encode($requestedPeople);
+        } 
+        else {
+            return json_encode('no existing requests');
+        }
     }
 
     /**
@@ -109,15 +150,10 @@ class FriendController extends Controller
         return json_encode($ret);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function deleteFriend(Request $request){
+        $friend = Friend::find($request->id);
+        $friend->delete();
+        return 1;
     }
 
     /**
@@ -138,9 +174,25 @@ class FriendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $message="";
+        //if the request is rejected, the record will be deleted from the database.
+        if(strcmp($request->status,'rejected')==0){
+            Friend::where('idUserRequest','=', $request->idUserRequest )
+                    ->where('idUserRequested','=',$request->idUserRequested)
+                    ->delete();
+            $message = "the friend request has been rejected";
+        }else{
+            Friend::where('idUserRequest','=',$request->idUserRequest)
+                    ->where('idUserRequested','=',$request->idUserRequested)
+                    ->update(['status'=>'accepted']);
+            $message = "the friend request has been accepted";
+        }
+
+        $ret = new stdClass();
+        $ret->message=$message;
+        return json_encode($ret);
     }
 
     /**

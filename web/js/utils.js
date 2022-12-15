@@ -111,14 +111,15 @@ Vue.component('list_friends', {
         }
     },
     template:`  <div class="nav-container">
-                    <div v-if="withFriends" v-for="(friend, index) in friends">
+                    <div v-if="withFriends === true" v-for="(friend, index) in friends">
                         <b-card class="mb-3">
                             <b-card-text>
-                                {{friend.name}}
+                                <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
+                                <b-button variant="danger" @click="deleteFriend">Delete</b-button>
                             </b-card-text>
                         </b-card>
                     </div>
-                    <div v-if="!withFriends">
+                    <div v-if="withFriends === false">
                         <b-card class="mb-3">
                             <b-card-text>
                                 No friends
@@ -126,20 +127,30 @@ Vue.component('list_friends', {
                         </b-card>
                     </div>
                 </div>`,
-    methods: {
-
-    },
+    // methods: {
+        // showUser(userId){
+        //     fetch('../trivial5/public/indexPerfil/'+this.friend.id)
+        //     .then(res=>res.json())
+        //     .then(data=>{
+        //         console.log(data);
+                
+        //     })
+        // }
+    // },
     beforeMount() {
-        fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser)
+        fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser,{
+            headers:{"Accept":"application/json"},
+        })
         .then(res => res.json())
         .then(data => {
             console.log(data);
             if(data != "sin amigos") {
+                console.log("tiene amigos");
                 this.friends = data;
                 this.withFriends = true;
-            }
-            else {
+            }else{
                 this.withFriends = false;
+                console.log(this.withFriends);
             }
         }); 
     }
@@ -173,11 +184,10 @@ Vue.component('pending_requests', {
                     </div>
                 </div>`,
     methods: {
-
         changeStatusRequest: function (status, idUserRequested) {
 
             console.log(status + " " + idUserRequested);
-
+            console.log("entra fetch");
             changeRequestStatus = new FormData();
             changeRequestStatus.append('idUserRequest', userStore().loginInfo.idUser);
             changeRequestStatus.append('idUserRequested', idUserRequested);
@@ -192,7 +202,6 @@ Vue.component('pending_requests', {
             .then(data => {
                 console.log(data);
                 let borrar = 0;
-                
                 for (let i = 0; i < this.requests.length; i++) {
                     console.log(this.requests[i].idUserRequested + " idUserRequested");
                     if(this.requests[i].idUserRequested == idUserRequested) {
@@ -211,7 +220,7 @@ Vue.component('pending_requests', {
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            if(data != "sense peticions") {
+            if(data != "no existing requests") {
                 this.requests = data;
                 console.log("hay peticiones")
                 this.withRequests = true;
@@ -308,7 +317,7 @@ Vue.component('profile', {
     template: ` <div v-show="this.isLogged">
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
-                    <canvas id="userStatistics">estadistica</canvas>
+                    <b-button @click="editProfile">Edit my profile</b-button>
                     <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="Record" active><record :games=this.record></record></b-tab>
                         <b-tab title="Challenges"><challenges></challenges></b-tab>
@@ -319,6 +328,7 @@ Vue.component('profile', {
         logoutUser: function() {
             userStore().logged = false;
         },
+        editProfile:function(){}
     },
     computed: {
         isLogged() {
@@ -524,7 +534,7 @@ Vue.component('login', {
             </b-input-group>
             <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
             <b-button @click="submitLogin">Join</b-button>
-            <p v-if="credentialsIncorrect" style="color:red;">Credentials incorrect</p>
+            <p v-if="credentialsIncorrect" style="color:red;">*Credentials incorrect</p>
 
         </div>`,
     methods: {
@@ -585,14 +595,51 @@ Vue.component('ranking', {
     template: ` <div class="nav-container">
                     <br><br>
                     <b-tabs pills cardcontent-class="mt-3" align="center">
-                        <b-tab title="Global" active active title-item-class="w-25 login__tab"><br><global></global></b-tab>
-                        <b-tab title="Daily" title-item-class="w-25 register__tab"><br>Daily</b-tab>
+                        <b-tab title="Global" active active title-item-class="w-25 login__tab"><globalranking></globalranking></b-tab>
+                        <b-tab title="Daily" title-item-class="w-25 register__tab"><dailyranking></dailyranking></b-tab>
                     </b-tabs>
                 </div>`,
 
 });
 
-Vue.component('global', {
+Vue.component('dailyranking', {
+    data: function () {
+        return {
+            players: [],
+        }
+    },
+    mounted() {
+
+        fetch('../trivial5/public/dailyranking')
+        .then(res => res.json())
+        .then(data => {
+            console.log("length " + data);
+            for (let i = 0; i < data.length; i++) {
+                console.log("Ranking " + data[i].name);
+                this.players.push(data[i]);
+                
+            }
+            console.log(JSON.stringify(this.players));
+        });
+    },
+    template: ` <div class="ranking__list">
+                    <br>
+                    <b-row class="mb-3">
+                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
+                        <b-col cols="2" md="3" class="p-3 ranking__text">Rank</b-col>
+                        <b-col cols="5" md="3" class="p-3 ranking__text">Name</b-col>
+                        <b-col cols="4" md="3" class="p-3 ranking__text">Score</b-col>
+                    </b-row>
+                    <b-row class="mb-3" v-for="(player, index) in this.players">
+                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
+                        <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
+                        <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
+                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.total_score}}</b-col>
+                    </b-row>
+                </div>`,
+});
+
+Vue.component('globalranking', {
     data: function () {
         return {
             players: [],
@@ -637,12 +684,13 @@ Vue.component('results' , {
             timer: 0
         }
     },
-    props: ['results', 'timerRestante', 'difficulty'],
+    props: ['results', 'timerRestante', 'difficulty', 'daily'],
     template: ` <div class="game__result">
                     <br>
                     <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
                     <h1 v-show="this.isLogged">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
                     <b-button to="/start">Lobby</b-button>
+                    <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
                 </div>`,
     methods: {
         calcularPuntuacion: function() {
@@ -934,7 +982,7 @@ Vue.component('game' , {
                         
                     </div>
                     <div v-if="showResults">
-                        <results :results=userAnswers :timerRestante=timer :difficulty=selectedDifficulty @saveData="updateScore"></results>
+                        <results :results=userAnswers :timerRestante=timer :daily=daily :difficulty=selectedDifficulty @saveData="updateScore" @playagain="playagain"></results>
                     </div>
                 </div>`,
     methods: {
@@ -959,11 +1007,12 @@ Vue.component('game' , {
             .then(res => res.json())
             .then(data => {
                 if(this.daily) {
-                    console.log(data.id);
+                    console.log(data);
                     this.questions = JSON.parse(data.data);
                     this.idGame = data.id;
                     this.selectedDifficulty = data.difficulty;
-                    this.selectedCategory = data.selectedCategory;
+                    this.selectedCategory = data.category;
+                    this.saveData(-300);
                 }
                 else {
                     this.questions = data;
@@ -975,6 +1024,18 @@ Vue.component('game' , {
                     this.saveGame();
                 }
             });
+        },
+        playagain: function() {
+            this.$bvModal.show("modalSelectGame");
+            this.idGame = null;
+            this.selectedDifficulty = "";
+            this.selectedCategory = "";
+            this.showQuestions = null;
+            this.showResults = null;
+            this.actualQuestion = 0;
+            this.timer = 150;
+            this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
+            
         },
         incrementQuestion: function() {
             if(this.actualQuestion < 9) {
