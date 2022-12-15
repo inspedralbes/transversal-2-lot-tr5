@@ -169,8 +169,8 @@ Vue.component('pending_requests', {
                         <b-card class="mb-3">
                             <b-card-text>
                                 {{request.name}} 
-                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeStatusRequest('rejected', request.idUserRequested)"></i> 
-                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeStatusRequest('accepted', request.idUserRequested)"></i>
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeStatusRequest('rejected', request.idUserRequest)"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeStatusRequest('accepted', request.idUserRequest)"></i>
                             </b-card-text>
                             
                         </b-card>
@@ -189,8 +189,8 @@ Vue.component('pending_requests', {
             console.log(status + " " + idUserRequested);
             console.log("entra fetch");
             changeRequestStatus = new FormData();
-            changeRequestStatus.append('idUserRequest', userStore().loginInfo.idUser);
-            changeRequestStatus.append('idUserRequested', idUserRequested);
+            changeRequestStatus.append('idUserRequested', userStore().loginInfo.idUser);
+            changeRequestStatus.append('idUserRequest', idUserRequested);
             changeRequestStatus.append('status', status);
 
             fetch('../trivial5/public/changerequeststatus', {
@@ -634,7 +634,7 @@ Vue.component('dailyranking', {
                         <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
                         <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
                         <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
-                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.total_score}}</b-col>
+                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.score}}</b-col>
                     </b-row>
                 </div>`,
 });
@@ -1175,6 +1175,8 @@ Vue.component('game' , {
               .catch(err => {
                 // An error occurred
               })
+            // router.push("/login");
+
           }
     },
     beforeMount () {
