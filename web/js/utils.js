@@ -50,7 +50,12 @@ Vue.component('record', {
                         <b-card class="mb-3">
                             <b-card-text class="fa fa-trophy"  style="font-size:56px; float:left" ></b-card-text>
                             <b-card-text>
-                                {{game.idUser}}
+                                Game: {{index+1}}
+                                Difficulty: {{game.difficulty}}
+                                Category: {{game.category}}
+                                Score: {{game.score}}
+                                <br>
+                                Date: {{game.created_at}}
                             </b-card-text>
                         </b-card>
                     
@@ -64,7 +69,7 @@ Vue.component('record', {
         fetch("../trivial5/public/record/"+ this.userLogged.idUser +"")
             .then(res => res.json())
             .then(data => {
-                console.log("json" + data);
+                console.log("json" + data[0]);
                 this.gamesPlayed = data;
         });
     },
@@ -349,12 +354,15 @@ Vue.component('profile', {
                             <b-col cols="3"><b-button @click="logoutUser">Logout</b-button></b-col>
                         </b-row>
                     </b-container>
+                   
+                    <br>
                     <div style="text-align: center;">
                         <p style="color:white">{{infoUser.name}}</p>
-                        <p style="color:white">{{infoUser.total_score}}</p>
+                        <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
+                        <br>
+                        <p style="color:white">Total Score -> {{infoUser.total_score}}</p>
                     </div>
-                    
-                    
+                    <br>
                     <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="Record" active><record :games=this.record></record></b-tab>
                         <b-tab title="Challenges"><challenges></challenges></b-tab>

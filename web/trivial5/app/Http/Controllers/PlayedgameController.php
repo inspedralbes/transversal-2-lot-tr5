@@ -26,11 +26,19 @@ class PlayedgameController extends Controller
 
     public function index_record($id)
     {
-        $record = DB::table('played_games')->where('idUser','=',$id)->limit(10)->get();
+        $record = DB::table('played_games')
+        ->distinct()
+            ->join('games', function($join) 
+            {
+                $join->on('played_games.idGame', '=', 'games.id');
+            })
+        ->where('idUser','=',$id)
+        ->limit(10)
+        ->get();
         //devolver tambien por id la categoria i dificultat del juego
         // $recordDetailed = Game::select('category','difficulty')->where('id','=',PlayedGame::value('idGame'));
 
-        return json_encode($record);
+        return $record;
     }
 
     public function  index_dailyranking()
@@ -52,6 +60,7 @@ class PlayedgameController extends Controller
                 })
                 ->where('idGame', '=', $dailyGame->id)
                 ->limit(100)
+                ->orderBy('score', 'desc')
                 ->get();
 
                 // $rankingDaily = DB::table('played_games')
