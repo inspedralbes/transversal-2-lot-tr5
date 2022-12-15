@@ -42,7 +42,7 @@ Route::post('saveresult', [PlayedgameController::class, 'store']);
 
 Route::post('updatescore', [PlayedgameController::class, 'update']);
 
-Route::post('deleteFriend', [FriendController::class, 'deleteFriend']);
+Route::post('deletefriend', [FriendController::class, 'deleteFriend']);
 
 
 require __DIR__.'/auth.php';

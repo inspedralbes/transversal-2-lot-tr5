@@ -27,16 +27,6 @@ class FriendController extends Controller
             ->where('status', '=', 'accepted')
             ->get();
 
-        // $friendsRequested = DB::table('users')
-        //     ->distinct()
-        //     ->leftJoin('friends', function($join) 
-        //     {
-        //         $join->on('users.id', '=', 'friends.idUserRequested');
-        //     })
-        //     ->where('idUserRequest', '=', $id)
-        //     ->where('status', '=', 'accepted')
-        //     ->get();
-
         $friendsRequest = DB::table('friends')
             ->distinct()
             ->leftJoin('users', function($join) 
@@ -46,16 +36,6 @@ class FriendController extends Controller
             ->where('idUserRequested', '=', $id)
             ->where('status', '=', 'accepted')
             ->get();
-
-        // $friendsRequest = DB::table('users')
-        //     ->distinct()
-        //     ->leftJoin('friends', function($join) 
-        //     {
-        //         $join->on('users.id', '=', 'friends.idUserRequest');
-        //     })
-        //     ->where('idUserRequested', '=', $id)
-        //     ->where('status', '=', 'accepted')
-        //     ->get();
 
         $allFriends = [];
         
@@ -119,30 +99,25 @@ class FriendController extends Controller
         $message = "";
         //si existe email del usuario
         $requestedID = User::where('email',$request->email)->value('id');
+        $if1 = (Friend::where('idUserRequested',$request->id)->exists()&&Friend::where('idUserRequest',$requestedID)->exists());
+        $if2 = (Friend::where('idUserRequested',$requestedID)->exists()&&Friend::where('idUserRequest',$request -> id)->exists());
+        $solicitudAMi = ((Friend::where('idUserRequested',$request->id)->value('idUserRequested')) == (Friend::where('idUserRequest',$requestedID)->value('idUserRequest')));
         if(User::where('email',$request->email)->exists()){
             error_log("entra if");
-            if(!(Friend::where('idUserRequested',$request->id)->exists()&&Friend::where('idUserRequest',$requestedID)->exists())){
-                if(!(Friend::where('idUserRequested',$requestedID)->exists()&&Friend::where('idUserRequest',$request -> id)->exists())){
-                    $friend -> idUserRequested = $requestedID;
-                    $friend -> idUserRequest = $request -> id;
-                    $friend -> save();
-                    $sent = 1;
-                    $message = "Request sent successfully";
-                }else{
-                    $message = "You have already sent the request to this email";
-                }
+            if((!$if1)||(!$if2)){
+                $friend -> idUserRequested = $requestedID;
+                $friend -> idUserRequest = $request -> id;
+                $friend -> save();
+                $sent = 1;
+                $message = "Request sent successfully";
+            }elseif($solicitudAMi){
+                $message = "Cannot sent the request to yourself";
             }else{
-                $message = "This user has already sent the request to you";
+                $message = "You have already sent the request to this email";
             }
         }else{
             $message = "Email not exists";
         }
-
-        // if(Friend::where('idUserRequested',$request -> id)->exists()&&Friend::where('idUserRequest',$requestedID)->exists()){
-        //     $message = "This user has already sent the request to you";
-        // }elseif(Friend::where('idUserRequested',$requestedID)->exists()&&Friend::where('idUserRequest',$request -> id)->exists()){
-        //     $message = "You have already sent the request to this email";
-        // }
         
         $ret = new stdClass();
         $ret->data = $sent;
@@ -150,10 +125,16 @@ class FriendController extends Controller
         return json_encode($ret);
     }
 
-    public function deleteFriend(Request $request){
-        $friend = Friend::find($request->id);
-        $friend->delete();
-        return 1;
+    public function deleteFriend(Request $request)
+    {
+        $recordToDelete = DB::table('friends')
+            ->where('idUserRequest', '=', $request -> idUserRequest)
+            ->where('idUserRequested', '=', $request -> idUserRequested)
+            ->delete();
+        $message = "friend delete successfully"; 
+        $ret = new stdClass();
+        $ret->data = $message;
+        return json_encode($ret);
     }
 
     /**
@@ -176,23 +157,12 @@ class FriendController extends Controller
      */
     public function update(Request $request)
     {
-        $message="";
-        //if the request is rejected, the record will be deleted from the database.
-        if(strcmp($request->status,'rejected')==0){
-            Friend::where('idUserRequest','=', $request->idUserRequest )
-                    ->where('idUserRequested','=',$request->idUserRequested)
-                    ->delete();
-            $message = "the friend request has been rejected";
-        }else{
-            Friend::where('idUserRequest','=',$request->idUserRequest)
-                    ->where('idUserRequested','=',$request->idUserRequested)
-                    ->update(['status'=>'accepted']);
-            $message = "the friend request has been accepted";
-        }
-
-        $ret = new stdClass();
-        $ret->message=$message;
-        return json_encode($ret);
+        $changeRequestStatus = DB::table('friends')
+            ->where('idUserRequest', '=', $request -> idUserRequest)
+            ->where('idUserRequested', '=', $request -> idUserRequested)
+            ->update(['status' => $request -> status]);
+        
+        return $changeRequestStatus;
     }
 
     /**
