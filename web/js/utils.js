@@ -613,7 +613,7 @@ Vue.component('dailyranking', {
         fetch('../trivial5/public/dailyranking')
         .then(res => res.json())
         .then(data => {
-            console.log("length " + data.length);
+            console.log("length " + data);
             for (let i = 0; i < data.length; i++) {
                 console.log("Ranking " + data[i].name);
                 this.players.push(data[i]);
@@ -1003,11 +1003,12 @@ Vue.component('game' , {
             .then(res => res.json())
             .then(data => {
                 if(this.daily) {
-                    console.log(data.id);
+                    console.log(data);
                     this.questions = JSON.parse(data.data);
                     this.idGame = data.id;
                     this.selectedDifficulty = data.difficulty;
-                    this.selectedCategory = data.selectedCategory;
+                    this.selectedCategory = data.category;
+                    this.saveData(-300);
                 }
                 else {
                     this.questions = data;
