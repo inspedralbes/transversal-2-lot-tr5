@@ -115,7 +115,7 @@ Vue.component('list_friends', {
                         <b-card class="mb-3">
                             <b-card-text>
                                 <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
-                                <b-button variant="danger" @click="deleteFriend">Delete</b-button>
+                                <b-button variant="danger" @click="deleteFriend(friend.idUserRequested, friend.idUserRequest)">Delete</b-button>
                             </b-card-text>
                         </b-card>
                     </div>
@@ -127,7 +127,33 @@ Vue.component('list_friends', {
                         </b-card>
                     </div>
                 </div>`,
-    // methods: {
+    methods: {
+        deleteFriend: function(idUserRequested, idUserRequest) {
+            deleteF = new FormData();
+            deleteF.append('idUserRequest', idUserRequest);
+            deleteF.append('idUserRequested', idUserRequested);
+
+            fetch('../trivial5/public/deletefriend', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: deleteF
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                let borrar = 0;
+                for (let i = 0; i < this.friends.length; i++) {
+                    console.log(this.friends[i].idUserRequested + " idUserRequested");
+                    if(this.friends[i].idUserRequested == idUserRequested) {
+                        borrar = i;
+                    }
+                }
+                console.log("antes de " + borrar + " " + this.friends);
+                this.friends.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.friends);
+            }); 
+            
+        }
         // showUser(userId){
         //     fetch('../trivial5/public/indexPerfil/'+this.friend.id)
         //     .then(res=>res.json())
@@ -136,7 +162,7 @@ Vue.component('list_friends', {
                 
         //     })
         // }
-    // },
+    },
     beforeMount() {
         fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser,{
             headers:{"Accept":"application/json"},
@@ -169,8 +195,8 @@ Vue.component('pending_requests', {
                         <b-card class="mb-3">
                             <b-card-text>
                                 {{request.name}} 
-                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeStatusRequest('rejected', request.idUserRequested)"></i> 
-                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeStatusRequest('accepted', request.idUserRequested)"></i>
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeStatusRequest('rejected', request.idUserRequest)"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeStatusRequest('accepted', request.idUserRequest)"></i>
                             </b-card-text>
                             
                         </b-card>
@@ -189,8 +215,8 @@ Vue.component('pending_requests', {
             console.log(status + " " + idUserRequested);
             console.log("entra fetch");
             changeRequestStatus = new FormData();
-            changeRequestStatus.append('idUserRequest', userStore().loginInfo.idUser);
-            changeRequestStatus.append('idUserRequested', idUserRequested);
+            changeRequestStatus.append('idUserRequested', userStore().loginInfo.idUser);
+            changeRequestStatus.append('idUserRequest', idUserRequested);
             changeRequestStatus.append('status', status);
 
             fetch('../trivial5/public/changerequeststatus', {
@@ -312,12 +338,23 @@ Vue.component('friends', {
 Vue.component('profile', {
     data: function(){
         return{
+            infoUser: "",
         }
     },
     template: ` <div v-show="this.isLogged">
-                    <p style="color:white">Estas logueado</p>
-                    <b-button @click="logoutUser">Logout</b-button>
-                    <b-button @click="editProfile">Edit my profile</b-button>
+                    <br>
+                    <b-container class="bv-example-row">
+                        <b-row>
+                            <b-col cols="9"><b-button @click="editProfile">Edit my profile</b-button></b-col>
+                            <b-col cols="3"><b-button @click="logoutUser">Logout</b-button></b-col>
+                        </b-row>
+                    </b-container>
+                    <div style="text-align: center;">
+                        <p style="color:white">{{infoUser.name}}</p>
+                        <p style="color:white">{{infoUser.total_score}}</p>
+                    </div>
+                    
+                    
                     <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="Record" active><record :games=this.record></record></b-tab>
                         <b-tab title="Challenges"><challenges></challenges></b-tab>
@@ -350,6 +387,14 @@ Vue.component('profile', {
         }
     },
     mounted() {
+
+        fetch('../trivial5/public/indexPerfil/' + userStore().loginInfo.idUser)
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data[0]);
+            this.infoUser = data[0];
+        });
+
        
         // let userStatistics = new CharacterData("userStatistics",{
         //     type:'doughnut',
@@ -634,7 +679,7 @@ Vue.component('dailyranking', {
                         <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
                         <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
                         <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
-                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.total_score}}</b-col>
+                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.score}}</b-col>
                     </b-row>
                 </div>`,
 });
@@ -1175,6 +1220,8 @@ Vue.component('game' , {
               .catch(err => {
                 // An error occurred
               })
+            // router.push("/login");
+
           }
     },
     beforeMount () {
