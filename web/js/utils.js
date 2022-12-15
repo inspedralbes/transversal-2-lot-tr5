@@ -114,7 +114,8 @@ Vue.component('list_friends', {
                     <div v-if="withFriends" v-for="(friend, index) in friends">
                         <b-card class="mb-3">
                             <b-card-text>
-                                {{friend.name}}
+                                <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
+                                <b-button variant="danger" @click="deleteFriend">Delete</b-button>
                             </b-card-text>
                         </b-card>
                     </div>
@@ -126,11 +127,20 @@ Vue.component('list_friends', {
                         </b-card>
                     </div>
                 </div>`,
-    methods: {
-
-    },
+    // methods: {
+        // showUser(userId){
+        //     fetch('../trivial5/public/indexPerfil/'+this.friend.id)
+        //     .then(res=>res.json())
+        //     .then(data=>{
+        //         console.log(data);
+                
+        //     })
+        // }
+    // },
     beforeMount() {
-        fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser)
+        fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser,{
+            headers:{"Accept":"application/json"},
+        })
         .then(res => res.json())
         .then(data => {
             console.log(data);
@@ -140,6 +150,7 @@ Vue.component('list_friends', {
             }
             else {
                 this.withFriends = false;
+                console.log(this.withFriends);
             }
         }); 
     }
@@ -173,7 +184,6 @@ Vue.component('pending_requests', {
                     </div>
                 </div>`,
     methods: {
-
         changeStatusRequest: function (status, idUserRequested) {
 
             console.log(status + " " + idUserRequested);
@@ -191,8 +201,8 @@ Vue.component('pending_requests', {
             .then(res => res.json())
             .then(data => {
                 console.log(data);
+                console.log(data.message);
                 let borrar = 0;
-                
                 for (let i = 0; i < this.requests.length; i++) {
                     console.log(this.requests[i].idUserRequested + " idUserRequested");
                     if(this.requests[i].idUserRequested == idUserRequested) {
@@ -207,7 +217,9 @@ Vue.component('pending_requests', {
         },
     },
     beforeMount() {
-        fetch('../trivial5/public/pendingrequest/' + userStore().loginInfo.idUser)
+        fetch('../trivial5/public/pendingrequest/' + userStore().loginInfo.idUser,{
+            headers:{"Accept":"application/json"},
+        })
         .then(res => res.json())
         .then(data => {
             console.log(data);
@@ -308,7 +320,7 @@ Vue.component('profile', {
     template: ` <div v-show="this.isLogged">
                     <p style="color:white">Estas logueado</p>
                     <b-button @click="logoutUser">Logout</b-button>
-                    <canvas id="userStatistics">estadistica</canvas>
+                    <b-button @click="editProfile">Edit my profile</b-button>
                     <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="Record" active><record :games=this.record></record></b-tab>
                         <b-tab title="Challenges"><challenges></challenges></b-tab>
@@ -319,6 +331,7 @@ Vue.component('profile', {
         logoutUser: function() {
             userStore().logged = false;
         },
+        editProfile:function(){}
     },
     computed: {
         isLogged() {
