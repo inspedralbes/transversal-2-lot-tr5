@@ -359,7 +359,7 @@ Vue.component('daily', {
 
 Vue.component('start', {
     template: ` <div>
-                    <p style="color:white">Welcome to League of Trivial</p>
+                    <h1 class="start__tituloPrincipal"> <br> League <br> of <br> Trivial</h1>
                 </div>`, 
 });
 
@@ -829,21 +829,25 @@ Vue.component('game' , {
             showResults: null,
             actualQuestion: 0,
             timer: 150,
-            userAnswers: [null, null, null, null, null, null, null, null, null, null]
+            userAnswers: [null, null, null, null, null, null, null, null, null, null],
+            boxTwo: ''
         }
     },
 
     template: ` <div class="container_button_play" >
                     <div v-if="showButtonPlay" class="div_button_play">
-                        <b-button v-if="isLogged && showButtonDaily" class="button__daily" @click="playDaily">DAILY</b-button>
+                        
                         <br>
                         <br>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play"><span>PLAY</span></b-button>
                         <br>
                         <br>
-                        <div v-if="!isLogged" style="color:white;">
-                            <p>If you want to see the correct answer LOG IN</p>
-                            <p>If you want to play the daily game LOG IN</p>
+                        <div style="color:white;">
+                            <b-button v-if="isLogged && showButtonDaily" class="button__daily" @click="playDaily">DAILY</b-button>
+                            <div class="mb-1" v-if="!isLogged">
+                                <b-button @click="desplegarModalLogin">DAILY GAME</b-button> 
+                            </div>
+                            
                         </div>
                     </div>
                     <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
@@ -1089,6 +1093,28 @@ Vue.component('game' , {
                 this.showResults = true;
             }
         },
+
+        desplegarModalLogin() {
+            this.boxTwo = ''
+            this.$bvModal.msgBoxConfirm('Esta funcionalidad solo está disponible si estás logueado. Quieres hacer log in?', {
+              title: 'Advertencia',
+              size: 'sm',
+              buttonSize: 'sm',
+              okVariant: 'success',
+              okTitle: 'Login',
+              cancelVariant: 'danger',
+              cancelTitle: 'Cancelar',
+              footerClass: 'p-2',
+              hideHeaderClose: false,
+              centered: true
+            })
+              .then(value => {
+                this.boxTwo = value
+              })
+              .catch(err => {
+                // An error occurred
+              })
+          }
     },
     beforeMount () {
 

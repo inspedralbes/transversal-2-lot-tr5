@@ -253,3 +253,11 @@ body{
 .nav-pills  .login__tab  .nav-link{
     background-color: rgb(99, 99, 121) !important;
 }
+
+
+/** Start CSS **/
+.start__tituloPrincipal{
+    font-family: 'LeagueOfLegendsWebFont';
+    text-align: center;
+    color: #fff;
+}
