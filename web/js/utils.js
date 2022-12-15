@@ -1170,7 +1170,7 @@ Vue.component('game' , {
               centered: true
             })
               .then(value => {
-                this.boxTwo = value
+                this.boxTwo = router.push('/join');
               })
               .catch(err => {
                 // An error occurred
