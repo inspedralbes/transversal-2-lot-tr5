@@ -10,13 +10,12 @@ function shuffleArray(array) {
 
 Vue.component('routes', {
     template: ` <div class="nav-container">
-                    <nav class="navbar">
+                    <b-nav class="navbar">
                         <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
-                        <b-nav-item active to="/">Play</b-nav-item>
-                        <b-nav-item active to="/start">Start</b-nav-item>
+                        <b-nav-item active to="/">LOGO</b-nav-item>
                         <b-nav-item v-show="this.isLogged" to="/profile">Profile</b-nav-item>
                         <b-nav-item v-show="!this.isLogged" to="/join">Login</b-nav-item>
-                    </nav>
+                    </b-nav>
                 </div>`,
     computed: {
         isLogged() {
@@ -456,41 +455,43 @@ Vue.component('register', {
                 <br>
                 <h1 style="color:white; text-align:center">Register</h1>
                 <br>
-                <b-input-group class="mb-2" size="sm">
-                    <b-input-group-prepend is-text>
-                        <b-icon icon="person-fill"></b-icon>
-                    </b-input-group-prepend>
-                    <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
-                </b-input-group>
-                <p v-if = "form.username === ''" class="errorsFields">Username{{form.username}} null</p>
-                
-                <b-input-group class="mb-2" size="sm">
-                    <b-input-group-prepend is-text>
-                        <b-icon icon="envelope"></b-icon>
-                    </b-input-group-prepend>
-                    <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
-                </b-input-group>
-                <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
-                <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
-                
-                <b-input-group class="mb-2" size="sm">
-                    <b-input-group-prepend is-text>
-                        <b-icon icon="lock"></b-icon>
-                    </b-input-group-prepend>
-                    <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
-                </b-input-group>
-                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
-                
-                <b-input-group class="mb-2" size="sm">
-                    <b-input-group-prepend is-text>
-                        <b-icon icon="shield-lock"></b-icon>
-                    </b-input-group-prepend>
-                    <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
-                </b-input-group>
+                <div @keyup.enter="submitLogin">
+                    <b-input-group class="mb-2" size="sm">
+                        <b-input-group-prepend is-text>
+                            <b-icon icon="person-fill"></b-icon>
+                        </b-input-group-prepend>
+                        <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
+                    </b-input-group>
+                    <p v-if = "form.username === ''" class="errorsFields">Username{{form.username}} null</p>
+                    
+                    <b-input-group class="mb-2" size="sm">
+                        <b-input-group-prepend is-text>
+                            <b-icon icon="envelope"></b-icon>
+                        </b-input-group-prepend>
+                        <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+                    </b-input-group>
+                    <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
+                    <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
+                    
+                    <b-input-group class="mb-2" size="sm">
+                        <b-input-group-prepend is-text>
+                            <b-icon icon="lock"></b-icon>
+                        </b-input-group-prepend>
+                        <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
+                    </b-input-group>
+                    <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+                    
+                    <b-input-group class="mb-2" size="sm">
+                        <b-input-group-prepend is-text>
+                            <b-icon icon="shield-lock"></b-icon>
+                        </b-input-group-prepend>
+                        <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
+                    </b-input-group>
 
-                <p v-if = "form.confirmPassword ===''" class="errorsFields">Paswword confirmation  null</p>
-                <p v-if = "form.confirmPassword !== form.password" class="errorsFields">Confirm password is not the same as password</p>
-                <br>
+                    <p v-if = "form.confirmPassword ===''" class="errorsFields">Paswword confirmation  null</p>
+                    <p v-if = "form.confirmPassword !== form.password" class="errorsFields">Confirm password is not the same as password</p>
+                    <br>
+                </div>
                 <b-button @click="submitRegister">Register</b-button>
 
                 <p v-if="this.registerCorrect === true"  style="color:green;">Thank you for your registration {{this.form.username}}</p>
@@ -569,23 +570,25 @@ Vue.component('login', {
             <br>
             <h1 style="color:white; text-align:center">Log in</h1>
             <br>
-            <b-input-group class="mb-2" size="sm">
-                <b-input-group-prepend is-text>
-                    <b-icon icon="envelope"></b-icon>
-                </b-input-group-prepend>
-                <b-form-input type="email" class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
-            </b-input-group>
+            <div @keyup.enter="submitLogin">
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="envelope"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input type="email" class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
+                </b-input-group>
 
-            <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
-            <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
-            
-            <b-input-group class="mb-2" size="sm">
-                <b-input-group-prepend is-text>
-                    <b-icon icon="lock"></b-icon>
-                </b-input-group-prepend>
-                <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
-            </b-input-group>
-            <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+                <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
+                <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
+                
+                <b-input-group class="mb-2" size="sm">
+                    <b-input-group-prepend is-text>
+                        <b-icon icon="lock"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
+                </b-input-group>
+                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+            </div>
             <b-button @click="submitLogin">Join</b-button>
             <p v-if="credentialsIncorrect" style="color:red;">*Credentials incorrect</p>
 
@@ -644,7 +647,6 @@ Vue.component('login', {
 });
 
 Vue.component('ranking', {
-
     template: ` <div class="nav-container">
                     <br><br>
                     <b-tabs pills cardcontent-class="mt-3" align="center">
@@ -740,8 +742,8 @@ Vue.component('results' , {
     props: ['results', 'timerRestante', 'difficulty', 'daily'],
     template: ` <div class="game__result">
                     <br>
-                    <h1>Your result is {{correctAnswers}}/{{results.length}}</h1>
-                    <h1 v-show="this.isLogged">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
+                    <h1 class="game__resultLetter">Your result is {{correctAnswers}}/{{results.length}}</h1>
+                    <h1 v-show="this.isLogged" class="game__resultLetter">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
                     <b-button to="/start">Lobby</b-button>
                     <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
                 </div>`,
@@ -801,32 +803,32 @@ Vue.component('question' , {
         }
     },
     props: ['infoQuestion'],
-    template: ` <div class="game__cards">
+    template: ` <div>
                     <h3></h3>
                     <b-card
                     :title=infoQuestion.question
-                    class="mb-2 question__card"
+                    class="mb-2 game__card"
                     >
                         <br>
-                        <div class="game__buttons_selection">
+                        <div>
                             <b-row>
                                 <b-col lg="6" class="pb-2">
-                                    <button v-if="isLogged" @click="getAnswerUser(0)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(0), respuesta__incorrecta: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
-                                    <button v-if="!isLogged" @click="getAnswerUser(0)" class="respuestas__body">{{ this.arrayAnswersDesordenada[0].answer }}</button>
+                                    <button v-if="isLogged" @click="getAnswerUser(0)" class="game__buttons_selection" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(0), game__answerIncorrect: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
+                                    <button v-if="!isLogged" @click="getAnswerUser(0)" class="game__buttons_selection">{{ this.arrayAnswersDesordenada[0].answer }}</button>
                                 </b-col>
                                 <b-col lg="6" class="pb-2">
-                                    <button v-if="isLogged" @click="getAnswerUser(1)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(1), respuesta__incorrecta: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
-                                    <button v-if="!isLogged" @click="getAnswerUser(1)" class="respuestas__body">{{ this.arrayAnswersDesordenada[1].answer }}</button>
+                                    <button v-if="isLogged" @click="getAnswerUser(1)" class="game__buttons_selection" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(1), game__answerIncorrect: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
+                                    <button v-if="!isLogged" @click="getAnswerUser(1)" class="game__buttons_selection">{{ this.arrayAnswersDesordenada[1].answer }}</button>
                                 </b-col>
                             </b-row>
                             <b-row>
                                 <b-col lg="6" class="pb-2">
-                                    <button v-if="isLogged" @click="getAnswerUser(2)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(2), respuesta__incorrecta: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
-                                    <button v-if="!isLogged" @click="getAnswerUser(2)" class="respuestas__body">{{ this.arrayAnswersDesordenada[2].answer }}</button>
+                                    <button v-if="isLogged" @click="getAnswerUser(2)" class="game__buttons_selection" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(2), game__answerIncorrect: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
+                                    <button v-if="!isLogged" @click="getAnswerUser(2)" class="game__buttons_selection">{{ this.arrayAnswersDesordenada[2].answer }}</button>
                                 </b-col>
                                 <b-col lg="6" class="pb-2">
-                                    <button v-if="isLogged" @click="getAnswerUser(3)" class="respuestas__body" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(3), respuesta__incorrecta: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
-                                    <button v-if="!isLogged" @click="getAnswerUser(3)" class="respuestas__body">{{ this.arrayAnswersDesordenada[3].answer }}</button>
+                                    <button v-if="isLogged" @click="getAnswerUser(3)" class="game__buttons_selection" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(3), game__answerIncorrect: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
+                                    <button v-if="!isLogged" @click="getAnswerUser(3)" class="game__buttons_selection">{{ this.arrayAnswersDesordenada[3].answer }}</button>
                                 </b-col>
                             </b-row>
                         </div>
@@ -936,19 +938,16 @@ Vue.component('game' , {
     },
 
     template: ` <div class="container_button_play" >
+                <div><img src="img/Winner.png" style="width: 100%;height: 100%;"></img></div>
                     <div v-if="showButtonPlay" class="div_button_play">
-                        
-                        <br>
-                        <br>
+                        <div class="start__tituloDiv">
+                            <h4>WELCOME TO</h4>
+                            <h1 class="start__tituloPrincipal"> LEAGUE OF <br> TRIVIAL</h1>
+                        </div>
                         <b-button v-b-modal="'modalSelectGame'" class="button__play"><span>PLAY</span></b-button>
-                        <br>
-                        <br>
-                        <div style="color:white;">
-                            <b-button v-if="isLogged && showButtonDaily" class="button__daily" @click="playDaily">DAILY</b-button>
-                            <div class="mb-1" v-if="!isLogged">
-                                <b-button @click="desplegarModalLogin">DAILY GAME</b-button> 
-                            </div>
-                            
+                        <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button><br>
+                        <div class="mb-1" v-if="!isLogged">
+                            <br><b-button @click="desplegarModalLogin" class="start__dailyGameButton">DAILY GAME</b-button> 
                         </div>
                     </div>
                     <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
@@ -971,16 +970,16 @@ Vue.component('game' , {
                             <template #first>
                                 <b-form-select-option :value="null" disabled>-- Please select a category --</b-form-select-option>
                             </template>
-                            <b-form-select-option value="arts_and_literature">Arts & Literature</b-form-select-option>
-                            <b-form-select-option value="film_and_tv">Film & TV</b-form-select-option>
-                            <b-form-select-option value="food_and_drink">Food & Drink</b-form-select-option>
-                            <b-form-select-option value="general_knowledge">General Knowledge</b-form-select-option>
-                            <b-form-select-option value="geography">Geography</b-form-select-option>
-                            <b-form-select-option value="history">History</b-form-select-option>
-                            <b-form-select-option value="music">Music</b-form-select-option>
-                            <b-form-select-option value="science">Science</b-form-select-option>
-                            <b-form-select-option value="society_and_culture">Society & Culture</b-form-select-option>
-                            <b-form-select-option value="sport_and_leisure">Sport & Leisure</b-form-select-option>
+                            <b-form-select-option value="arts_and_literature">🎨Arts & Literature</b-form-select-option>
+                            <b-form-select-option value="film_and_tv">🎞️Film & TV</b-form-select-option>
+                            <b-form-select-option value="food_and_drink">🥘Food & Drink</b-form-select-option>
+                            <b-form-select-option value="general_knowledge">🤓General Knowledge</b-form-select-option>
+                            <b-form-select-option value="geography">🗺️Geography</b-form-select-option>
+                            <b-form-select-option value="history">📜History</b-form-select-option>
+                            <b-form-select-option value="music">🎼Music</b-form-select-option>
+                            <b-form-select-option value="science">🔬Science</b-form-select-option>
+                            <b-form-select-option value="society_and_culture">🧠Society & Culture</b-form-select-option>
+                            <b-form-select-option value="sport_and_leisure">🤺Sport & Leisure</b-form-select-option>
                         </b-form-select>
                         <br>
                         <br>
@@ -1024,8 +1023,8 @@ Vue.component('game' , {
                     <div v-if="showQuestions" v-for="(question, index) in this.questions">
                         <question v-show="actualQuestion == index" :infoQuestion="question" @userAnswer="addUserAnswer">
                         <br><br>
-                        <div v-for="(answer, index) in userAnswers" class="respuestas__footer">
-                            <div v-if="isLogged" v-bind:class="{ respuesta__correcta:  comprobarRespuestaCorrecta(index), respuesta__incorrecta: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
+                        <div v-for="(answer, index) in userAnswers" class="game__cardFooter">
+                            <div v-if="isLogged" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(index), game__answerIncorrect: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
                         </div>
                         <br><br>
                         <h3>Timer: {{timer}}</h3>
@@ -1210,8 +1209,8 @@ Vue.component('game' , {
 
         desplegarModalLogin() {
             this.boxTwo = ''
-            this.$bvModal.msgBoxConfirm('Esta funcionalidad solo está disponible si estás logueado. Quieres hacer log in?', {
-              title: 'Advertencia',
+            this.$bvModal.msgBoxConfirm('This functionality is only available if you are logged in. Do you want to log in?', {
+              title: 'Warning',
               size: 'sm',
               buttonSize: 'sm',
               okVariant: 'success',
@@ -1229,8 +1228,7 @@ Vue.component('game' , {
                 // An error occurred
               })
             // router.push("/login");
-
-          }
+        }
     },
     beforeMount () {
 
