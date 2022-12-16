@@ -253,3 +253,19 @@ body{
     background-color: #222;
     border: 1px white;
 }
+
+
+/*-----PROFILE CSS-----*/
+.friend__list{
+    /* position:relative; */
+}
+.friends__cardtext .button__delete{
+    float:right;
+}
+
+.friends__cardtext{
+    background:#1e2833;
+    border:2px solid #1e2833;
+    color:#eaeaeb;
+}
+

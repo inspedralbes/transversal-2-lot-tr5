@@ -69,6 +69,7 @@ Vue.component('record', {
             .then(res => res.json())
             .then(data => {
                 console.log("json" + data[0]);
+                console.log(data);
                 this.gamesPlayed = data;
         });
     },
@@ -116,10 +117,11 @@ Vue.component('list_friends', {
     },
     template:`  <div class="nav-container">
                     <div v-if="withFriends === true" v-for="(friend, index) in friends">
-                        <b-card class="mb-3">
-                            <b-card-text>
+                        <b-card class="mb-3 friend__list">
+                            <b-card-text class="friends__cardtext">
+                                <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                 <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
-                                <b-button variant="danger" @click="deleteFriend(friend.idUserRequested, friend.idUserRequest)">Delete</b-button>
+                                <b-button variant="danger" class="button__delete" @click="deleteFriend(friend.idUserRequested, friend.idUserRequest)">Delete</b-button>
                             </b-card-text>
                         </b-card>
                     </div>

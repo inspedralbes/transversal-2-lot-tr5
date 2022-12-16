@@ -32,7 +32,9 @@ class PlayedgameController extends Controller
             {
                 $join->on('played_games.idGame', '=', 'games.id');
             })
-        ->where('idUser','=',$id)
+        ->where('played_games.idUser','=',$id)
+        ->orderBy('played_games.date','desc')
+        ->orderBy('played_games.created_at','desc')
         ->limit(10)
         ->get();
         //devolver tambien por id la categoria i dificultat del juego
