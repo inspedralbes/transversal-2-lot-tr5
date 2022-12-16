@@ -15,18 +15,21 @@
          url('./webfont/FrizQuadrataBold.svg') format('svg'); /* Legacy iOS */
 }
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500&display=swap');
+
 body{
     /* background: #222; */
     /* background: #192734; */
     background: #131920;
     margin:1%;
-    font-family: 'Montserrat', sans-serif;
+    /* font-family: 'Andada Pro', serif; */
     /* font-family: 'LeagueOfLegendsWebFont'; */
 }
 
 .container_button_play{
     /* height: 500px;
     position:relative; */
+    font-family: 'Sora', sans-serif;
 }
 
 /*CSS of PLAY button*/
@@ -121,6 +124,7 @@ body{
     align-items: center;
     gap: 40px;
     color:#e3e3e3!important;
+    font-family: 'Sora', sans-serif;
 }
 
 .nav-links{
@@ -140,6 +144,7 @@ body{
 
 .game__resultLetter{
     color:#eaeaeb;
+    font-family: 'Sora', sans-serif;
 }
 
 /*tag tipus card*/
@@ -228,9 +233,10 @@ body{
 
 .start__tituloDiv{
     color: #eaeaeb;
+    font-family: 'Sora', sans-serif;
 }
 .start__tituloPrincipal{
-    font-family: 'LeagueOfLegendsWebFont';
+    font-family: 'LeagueOfLegendsWebFont'!important;
     text-align: center;
     text-transform: uppercase;
     font-size: 60px;
