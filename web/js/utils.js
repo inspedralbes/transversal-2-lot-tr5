@@ -45,10 +45,9 @@ Vue.component('record', {
         }
     },
     template: ` <div class="nav-container">
-                    <div v-for="(game, index) in gamesPlayed">
-                        <b-card class="mb-3">
-                            <b-card-text class="fa fa-trophy"  style="font-size:56px; float:left" ></b-card-text>
-                            <b-card-text>
+                    <b-card header="Results" class="record__header">
+                        <div v-for="(game, index) in gamesPlayed">
+                            <b-card-text class="record_cardTexts">
                                 Game: {{index+1}}
                                 Difficulty: {{game.difficulty}}
                                 Category: {{game.category}}
@@ -56,9 +55,9 @@ Vue.component('record', {
                                 <br>
                                 Date: {{game.created_at}}
                             </b-card-text>
-                        </b-card>
-                    
-                    </div>
+                            <hr>
+                        </div>
+                    </b-card>
                 </div>`,
     methods: {
         
@@ -351,30 +350,56 @@ Vue.component('profile', {
                     <br>
                     <b-container class="bv-example-row">
                         <b-row>
-                            <b-col cols="9"><b-button @click="editProfile">Edit my profile</b-button></b-col>
-                            <b-col cols="3"><b-button @click="logoutUser">Logout</b-button></b-col>
+                            <b-col><b-button to="/" class="profile__backButton"><b-icon icon="arrow-left"></b-icon></b-button></b-col>
+                            <b-col><b-button @click="logoutUser" class="profile__logoutButton">Logout</b-button></b-col>
                         </b-row>
                     </b-container>
-                   
                     <br>
-                    <div style="text-align: center;">
-                        <p style="color:white">{{infoUser.name}}</p>
-                        <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
+                    <div class="profile__div">
+                        <div class="profile__picture">
+                            <b-avatar badge-variant="info" badge-offset="-0.5em" size="6rem" src="https://placekitten.com/300/300">
+                                <template #badge>
+                                    <div class="profile__editOptions">
+                                        <b-button @onclick="editProfile" class="rounded-circle profile__editButton" size="sm">
+                                            <b-icon icon="pencil"></b-icon>
+                                        </b-button>
+                                    </div>
+                                </template>
+                            </b-avatar>
+                        </div>
                         <br>
-                        <p style="color:white">Total Score -> {{infoUser.total_score}}</p>
+                        <p class="profile__userName">{{infoUser.name}}</p>
+                        <p class="profile__userScore">Total Score -> {{infoUser.total_score}}</p>
                     </div>
                     <br>
-                    <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
-                        <b-tab title="Record" active><record :games=this.record></record></b-tab>
-                        <b-tab title="Challenges"><challenges></challenges></b-tab>
-                        <b-tab title="Friends"><friends></friends></b-tab>
+                    <b-tabs pills card content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
+                        <b-tab active class="profile__tabsSelection">
+                            <template slot="title">
+                                <b-icon icon="trophy"></b-icon> Record
+                            </template>
+                            <record :games=this.record></record>
+                        </b-tab>
+                        <b-tab :title-link-class="profile__tabsSelection">
+                            <template slot="title">
+                                <b-icon icon="award"></b-icon> Challenges
+                            </template>
+                            <challenges></challenges>
+                        </b-tab>
+                        <b-tab :title-link-class="profile__tabsSelection">
+                            <template slot="title">
+                                <b-icon icon="person-lines-fill"></b-icon> Friends
+                            </template>
+                            <friends></friends>
+                        </b-tab>
                     </b-tabs>
                 </div>`, 
     methods: {
+        editProfile:function(){
+            alert("edit clicked")
+        },
         logoutUser: function() {
             userStore().logged = false;
-        },
-        editProfile:function(){}
+        }
     },
     computed: {
         isLogged() {
@@ -430,7 +455,7 @@ Vue.component('start', {
 Vue.component('join', {
     template: ` <div class="nav-container">
                     <br><br>
-                    <b-tabs pills cardcontent-class="mt-3" align="center">
+                    <b-tabs pills card content-class="mt-3" align="center">
                         <b-tab title="Login" active active title-item-class="w-25 login__tab"><br><login></login></b-tab>
                         <b-tab title="Register" title-item-class="w-25 register__tab"><br><register></register></b-tab>
                     </b-tabs>
@@ -681,18 +706,18 @@ Vue.component('dailyranking', {
     },
     template: ` <div class="ranking__list">
                     <br>
-                    <b-row class="mb-3">
-                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
-                        <b-col cols="2" md="3" class="p-3 ranking__text">Rank</b-col>
-                        <b-col cols="5" md="3" class="p-3 ranking__text">Name</b-col>
-                        <b-col cols="4" md="3" class="p-3 ranking__text">Score</b-col>
-                    </b-row>
-                    <b-row class="mb-3" v-for="(player, index) in this.players">
-                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
-                        <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
-                        <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
-                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.score}}</b-col>
-                    </b-row>
+                    <b-container class="text-center">
+                        <b-row class="mb-3">
+                            <b-col class="ranking__text">Rank</b-col>
+                            <b-col class="ranking__text">Name</b-col>
+                            <b-col class="ranking__text">Score</b-col>
+                        </b-row>
+                        <b-row class="mb-3" v-for="(player, index) in this.players">
+                            <b-col class="ranking__text">{{index + 1}}</b-col>
+                            <b-col class="ranking__text">{{player.name}}</b-col>
+                            <b-col class="ranking__text">{{player.score}}</b-col>
+                        </b-row>
+                    </b-container>
                 </div>`,
 });
 
@@ -718,18 +743,18 @@ Vue.component('globalranking', {
     },
     template: ` <div class="ranking__list">
                     <br>
-                    <b-row class="mb-3">
-                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
-                        <b-col cols="2" md="3" class="p-3 ranking__text">Rank</b-col>
-                        <b-col cols="5" md="3" class="p-3 ranking__text">Name</b-col>
-                        <b-col cols="4" md="3" class="p-3 ranking__text">Score</b-col>
-                    </b-row>
-                    <b-row class="mb-3" v-for="(player, index) in this.players">
-                        <b-col cols="1" md="3" class="p-3 ranking__text"></b-col>
-                        <b-col cols="2" md="3" class="p-3 ranking__text">{{index + 1}}</b-col>
-                        <b-col cols="5" md="3" class="p-3 ranking__text">{{player.name}}</b-col>
-                        <b-col cols="4" md="3" class="p-3 ranking__text">{{player.total_score}}</b-col>
-                    </b-row>
+                    <b-container class="text-center">
+                        <b-row class="mb-3">
+                            <b-col class="ranking__text">Rank</b-col>
+                            <b-col class="ranking__text">Name</b-col>
+                            <b-col class="ranking__text">Score</b-col>
+                        </b-row>
+                        <b-row class="mb-3" v-for="(player, index) in this.players">
+                            <b-col class="ranking__text">{{index + 1}}</b-col>
+                            <b-col class="ranking__text">{{player.name}}</b-col>
+                            <b-col class="ranking__text">{{player.total_score}}</b-col>
+                        </b-row>
+                    </b-container>
                 </div>`,
 })
 

@@ -60,7 +60,7 @@ body{
     line-height: 40px;
     padding: 0;
     border: none;
-    background-color: #222;
+    background-color: #131920;
   }
   .button__play{
     color: #fff352;
@@ -171,9 +171,6 @@ body{
     font-size: 20px;
     font-weight: 500;
     transition: background-color 0.2s;
-    -webkit-box-shadow: 11px 12px 11px 0px rgba(22,30,39,0.55);
-    -moz-box-shadow: 11px 12px 11px 0px rgba(22,30,39,0.55);
-    box-shadow: 11px 12px 11px 0px rgba(22,30,39,0.55);
 }
 .game__cardFooter {
     display: inline-flex;
@@ -256,6 +253,74 @@ body{
 
 
 /*-----PROFILE CSS-----*/
+.profile__div{
+    text-align: center;
+}
+
+/* .profile__picture{
+    position: relative;
+    display: inline-block;
+}
+
+.profile__picture:hover .profile__editOption{
+    display: block;
+}*/
+
+.profile__editOptions{
+    opacity: 0.2;
+} 
+
+.profile__editOptions:hover{
+    opacity: 1;
+}
+
+.profile__editButton{
+    /* background: #a5a5d4 !important; */
+}
+
+.nav-pills .profile__tabsSelection .nav-link.active{
+    background-color: rgb(99, 99, 121) !important;
+}
+
+.profile__backButton, .profile__logoutButton{
+    background-color:#131920 !important;
+    border-color: #131920 !important;
+    color: #e3e3e3 !important;
+}
+
+.profile__backButton:hover, .profile__logoutButton:hover{
+    border: 1px solid #3b4c61 !important;
+    background-color: #3b4c61 !important;
+    color: #e3e3e3 !important;;
+}
+
+.profile__userName{
+    color: #e3e3e3 !important;
+    font-size: 20px !important;
+}
+
+.profile__userScore{
+    color: #e3e3e3 !important;
+    font-size: 40px !important;
+}
+/* .profile__logoutButton{
+    background-color:#131920 !important;
+    border-color: #131920 !important;
+} */
+
+/*-----RECORD CSS-----*/
+.record__header{
+    background: #1e2833 !important;
+    border:#1e2833 !important;
+    color: #e3e3e3 !important;
+}
+
+.card-body .record_cardTexts{
+    background: #3b4c61 !important;
+    border:#3b4c61 !important;
+    color: #e3e3e3 !important;
+}
+
 .friend__list{
     /* position:relative; */
 }
