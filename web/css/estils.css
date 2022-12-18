@@ -20,7 +20,7 @@
 body{
     /* background: #222; */
     /* background: #192734; */
-    background: #131920;
+    background-color: #181e25;
     margin:1%;
     /* font-family: 'Andada Pro', serif; */
     /* font-family: 'LeagueOfLegendsWebFont'; */
@@ -60,8 +60,9 @@ body{
     line-height: 40px;
     padding: 0;
     border: none;
-    background-color: #131920;
+    background-color: #181e25;
   }
+  
   .button__play{
     color: #fff352;
     border: 1px solid #fff352;
@@ -110,7 +111,7 @@ body{
 }*/
 
 .navbar{
-    background-color: #131920;
+    background-color: #181e25;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -160,17 +161,33 @@ body{
 
 .game__buttons_selection{
     background: #1e2833;
-    border:2px solid #3b4c61;
+    /* border:2px solid #3b4c61; */
+    border-top: 2px solid #3b4c61;
+    border-left: 2px solid #3b4c61;
+    border-right: 2px solid #3b4c61;
+    border-bottom: none;
     color: #eaeaeb;
     height: 100%;
     width: 100%;
     outline: none;
     justify-content: center;
+    align-items: center;
     cursor: pointer;
     border-radius: 10px;
     font-size: 20px;
     font-weight: 500;
     transition: background-color 0.2s;
+    -webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	-o-border-radius: 7px;
+	border-radius: 7px;
+    box-shadow: 0 .2em #2b3847; 
+}
+
+.game__buttons_selection:active{
+    box-shadow: none;
+	position: relative;
+	top: .2em;
 }
 .game__cardFooter {
     display: inline-flex;
@@ -196,7 +213,36 @@ body{
     text-align: center;
 }
 
-@media only screen and(max-width:768px){
+.game__selection {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    }
+    
+.game__question { grid-area: 1 / 2 / 3 / 6; }
+.game__select1 { grid-area: 3 / 2 / 4 / 6; }
+.game__select2 { grid-area: 4 / 2 / 5 / 6; }
+.game__select3 { grid-area: 5 / 2 / 6 / 6; }
+.game__select4 { grid-area: 6 / 2 / 7 / 6; }
+
+
+/*Desktop Query*/
+@media only screen and(min-width:768px){
+    .game__cardDiv{
+        width: 60%;
+    }
+}
+
+/*Tablet Query*/
+@media only screen and (min-width:481px)and(max-width:768px){
+
+}
+
+/*Mobile Query*/
+
+/* @media only screen and(max-width:768px){
     .respuestas__body{
         width: 100%;
         height: 100%;
@@ -212,7 +258,7 @@ body{
         max-height: 70vh;
         height: 50rem;
     }
-}
+} */
 
 .ranking__text{
     color:#eaeaeb !important;
@@ -257,15 +303,6 @@ body{
     text-align: center;
 }
 
-/* .profile__picture{
-    position: relative;
-    display: inline-block;
-}
-
-.profile__picture:hover .profile__editOption{
-    display: block;
-}*/
-
 .profile__editOptions{
     opacity: 0.2;
 } 
@@ -274,17 +311,13 @@ body{
     opacity: 1;
 }
 
-.profile__editButton{
-    /* background: #a5a5d4 !important; */
-}
-
 .nav-pills .profile__tabsSelection .nav-link.active{
     background-color: rgb(99, 99, 121) !important;
 }
 
 .profile__backButton, .profile__logoutButton{
-    background-color:#131920 !important;
-    border-color: #131920 !important;
+    background-color:#181e25 !important;
+    border-color: #181e25 !important;
     color: #e3e3e3 !important;
 }
 
@@ -303,10 +336,6 @@ body{
     color: #e3e3e3 !important;
     font-size: 40px !important;
 }
-/* .profile__logoutButton{
-    background-color:#131920 !important;
-    border-color: #131920 !important;
-} */
 
 /*-----RECORD CSS-----*/
 .record__header{
@@ -334,3 +363,80 @@ body{
     color:#eaeaeb;
 }
 
+/*-----LOGIN CSS-----*/
+
+.register__content{
+    /* height: 100%; */
+    /* width: 500px; */
+    /* border-radius: 50px; */
+    /* flex-direction: column; */
+}
+.register__center{
+    width: 100%;
+    text-align: center;
+}
+.register__card{
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    background-color: #1e2833;
+    border-radius: 20px;
+    height: 100%;
+    width: 50%;
+    display: inline-block;
+}
+
+.register__cardTitle{
+    text-align: center;
+    color: #eaeaeb;
+    font-weight: bold;
+}
+
+.input__field{
+    padding: 15px 0;
+    position: relative;
+    margin: 2.5rem;
+}
+
+.input__text{
+    background: none;
+    border: none;
+    border-bottom: solid #3b4c61 1px;
+    color:#eaeaeb;
+    height: 35px;
+    padding-left: 25px;
+    width: 100%;
+}
+
+.input__icon{
+    position: absolute;
+    color:#eaeaeb;
+    top:30px
+}
+
+.input__text:hover
+{
+    background-color: #1e2833;
+}
+
+.input__text:focus,textarea:focus{
+    outline: none;
+}
+
+.form__title{
+    font-weight: 600;
+    color: #eaeaeb;
+}
+
+@media only screen and (max-width:700px){
+    .register__card{
+        /* display: flex; */
+        align-items: center;
+        justify-content: center;
+        background-color: #1e2833;
+        border-radius: 20px;
+        height: 100%;
+        width: 100%;
+        display: inline-block;
+    }
+}
