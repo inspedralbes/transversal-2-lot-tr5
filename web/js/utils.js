@@ -8,6 +8,11 @@ function shuffleArray(array) {
     }
 }
 
+const buttonAudio = new Audio("https://www.fesliyanstudios.com/play-mp3/387");
+function play(){
+    buttonAudio.play();
+}
+
 Vue.component('routes', {
     template: ` <div class="nav-container">
                     <b-nav class="navbar">
@@ -476,60 +481,55 @@ Vue.component('register', {
         }
     },
     template:`
-            <div>
-                <br>
-                <h1 style="color:white; text-align:center">Register</h1>
-                <br>
-                <div @keyup.enter="submitLogin">
-                    <b-input-group class="mb-2" size="sm">
-                        <b-input-group-prepend is-text>
-                            <b-icon icon="person-fill"></b-icon>
-                        </b-input-group-prepend>
-                        <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
-                    </b-input-group>
-                    <p v-if = "validUsername===false" class="errorsFields">*Username null</p>
-                    
-                    <b-input-group class="mb-2" size="sm">
-                        <b-input-group-prepend is-text>
-                            <b-icon icon="envelope"></b-icon>
-                        </b-input-group-prepend>
-                        <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
-                    </b-input-group>
-                    <p v-if = "validEmail===false" class="errorsFields">*Email should contains @ with a domain</p>
-                    
-                    <b-input-group class="mb-2" size="sm">
-                        <b-input-group-prepend is-text>
-                            <b-icon icon="lock"></b-icon>
-                        </b-input-group-prepend>
-                        <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
-                    </b-input-group>
-                    <p v-if = "validPassword===false" class="errorsFields">*Password null</p>
-                    
-                    <b-input-group class="mb-2" size="sm">
-                        <b-input-group-prepend is-text>
-                            <b-icon icon="shield-lock"></b-icon>
-                        </b-input-group-prepend>
-                        <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
-                    </b-input-group>
+            <div class="register__center">
+                <div class="register__card">
+                    <br><h3 class="form__title">Register</h3>
+                    <div class="register__content">
+                            <div class="register__innerContent">
+                                <div @keyup.enter="submitRegister">
+                                    <div class="input__field">
+                                        <b-icon icon="person-fill" class="input__icon"></b-icon>
+                                        <input type="text" class="input__text" v-model="form.username" placeholder="Username" required>
+                                        <p v-if = "validUsername===false" class="errorsFields">*Username null</p>
+                                    </div>
+                                    
+                                    <div class="input__field">
+                                        <b-icon icon="envelope" class="input__icon"></b-icon>
+                                        <input type="email" class="input__text" v-model="form.email" placeholder="Email" required></input>
+                                        <p v-if = "validEmail===false" class="errorsFields">*Email should contains @ with a domain</p>
+                                    </div>
+                                    
+                                    <div class="input__field">
+                                        <b-icon icon="lock" class="input__icon"></b-icon>
+                                        <input type="password" class="input__text" v-model="form.password" placeholder="Password" required></input>
+                                        <p v-if = "validPassword===false" class="errorsFields">*Password null</p>
+                                    </div>
+                                    
+                                    <div class="input__field">
+                                        <b-icon icon="shield-lock" class="input__icon"></b-icon>
+                                        <input type="password" class="input__text" v-model="form.confirmPassword" placeholder="Comfirm password" required></input>
+                                        <p v-if = "validConfirmPassword === false" class="errorsFields">*Pasword confirmation null</p><br>
+                                        <p v-if = "samePassword ===false" class="errorsFields">*Confirm password is not the same as password</p>
+                                    </div>
 
-                    <p v-if = "validConfirmPassword === false" class="errorsFields">*Pasword confirmation null</p><br>
-                    <p v-if = "samePassword ===false" class="errorsFields">*Confirm password is not the same as password</p>
-                    <br>
+                                    <b-button @click="everythingValids">Register</b-button>
+
+                                    <p v-if="this.registerCorrect === true"  style="color:green;">Thank you for your registration {{this.form.username}}</p>
+                                    <p v-if="this.registerCorrect === false" style="color:red;">{{this.fetchReceivedMessage}}</p>
+                                </div>
+                            </div>
+                    </div>
                 </div>
-                <b-button @click="everythingValids">Register</b-button>
-
-                <p v-if="this.registerCorrect === true"  style="color:green;">Thank you for your registration {{this.form.username}}</p>
-                <p v-if="this.registerCorrect === false" style="color:red;">{{this.fetchReceivedMessage}}</p>
+                
             </div>`
             ,
     methods: {
         everythingValids:function(){
-            if(this.emailRegex.test(this.form.email)){this.validEmail = true;}else{this.validEmail=false}
-            if(this.form.username!=""){this.validUsername=true;}else{this.validUsername=false}
-            if(this.form.password != ""){this.validPassword=true;}else{this.validPassword=false}
-            if(this.form.confirmPassword != ""){this.validConfirmPassword = true;}else{this.validConfirmPassword=false}
-            if(this.form.confirmPassword === this.form.password){this.samePassword=true;}else{this.samePassword=false}
-
+            this.emailRegex.test(this.form.email)?this.validEmail = true:this.validEmail=false;
+            this.form.username!=""?this.validUsername=true:this.validUsername=false;
+            this.form.password != ""?this.validPassword=true:this.validPassword=false;
+            this.form.confirmPassword != ""?this.validConfirmPassword = true:this.validConfirmPassword=false;
+            this.form.confirmPassword === this.form.password?this.samePassword=true:this.samePassword=false;
             if(this.validEmail==true&&this.validUsername==true&&this.validPassword==true&&this.validConfirmPassword == true&&this.samePassoword==true){
                 this.submitRegister();
             }
@@ -598,37 +598,46 @@ Vue.component('login', {
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
             processing:false,
             credentialsIncorrect: false,
+            validLoginEmail:true,
+            validLoginEmailDomain:true,
+            validLoginPassword:true,
         }
     },
     template:`
-        <div>
-            <br>
-            <h1 style="color:white; text-align:center">Log in</h1>
-            <br>
-            <div @keyup.enter="submitLogin">
-                <b-input-group class="mb-2" size="sm">
-                    <b-input-group-prepend is-text>
-                        <b-icon icon="envelope"></b-icon>
-                    </b-input-group-prepend>
-                    <b-form-input type="email" class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
-                </b-input-group>
-
-                <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
-                <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
-                
-                <b-input-group class="mb-2" size="sm">
-                    <b-input-group-prepend is-text>
-                        <b-icon icon="lock"></b-icon>
-                    </b-input-group-prepend>
-                    <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
-                </b-input-group>
-                <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+        <div class="register__center">
+            <div class="register__card">
+                <br><h3 class="form__title">Log in</h3>
+                <div class="register__content">
+                    <div class="register__innerContent">
+                        <div @keyup.enter="submitLogin">
+                            <div class="input__field">
+                                    <b-icon icon="envelope" class="input__icon"></b-icon>
+                                <input type="email" class="input__text" v-model="form.email" placeholder="Email" required></input>
+                                <p v-if = "validLoginEmail===false" class="errorsFields">Email null</p>
+                                <p v-if = "validLoginEmailDomain===false" class="errorsFields">Email should contains @ with a domain </p>
+                            </div>
+                            
+                            <div class="input__field">
+                                    <b-icon icon="lock" class="input__icon"></b-icon>
+                                <input type="password" class="input__text" v-model="form.password" placeholder="Password" required></input>
+                                <p v-if = "validLoginPassword===false" class="errorsFields">Password null</p>
+                            </div>
+                        </div>
+                        <b-button @click="loginValidation">Join</b-button>
+                        <p v-if="credentialsIncorrect" style="color:red;">*Credentials incorrect</p>
+                    </div>
+                </div>
             </div>
-            <b-button @click="submitLogin">Join</b-button>
-            <p v-if="credentialsIncorrect" style="color:red;">*Credentials incorrect</p>
-
         </div>`,
     methods: {
+        loginValidation:function(){
+            this.emailRegex.test(this.form.email)?this.validLoginEmailDomain = true:this.validLoginEmailDomain=false;
+            this.form.email!=""?this.validLoginEmail=true:this.validLoginEmail=false;
+            this.form.password != ""?this.validLoginPassword=true:this.validLoginPassword=false;
+            if(this.validLoginEmailDomain==true&&this.validLoginEmail==true&&this.validLoginPassword==true){
+                this.submitLogin();
+            }
+        },
         submitLogin: function(){
             this.processing=true;
             if(this.form.email != '' && this.form.password != '' ) {
@@ -838,13 +847,13 @@ Vue.component('question' , {
         }
     },
     props: ['infoQuestion'],
-    template: ` <div>
+    template: ` <div game__Card>
                     <h3></h3>
                     <b-card
                     :title=infoQuestion.question
                     class="mb-2 game__card"
                     >
-                        <br>
+                        <hr><br>
                         <div>
                             <b-row>
                                 <b-col lg="6" class="pb-2">
@@ -874,6 +883,7 @@ Vue.component('question' , {
                 </div>`,
     methods: {
         getAnswerUser: function (numero) {
+            Audio.play();
             if(!this.answered){
                 console.log(this.arrayAnswersDesordenada[numero]);
                 console.log(this.infoQuestion.correctAnswer);
