@@ -13,7 +13,7 @@ Vue.component('routes', {
                     <b-nav class="navbar">
                         <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
                         <b-nav-item active to="/">LOGO</b-nav-item>
-                        <b-nav-item v-show="this.isLogged" to="/profile">Profile</b-nav-item>
+                        <b-nav-item v-show="this.isLogged" :to="'/profile/' + this.userLogged.idUser">Profile</b-nav-item>
                         <b-nav-item v-show="!this.isLogged" to="/join">Login</b-nav-item>
                     </b-nav>
                 </div>`,
@@ -39,6 +39,7 @@ Vue.component('routes', {
 });
 
 Vue.component('record', {
+    props: ['id'],
     data: function(){
         return{
             gamesPlayed: [],
@@ -63,8 +64,8 @@ Vue.component('record', {
         
     },
     mounted() {
-        console.log("hola id " + this.userLogged.idUser);
-        fetch("../trivial5/public/record/"+ this.userLogged.idUser +"")
+        console.log("hola id " + this.id);
+        fetch("../trivial5/public/record/"+ this.id +"")
             .then(res => res.json())
             .then(data => {
                 console.log("json" + data[0]);
@@ -338,6 +339,7 @@ Vue.component('profile', {
     data: function(){
         return{
             infoUser: "",
+            id: this.$route.params.id,
         }
     },
     template: ` <div v-show="this.isLogged">
@@ -371,15 +373,15 @@ Vue.component('profile', {
                             <template slot="title">
                                 <b-icon icon="trophy"></b-icon> Record
                             </template>
-                            <record :games=this.record></record>
+                            <record :id=this.id></record>
                         </b-tab>
-                        <b-tab :title-link-class="profile__tabsSelection">
+                        <b-tab v-show="this.id == userStore().loginInfo.idUser" :title-link-class="profile__tabsSelection">
                             <template slot="title">
                                 <b-icon icon="award"></b-icon> Challenges
                             </template>
                             <challenges></challenges>
                         </b-tab>
-                        <b-tab :title-link-class="profile__tabsSelection">
+                        <b-tab v-show="this.id == userStore().loginInfo.idUser" :title-link-class="profile__tabsSelection">
                             <template slot="title">
                                 <b-icon icon="person-lines-fill"></b-icon> Friends
                             </template>
@@ -416,7 +418,100 @@ Vue.component('profile', {
     },
     mounted() {
 
-        fetch('../trivial5/public/indexPerfil/' + userStore().loginInfo.idUser)
+        console.log("id ruta " + this.$route.params.id + " | id " + this.id);
+
+        this.id = this.$route.params.id;
+
+        fetch('../trivial5/public/indexPerfil/' + this.id)
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data[0]);
+            this.infoUser = data[0];
+        });
+
+       
+        // let userStatistics = new CharacterData("userStatistics",{
+        //     type:'doughnut',
+        //     data:statisticsData,
+        //     options:{}
+        // })
+        // router.push("/");
+                
+    },
+});
+
+Vue.component('user-profile', {
+    data: function(){
+        return{
+            infoUser: "",
+            id: this.$route.params.id,
+        }
+    },
+    template: ` <div v-show="this.isLogged">
+                    <br>
+                    <b-container class="bv-example-row">
+                        <b-row>
+                            <b-col><b-button to="/" class="profile__backButton"><b-icon icon="arrow-left"></b-icon></b-button></b-col>
+                            <b-col><b-button @click="logoutUser" class="profile__logoutButton">Logout</b-button></b-col>
+                        </b-row>
+                    </b-container>
+                    <br>
+                    <div class="profile__div">
+                        <div class="profile__picture">
+                            <b-avatar badge-variant="info" badge-offset="-0.5em" size="6rem" src="https://placekitten.com/300/300">
+                                <template #badge>
+                                    <div class="profile__editOptions">
+                                        <b-button @onclick="editProfile" class="rounded-circle profile__editButton" size="sm">
+                                            <b-icon icon="pencil"></b-icon>
+                                        </b-button>
+                                    </div>
+                                </template>
+                            </b-avatar>
+                        </div>
+                        <br>
+                        <p class="profile__userName">{{infoUser.name}}</p>
+                        <p class="profile__userScore">Total Score -> {{infoUser.total_score}}</p>
+                    </div>
+                    <br>
+                    <b-tabs pills card content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
+                        <b-tab active class="profile__tabsSelection">
+                            <template slot="title">
+                                <b-icon icon="trophy"></b-icon> Record
+                            </template>
+                            <record :id=this.id ></record>
+                        </b-tab>
+                    </b-tabs>
+                </div>`, 
+    methods: {
+        editProfile:function(){
+            alert("edit clicked")
+        },
+        logoutUser: function() {
+            userStore().logged = false;
+        }
+    },
+    computed: {
+        isLogged() {
+            return userStore().logged;
+        },
+        userLogged() {
+            
+            if(userStore().logged){
+                return userStore().loginInfo;
+            }
+            else {
+                return {
+                    user: {
+                        nombre: "",
+                        imagen: ""
+                    }
+                }
+            }
+        }
+    },
+    mounted() {
+
+        fetch('../trivial5/public/indexPerfil/' + this.id)
         .then(res=>res.json())
         .then(data=>{
             console.log(data[0]);
@@ -1329,14 +1424,21 @@ const Daily = {
     template:`<daily></daily>`
 }
 
+const UP = {
+    template:`<user-profile></user-profile>`
+}
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [{
     path: '/',
     component: Game
 }, {
-    path: '/profile',
+    path: '/profile/:id',
     component: Perfil
+},
+{
+    path: '/userprofile/:id',
+    component: UP
 },
 {
     path: '/ranking',
