@@ -279,7 +279,6 @@ Vue.component('send_friend_request', {
     //hacer verificacion mail para agregar
     template: ` <div class="nav-container">
                     <br>
-                    
                     <b-input-group class="mt-3">
                         <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
                         <b-input-group-append>
@@ -292,7 +291,6 @@ Vue.component('send_friend_request', {
                 </div>`,
     methods: {
         validarEmail: function() {
-
             if(this.emailRegex.test(this.email)) {
                 this.mailValido = true;
                 this.sendRequest();
@@ -300,12 +298,9 @@ Vue.component('send_friend_request', {
             else {
                 this.mailValido = false;
             }
-            
         },
-        sendRequest: function() {
-                        
+        sendRequest: function() { 
             //hacer fetch al back enviandole el email para que se cree la peticion
-
             friendRequest = new FormData();
             friendRequest.append('id', userStore().loginInfo.idUser);
             friendRequest.append('email', this.email);
@@ -320,7 +315,6 @@ Vue.component('send_friend_request', {
                 console.log(data.data);
                 this.sendRequestAccepted = data.data;
                 this.mssgIncorrecto = data.message;
-
                 console.log("accepted " +this.sendRequestAccepted );
             }); 
 
@@ -472,9 +466,13 @@ Vue.component('register', {
                 confirmPassword: '',
             },
             registerCorrect: false,
-            everythingValids: false,
             fetchReceivedMessage:"",
             emailRegex : new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}'),
+            validEmail:true,
+            validUsername:true,
+            validPassword:true,
+            validConfirmPassword:true,
+            samePassword:true
         }
     },
     template:`
@@ -489,7 +487,7 @@ Vue.component('register', {
                         </b-input-group-prepend>
                         <b-form-input class="form__control" v-model="form.username" placeholder="Username" required></b-form-input>
                     </b-input-group>
-                    <p v-if = "form.username === ''" class="errorsFields">Username{{form.username}} null</p>
+                    <p v-if = "validUsername===false" class="errorsFields">*Username null</p>
                     
                     <b-input-group class="mb-2" size="sm">
                         <b-input-group-prepend is-text>
@@ -497,8 +495,7 @@ Vue.component('register', {
                         </b-input-group-prepend>
                         <b-form-input class="form__control" v-model="form.email" placeholder="Email" required></b-form-input>
                     </b-input-group>
-                    <p v-if = "form.email === ''" class="errorsFields">Email{{form.email}} null</p>
-                    <p v-if = "(this.emailRegex.test(form.email)) === false" class="errorsFields">Email should contains @ with a domain </p>
+                    <p v-if = "validEmail===false" class="errorsFields">*Email should contains @ with a domain</p>
                     
                     <b-input-group class="mb-2" size="sm">
                         <b-input-group-prepend is-text>
@@ -506,7 +503,7 @@ Vue.component('register', {
                         </b-input-group-prepend>
                         <b-form-input type="password" class="form__control" v-model="form.password" placeholder="Password" required></b-form-input>
                     </b-input-group>
-                    <p v-if = "form.password === ''" class="errorsFields">Password{{form.password}} null</p>
+                    <p v-if = "validPassword===false" class="errorsFields">*Password null</p>
                     
                     <b-input-group class="mb-2" size="sm">
                         <b-input-group-prepend is-text>
@@ -515,17 +512,28 @@ Vue.component('register', {
                         <b-form-input type="password" class="form__control" v-model="form.confirmPassword" placeholder="Comfirm password" required></b-form-input>
                     </b-input-group>
 
-                    <p v-if = "form.confirmPassword ===''" class="errorsFields">Paswword confirmation  null</p>
-                    <p v-if = "form.confirmPassword !== form.password" class="errorsFields">Confirm password is not the same as password</p>
+                    <p v-if = "validConfirmPassword === false" class="errorsFields">*Pasword confirmation null</p><br>
+                    <p v-if = "samePassword ===false" class="errorsFields">*Confirm password is not the same as password</p>
                     <br>
                 </div>
-                <b-button @click="submitRegister">Register</b-button>
+                <b-button @click="everythingValids">Register</b-button>
 
                 <p v-if="this.registerCorrect === true"  style="color:green;">Thank you for your registration {{this.form.username}}</p>
                 <p v-if="this.registerCorrect === false" style="color:red;">{{this.fetchReceivedMessage}}</p>
             </div>`
             ,
     methods: {
+        everythingValids:function(){
+            if(this.emailRegex.test(this.form.email)){this.validEmail = true;}else{this.validEmail=false}
+            if(this.form.username!=""){this.validUsername=true;}else{this.validUsername=false}
+            if(this.form.password != ""){this.validPassword=true;}else{this.validPassword=false}
+            if(this.form.confirmPassword != ""){this.validConfirmPassword = true;}else{this.validConfirmPassword=false}
+            if(this.form.confirmPassword === this.form.password){this.samePassword=true;}else{this.samePassword=false}
+
+            if(this.validEmail==true&&this.validUsername==true&&this.validPassword==true&&this.validConfirmPassword == true&&this.samePassoword==true){
+                this.submitRegister();
+            }
+        },
         submitRegister: function(){
             console.log("hola register");
             console.log("valido");
