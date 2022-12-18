@@ -380,13 +380,13 @@ Vue.component('profile', {
                             </template>
                             <record :id=this.id></record>
                         </b-tab>
-                        <b-tab v-show="this.id == userStore().loginInfo.idUser" :title-link-class="profile__tabsSelection">
+                        <b-tab v-if="this.id == this.userLogged.idUser" :title-link-class="profile__tabsSelection">
                             <template slot="title">
                                 <b-icon icon="award"></b-icon> Challenges
                             </template>
                             <challenges></challenges>
                         </b-tab>
-                        <b-tab v-show="this.id == userStore().loginInfo.idUser" :title-link-class="profile__tabsSelection">
+                        <b-tab v-if="this.id == this.userLogged.idUser" :title-link-class="profile__tabsSelection">
                             <template slot="title">
                                 <b-icon icon="person-lines-fill"></b-icon> Friends
                             </template>
@@ -421,6 +421,18 @@ Vue.component('profile', {
             }
         }
     },
+    // beforeUpdate() {
+    //     console.log("id ruta update " + this.$route.params.id + " | id " + this.id);
+
+    //     this.id = this.$route.params.id;
+
+    //     fetch('../trivial5/public/indexPerfil/' + this.id)
+    //     .then(res=>res.json())
+    //     .then(data=>{
+    //         console.log(data[0]);
+    //         this.infoUser = data[0];
+    //     });
+    // },
     mounted() {
 
         console.log("id ruta " + this.$route.params.id + " | id " + this.id);
