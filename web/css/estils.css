@@ -215,24 +215,9 @@ body{
     text-align: center;
 }
 
-.game__selection {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-    }
-    
-.game__question { grid-area: 1 / 2 / 3 / 6; }
-.game__select1 { grid-area: 3 / 2 / 4 / 6; }
-.game__select2 { grid-area: 4 / 2 / 5 / 6; }
-.game__select3 { grid-area: 5 / 2 / 6 / 6; }
-.game__select4 { grid-area: 6 / 2 / 7 / 6; }
-
-
 /*Desktop Query*/
 @media only screen and(min-width:768px){
-    .game__cardDiv{
+    .game__card{
         width: 60%;
     }
 }
