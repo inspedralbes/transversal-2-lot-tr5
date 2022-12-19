@@ -221,13 +221,15 @@ body{
         align-items: center; 
         justify-content: center;
     } */
-    .game__div{
-        text-align: center;
+    .game__outerDiv{
+        display: flex;
+        justify-content: center;
+        align-items: center;
         /* width: 60%; */
     }
 
-    .game__body{
-        display: inline-block;
+    .game__div{
+        
     }
 }
 
