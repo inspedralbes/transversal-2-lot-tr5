@@ -44,5 +44,6 @@ Route::post('updatescore', [PlayedgameController::class, 'update']);
 
 Route::post('deletefriend', [FriendController::class, 'deleteFriend']);
 
+Route::post('editProfile', [UserController::class, 'updateProfile']);
 
 require __DIR__.'/auth.php';

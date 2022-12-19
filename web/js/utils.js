@@ -374,19 +374,19 @@ Vue.component('profile', {
                     </div>
                     <br>
                     <b-tabs pills card content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
-                        <b-tab active class="profile__tabsSelection">
+                        <b-tab active >
                             <template slot="title">
                                 <b-icon icon="trophy"></b-icon> Record
                             </template>
                             <record :id=this.id></record>
                         </b-tab>
-                        <b-tab v-if="this.id == this.userLogged.idUser" :title-link-class="profile__tabsSelection">
+                        <b-tab v-if="this.id == this.userLogged.idUser" >
                             <template slot="title">
                                 <b-icon icon="award"></b-icon> Challenges
                             </template>
                             <challenges></challenges>
                         </b-tab>
-                        <b-tab v-if="this.id == this.userLogged.idUser" :title-link-class="profile__tabsSelection">
+                        <b-tab v-if="this.id == this.userLogged.idUser">
                             <template slot="title">
                                 <b-icon icon="person-lines-fill"></b-icon> Friends
                             </template>
@@ -590,7 +590,7 @@ Vue.component('register', {
     template:`
             <div class="register__center">
                 <div class="register__card">
-                    <br><h3 class="form__title">Register</h3>
+                    <br><br><h3 class="form__title">Register</h3>
                     <div class="register__content">
                             <div class="register__innerContent">
                                 <div @keyup.enter="submitRegister">
@@ -619,7 +619,7 @@ Vue.component('register', {
                                         <p v-if = "samePassword ===false" class="errorsFields">*Confirm password is not the same as password</p>
                                     </div>
 
-                                    <b-button @click="everythingValids">Register</b-button>
+                                    <b-button @click="everythingValids" class="register__button">Register <b-icon icon="arrow-right"></b-icon></b-button><br><br>
 
                                     <p v-if="this.registerCorrect === true"  style="color:green;">Thank you for your registration {{this.form.username}}</p>
                                     <p v-if="this.registerCorrect === false" style="color:red;">{{this.fetchReceivedMessage}}</p>
@@ -713,7 +713,7 @@ Vue.component('login', {
     template:`
         <div class="register__center">
             <div class="register__card">
-                <br><h3 class="form__title">Log in</h3>
+                <br><br><h3 class="form__title">Log in</h3>
                 <div class="register__content">
                     <div class="register__innerContent">
                         <div @keyup.enter="submitLogin">
@@ -730,7 +730,7 @@ Vue.component('login', {
                                 <p v-if = "validLoginPassword===false" class="errorsFields">Password null</p>
                             </div>
                         </div>
-                        <b-button @click="loginValidation">Join</b-button>
+                        <b-button @click="loginValidation" class="login__button">Join <b-icon icon="arrow-right"></b-icon></b-button><br><br>
                         <p v-if="credentialsIncorrect" style="color:red;">*Credentials incorrect</p>
                     </div>
                 </div>
@@ -800,9 +800,9 @@ Vue.component('login', {
 Vue.component('ranking', {
     template: ` <div class="nav-container">
                     <br><br>
-                    <b-tabs pills cardcontent-class="mt-3" align="center">
-                        <b-tab title="Global" active active title-item-class="w-25 login__tab"><globalranking></globalranking></b-tab>
-                        <b-tab title="Daily" title-item-class="w-25 register__tab"><dailyranking></dailyranking></b-tab>
+                    <b-tabs pills cardcontent-class="mt-3" active-nav-item-class="font-weight-bold text-danger">
+                        <b-tab title="Global" active active title-item-class="w-50 login__tab"><globalranking></globalranking></b-tab>
+                        <b-tab title="Daily" title-item-class="w-50 register__tab"><dailyranking></dailyranking></b-tab>
                     </b-tabs>
                 </div>`,
 
@@ -830,18 +830,19 @@ Vue.component('dailyranking', {
     },
     template: ` <div class="ranking__list">
                     <br>
-                    <b-container class="text-center">
-                        <b-row class="mb-3">
-                            <b-col class="ranking__text">Rank</b-col>
-                            <b-col class="ranking__text">Name</b-col>
-                            <b-col class="ranking__text">Score</b-col>
-                        </b-row>
-                        <b-row class="mb-3" v-for="(player, index) in this.players">
-                            <b-col class="ranking__text">{{index + 1}}</b-col>
-                            <b-col class="ranking__text">{{player.name}}</b-col>
-                            <b-col class="ranking__text">{{player.score}}</b-col>
-                        </b-row>
-                    </b-container>
+                    <div class="text-center">
+                        <div class="ranking__content">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                    <tr v-for="(player, index) in this.players">
+                                        <td>{{index + 1}}</td>
+                                        <td>{{player.name}}</td>
+                                        <td>{{player.score}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>`,
 });
 
@@ -867,18 +868,19 @@ Vue.component('globalranking', {
     },
     template: ` <div class="ranking__list">
                     <br>
-                    <b-container class="text-center">
-                        <b-row class="mb-3">
-                            <b-col class="ranking__text">Rank</b-col>
-                            <b-col class="ranking__text">Name</b-col>
-                            <b-col class="ranking__text">Score</b-col>
-                        </b-row>
-                        <b-row class="mb-3" v-for="(player, index) in this.players">
-                            <b-col class="ranking__text">{{index + 1}}</b-col>
-                            <b-col class="ranking__text">{{player.name}}</b-col>
-                            <b-col class="ranking__text">{{player.total_score}}</b-col>
-                        </b-row>
-                    </b-container>
+                    <div class="text-center">
+                        <div class="ranking__content">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                    <tr v-for="(player, index) in this.players">
+                                        <td>{{index + 1}}</td>
+                                        <td>{{player.name}}</td>
+                                        <td>{{player.total_score}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>`,
 })
 
@@ -963,21 +965,21 @@ Vue.component('question' , {
                         <hr><br>
                         <div>
                             <b-row>
-                                <b-col lg="6" class="pb-2">
+                                <b-col lg="6" class="pb-3" ml="10">
                                     <button v-if="isLogged" @click="getAnswerUser(0)" class="game__buttons_selection" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(0), game__answerIncorrect: comprobarRespuestaIncorrecta(0)  }">{{ this.arrayAnswersDesordenada[0].answer }}</button>
                                     <button v-if="!isLogged" @click="getAnswerUser(0)" class="game__buttons_selection">{{ this.arrayAnswersDesordenada[0].answer }}</button>
                                 </b-col>
-                                <b-col lg="6" class="pb-2">
+                                <b-col lg="6" class="pb-3" ml="10">
                                     <button v-if="isLogged" @click="getAnswerUser(1)" class="game__buttons_selection" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(1), game__answerIncorrect: comprobarRespuestaIncorrecta(1) }">{{ this.arrayAnswersDesordenada[1].answer }}</button>
                                     <button v-if="!isLogged" @click="getAnswerUser(1)" class="game__buttons_selection">{{ this.arrayAnswersDesordenada[1].answer }}</button>
                                 </b-col>
                             </b-row>
                             <b-row>
-                                <b-col lg="6" class="pb-2">
+                                <b-col lg="6" class="pb-3" ml="10">
                                     <button v-if="isLogged" @click="getAnswerUser(2)" class="game__buttons_selection" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(2), game__answerIncorrect: comprobarRespuestaIncorrecta(2) }">{{ this.arrayAnswersDesordenada[2].answer }}</button>
                                     <button v-if="!isLogged" @click="getAnswerUser(2)" class="game__buttons_selection">{{ this.arrayAnswersDesordenada[2].answer }}</button>
                                 </b-col>
-                                <b-col lg="6" class="pb-2">
+                                <b-col lg="6" class="pb-3" ml="10">
                                     <button v-if="isLogged" @click="getAnswerUser(3)" class="game__buttons_selection" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(3), game__answerIncorrect: comprobarRespuestaIncorrecta(3) }">{{ this.arrayAnswersDesordenada[3].answer }}</button>
                                     <button v-if="!isLogged" @click="getAnswerUser(3)" class="game__buttons_selection">{{ this.arrayAnswersDesordenada[3].answer }}</button>
                                 </b-col>
@@ -990,7 +992,6 @@ Vue.component('question' , {
                 </div>`,
     methods: {
         getAnswerUser: function (numero) {
-            Audio.play();
             if(!this.answered){
                 console.log(this.arrayAnswersDesordenada[numero]);
                 console.log(this.infoQuestion.correctAnswer);
@@ -1148,27 +1149,27 @@ Vue.component('game' , {
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 1</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(0)">PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(0)" style="float:right;">PLAY</b-button></b-col>
                         </b-row>
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 2</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(1)">PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(1)" style="float:right;">PLAY</b-button></b-col>
                         </b-row>
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 3</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(2)">PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(2)" style="float:right;">PLAY</b-button></b-col>
                         </b-row>
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 4</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(3)">PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(3)" style="float:right;">PLAY</b-button></b-col>
                         </b-row>
                         <br>
                         <b-row>
                             <b-col cols="8" sm="6">DEMO 5</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(4)">PLAY</b-button></b-col>
+                            <b-col cols="4" sm="6"><b-button @click="createGame(4)" style="float:right;">PLAY</b-button></b-col>
                         </b-row>
                     </b-modal>
 

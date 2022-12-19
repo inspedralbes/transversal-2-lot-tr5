@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use \stdClass;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -93,9 +94,26 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateProfile(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|regex:/(.*)@(.*)\.(.*)/i|unique:users',
+        ]);
+
+        if(!(User::where('email',$request->email)->exists())){
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->save();
+            $data = 1;
+        }else{
+            $data = 0;
+        }
+
+        $ret = new stdClass();
+        $ret->data = $data;
+        return json_encode($ret);
     }
 
     /**

@@ -62,7 +62,7 @@ body{
     border: none;
     background-color: #181e25;
   }
-  
+
   .button__play{
     color: #fff352;
     border: 1px solid #fff352;
@@ -182,12 +182,14 @@ body{
 	-o-border-radius: 7px;
 	border-radius: 7px;
     box-shadow: 0 .2em #2b3847; 
+    margin-bottom: 10px;
 }
 
 .game__buttons_selection:active{
     box-shadow: none;
 	position: relative;
 	top: .2em;
+    transform: translateY(-2px);
 }
 .game__cardFooter {
     display: inline-flex;
@@ -260,6 +262,54 @@ body{
     }
 } */
 
+table{
+    width: 100%;
+    border-collapse: inherit;
+    border-radius: 30px;
+    border-spacing: 0px;
+    /* background: linear-gradient(#555,#222); */
+    background-color: #1e2833;
+}
+
+.ranking__content{
+    /* height: 400px; */
+    /* overflow-x: auto; */
+    margin-top: 0px;
+    /* background: linear-gradient(#555, #222); */
+}
+
+/* th{
+    padding: 20px 15px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 16px;
+    color: #eaeaeb;
+    text-align: center;
+    text-transform: uppercase;
+    border-radius: 3px;
+} */
+
+td{
+    border-top: 10px;
+    padding: 20px;
+    text-align: left;
+    vertical-align:middle;
+    font-weight: 300;
+    font-size: 14px;
+    color: #eaeaeb;
+    border-bottom: solid 1px rgba(255,255,255,0.1);
+    text-align: center;
+}
+
+tbody tr:first-child td:first-child{
+    border-radius: 20px 0 0 0;
+ }
+
+tbody tr:first-child td:last-child{
+    border-radius: 0 20px 0 0;
+ }
+
+
 .ranking__text{
     color:#eaeaeb !important;
 }
@@ -270,9 +320,24 @@ body{
 }
 
 /*----- TABS of Login and Register -----*/
-.nav-pills  .login__tab  .nav-link{
-    background-color: rgb(99, 99, 121) !important;
+
+.nav-pills .nav-item .nav-link.active{
+    background-color:#1e2833 ;
+    border-radius: 50px;
 }
+
+/* .nav-pills .nav-item .nav-link{
+    border-radius: 50px;
+    background-color:#1e2833 ;
+} */
+
+.nav-pills{
+    text-align: center;
+    border-radius: 12px;
+    /* background-color:#1e2833; */
+    /* border:1px solid #1e2833; */
+}
+
 
 .start__tituloDiv{
     color: #eaeaeb;
@@ -384,6 +449,9 @@ body{
     height: 100%;
     width: 50%;
     display: inline-block;
+    -webkit-box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
+-moz-box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
+box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
 }
 
 .register__cardTitle{
@@ -395,7 +463,7 @@ body{
 .input__field{
     padding: 15px 0;
     position: relative;
-    margin: 2.5rem;
+    margin: 1.5rem;
 }
 
 .input__text{
@@ -428,6 +496,20 @@ body{
     color: #eaeaeb;
 }
 
+.register__button{
+    background: linear-gradient(112.9deg, rgb(112, 255, 151) 6.2%, rgb(70, 195, 255) 99.7%);
+    width: 120px;
+    height: 50px;
+    border-radius: 40px;
+}
+
+.login__button{
+    background: linear-gradient(112.9deg, rgb(112, 255, 151) 6.2%, rgb(70, 195, 255) 99.7%);
+    width: 100px;
+    height: 45px;
+    border-radius: 40px;
+}
+
 @media only screen and (max-width:700px){
     .register__card{
         /* display: flex; */
@@ -439,4 +521,10 @@ body{
         width: 100%;
         display: inline-block;
     }
+}
+
+/*-----MODAL CSS-----*/
+.modal-header,.modal-body{
+    background-color: #1e2833;
+    color:#eaeaeb;
 }
