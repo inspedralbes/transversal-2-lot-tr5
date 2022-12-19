@@ -934,7 +934,7 @@ Vue.component('results' , {
             withFriends: false,
         }
     },
-    props: ['results', 'timerRestante', 'difficulty', 'daily'],
+    props: ['results', 'timerRestante', 'difficulty', 'daily', 'idGame'],
     template: ` <div class="game__result">
                     <br>
                     <h1 class="game__resultLetter">Your result is {{correctAnswers}}/{{results.length}}</h1>
@@ -1011,7 +1011,7 @@ Vue.component('results' , {
             let gameChallenge = new FormData();
             gameChallenge.append('idGame', this.idGame);
             gameChallenge.append('idChallenger', userStore().loginInfo.idUser);
-            gameChallenge.append('idChallenger', id);
+            gameChallenge.append('idChallenged', id);
             gameChallenge.append('date', date);
 
             fetch('../trivial5/public/storechallenge', {
