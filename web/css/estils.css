@@ -538,3 +538,14 @@ box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
     color:#eaeaeb;
     text-align: center;
 }
+
+/*-----QUIZ SELECTION CSS-----*/
+
+.select__options{
+}
+
+.select__optionsOuter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

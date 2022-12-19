@@ -1141,33 +1141,37 @@ Vue.component('game' , {
                             </div>
                         </div>
                     </div>
-                    <div v-if="this.page == 1">
-                        <p style="color: white;">Select difficulty</p>
-                        <b-button @click="changeDifficulty('easy')">Easy</b-button>
-                        <b-button @click="changeDifficulty('medium')">Medium</b-button>
-                        <b-button @click="changeDifficulty('hard')">Hard</b-button>
+                    <div class="select__optionsOuter">
+                        <div class="select__options">
+                            <div v-if="this.page == 1">
+                                <p style="color: white;">Select difficulty</p>
+                                <b-button @click="changeDifficulty('easy')">Easy</b-button>
+                                <b-button @click="changeDifficulty('medium')">Medium</b-button>
+                                <b-button @click="changeDifficulty('hard')">Hard</b-button>
 
-                        <p style="color: white;">Select category</p>
+                                <p style="color: white;">Select category</p>
 
-                        <b-row class="justify-content-md-center">
-                            <b-col cols="2"><b-button @click="changeCategory('arts_and_literature')">🎨Arts & Literature</b-button></b-col>
-                            <b-col cols="2"><b-button @click="changeCategory('film_and_tv')">🎞️Film & TV</b-button></b-col>
-                            <b-col cols="2"><b-button @click="changeCategory('food_and_drink')">🥘Food & Drink</b-button></b-col></b-col>
-                            <b-col cols="2"><b-button @click="changeCategory('general_knowledge')">🤓General Knowledge</b-button></b-col></b-col>
-                            <b-col cols="2"><b-button @click="changeCategory('geography')">🗺️Geography</b-button></b-col></b-col>
-                        </b-row>
-                        <b-row class="justify-content-md-center">
-                            <b-col cols="2"><b-button @click="changeCategory('history')">📜History</b-button></b-col></b-col>
-                            <b-col cols="2"><b-button @click="changeCategory('music')">🎼Music</b-button></b-col></b-col>
-                            <b-col cols="2"><b-button @click="changeCategory('science')">🔬Science</b-button></b-col></b-col>
-                            <b-col cols="2"><b-button @click="changeCategory('society_and_culture')">🧠Society & Culture</b-button></b-col></b-col>
-                            <b-col cols="2"><b-button @click="changeCategory('sport_and_leisure')">🤺Sport & Leisure</b-button></b-col></b-col>
-                        </b-row>
+                                <b-row class="justify-content-md-center">
+                                    <b-col cols="2"><b-button @click="changeCategory('arts_and_literature')">🎨Arts & Literature</b-button></b-col>
+                                    <b-col cols="2"><b-button @click="changeCategory('film_and_tv')">🎞️Film & TV</b-button></b-col>
+                                    <b-col cols="2"><b-button @click="changeCategory('food_and_drink')">🥘Food & Drink</b-button></b-col></b-col>
+                                    <b-col cols="2"><b-button @click="changeCategory('general_knowledge')">🤓General Knowledge</b-button></b-col></b-col>
+                                    <b-col cols="2"><b-button @click="changeCategory('geography')">🗺️Geography</b-button></b-col></b-col>
+                                </b-row>
+                                <b-row class="justify-content-md-center">
+                                    <b-col cols="2"><b-button @click="changeCategory('history')">📜History</b-button></b-col></b-col>
+                                    <b-col cols="2"><b-button @click="changeCategory('music')">🎼Music</b-button></b-col></b-col>
+                                    <b-col cols="2"><b-button @click="changeCategory('science')">🔬Science</b-button></b-col></b-col>
+                                    <b-col cols="2"><b-button @click="changeCategory('society_and_culture')">🧠Society & Culture</b-button></b-col></b-col>
+                                    <b-col cols="2"><b-button @click="changeCategory('sport_and_leisure')">🤺Sport & Leisure</b-button></b-col></b-col>
+                                </b-row>
 
-                        <p style="color: white;">Your selection -> {{this.selectedDifficulty}} && {{this.selectedCategory}}</p>
+                                <p style="color: white;">Your selection -> {{this.selectedDifficulty}} && {{this.selectedCategory}}</p>
 
-                        <b-button @click="decreasePage" class="button__play"><span>Back</span></b-button>
-                        <b-button @click="startGame" class="button__play"><span>Start</span></b-button>
+                                <b-button @click="decreasePage" class="button__play"><span>Back</span></b-button>
+                                <b-button @click="startGame" class="button__play"><span>Start</span></b-button>
+                            </div>
+                        </div>
                     </div>
                     <br><br>
                     <div class="game__outerDiv">
