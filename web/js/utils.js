@@ -988,7 +988,7 @@ Vue.component('question' , {
         }
     },
     props: ['infoQuestion'],
-    template: ` <div game__Card>
+    template: ` <div class="game__card">
                     <h3></h3>
                     <b-card
                     :title=infoQuestion.question

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Game;
+use App\Models\PlayedGame;
 
 class ChallengeController extends Controller
 {
@@ -11,12 +13,20 @@ class ChallengeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
 
+        // $partidaChallenge = Challenge::where('')
+
         $completedChallenges = DB::table('played_games')
-            ->where('status', '=', 'accepted')
+        ->distinct()
+            ->join('challenges',function($join){
+                $join->on('played_games.idGame','=','challenges.idGmae');
+            })
+            ->where('challenges.status', '=', 'accepted')
             ->get();
+
+        return $completedChallenges;
     }
 
     /**
@@ -45,8 +55,19 @@ class ChallengeController extends Controller
         $challenge -> date = $request -> date;
         $challenge -> status = $request -> status;
 
-        $challenge -> save();
+        $playedGame = new PlayedGame();
+        $playedGames -> idUser = $request -> idUser;
+        $playedGames -> idGame = $request -> idGame;
+        $playedGames -> date = $request -> date;
+        $playedGames -> score = $request ->score;
 
+        $playedGames -> save();
+        $user = User::find($playedGames -> idUser);
+        $user -> total_score +=  $playedGames -> score;
+
+        $user -> save();
+        $challenge -> save();
+        
         return $challenge;
     }
 
