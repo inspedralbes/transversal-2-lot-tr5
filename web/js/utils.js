@@ -1199,7 +1199,7 @@ Vue.component('game' , {
                 }
                 else {
                     console.log(id);
-                    rutaFetch = "../trivial5/public/demo/{"+id+"}";
+                    rutaFetch = "../trivial5/public/demo/"+id;
                 }
             }
             else {
