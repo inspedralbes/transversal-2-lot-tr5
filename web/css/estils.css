@@ -217,19 +217,14 @@ body{
 
 /*Desktop Query*/
 @media(min-width:768px){
-    /* .game__outerDiv{
-        align-items: center; 
-        justify-content: center;
-    } */
     .game__outerDiv{
         display: flex;
         justify-content: center;
         align-items: center;
-        /* width: 60%; */
     }
 
     .game__div{
-        
+        width: 60%;
     }
 }
 
