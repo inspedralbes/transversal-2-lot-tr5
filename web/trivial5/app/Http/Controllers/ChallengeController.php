@@ -15,9 +15,6 @@ class ChallengeController extends Controller
      */
     public function index($id)
     {
-
-        // $partidaChallenge = Challenge::where('')
-
         $completedChallenges = DB::table('played_games')
         ->distinct()
             ->join('challenges',function($join){

@@ -5,6 +5,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\PlayedgameController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -28,6 +29,8 @@ Route::get('pendingrequest/{id}', [FriendController::class, 'index_pending'] );
 Route::get('listfriends/{id}', [FriendController::class, 'index'] );
 
 Route::get('indexPerfil/{id}', [UserController::class, 'indexPerfil']);
+
+Route::get('indexChallenge',[ChallengeController::class,'index']);
 
 
 //POST
