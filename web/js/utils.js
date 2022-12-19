@@ -932,6 +932,7 @@ Vue.component('results' , {
                     <h1 v-show="this.isLogged" class="game__resultLetter">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
                     <b-button @click="$emit('lobby')">Lobby</b-button>
                     <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
+                    <b-button @click="">Chanllenge someone!</B-button>
                 </div>`,
     methods: {
         calcularPuntuacion: function() {
