@@ -133,6 +133,9 @@ body{
 }
 
 /*div que contingui totes les cartes*/
+.card-body{
+    padding: 0 10px;
+}
 .game__cards{
     display: flex;
     align-items: center;
@@ -157,6 +160,10 @@ body{
 
 .game__modal{
     background-color: #181620;
+}
+
+.game__outerDiv{
+    margin:10px;
 }
 
 .game__buttons_selection{
@@ -542,6 +549,11 @@ box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
 /*-----QUIZ SELECTION CSS-----*/
 
 .select__options{
+    text-align: center;
+}
+
+.select__options > div> p{
+    text-transform: uppercase;
 }
 
 .select__optionsOuter{

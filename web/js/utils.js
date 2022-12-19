@@ -1151,6 +1151,7 @@ Vue.component('game' , {
                     <div class="select__optionsOuter">
                         <div class="select__options">
                             <div v-if="this.page == 1">
+                                <br><br>
                                 <p style="color: white;">Select difficulty</p>
                                 <b-button @click="changeDifficulty('easy')">Easy</b-button>
                                 <b-button @click="changeDifficulty('medium')">Medium</b-button>
@@ -1175,8 +1176,8 @@ Vue.component('game' , {
 
                                 <p style="color: white;">Your selection -> {{this.selectedDifficulty}} && {{this.selectedCategory}}</p>
 
-                                <b-button @click="decreasePage" class="button__play"><span>Back</span></b-button>
-                                <b-button @click="startGame" class="button__play"><span>Start</span></b-button>
+                                <b-button @click="decreasePage"><span>Back</span></b-button>
+                                <b-button @click="startGame"><span>Start</span></b-button>
                             </div>
                         </div>
                     </div>
