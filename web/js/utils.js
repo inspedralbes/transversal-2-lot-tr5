@@ -1168,75 +1168,7 @@ Vue.component('game' , {
                         <b-button @click="decreasePage" class="button__play"><span>Back</span></b-button>
                         <b-button @click="startGame" class="button__play"><span>Start</span></b-button>
                     </div>
-                    <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
-                        <p>Difficulty</p>
-                        <template>
-                            <div>
-                                <b-form-select class="mb-3" v-model="selectedDifficulty">
-                                    <template #first>
-                                        <b-form-select-option :value="null" disabled>-- Please select a difficulty --</b-form-select-option>
-                                    </template>
-                                    <b-form-select-option value="easy">Easy</b-form-select-option>
-                                    <b-form-select-option value="medium">Medium</b-form-select-option>
-                                    <b-form-select-option value="hard">Hard</b-form-select-option>
-                                </b-form-select>
-                            </div>
-                        </template>
-                        <br>
-                        <p>Category</p>
-                        <b-form-select class="mb-3" v-model="selectedCategory">
-                            <template #first>
-                                <b-form-select-option :value="null" disabled>-- Please select a category --</b-form-select-option>
-                            </template>
-                            <b-form-select-option value="arts_and_literature">🎨Arts & Literature</b-form-select-option>
-                            <b-form-select-option value="film_and_tv">🎞️Film & TV</b-form-select-option>
-                            <b-form-select-option value="food_and_drink">🥘Food & Drink</b-form-select-option>
-                            <b-form-select-option value="general_knowledge">🤓General Knowledge</b-form-select-option>
-                            <b-form-select-option value="geography">🗺️Geography</b-form-select-option>
-                            <b-form-select-option value="history">📜History</b-form-select-option>
-                            <b-form-select-option value="music">🎼Music</b-form-select-option>
-                            <b-form-select-option value="science">🔬Science</b-form-select-option>
-                            <b-form-select-option value="society_and_culture">🧠Society & Culture</b-form-select-option>
-                            <b-form-select-option value="sport_and_leisure">🤺Sport & Leisure</b-form-select-option>
-                        </b-form-select>
-                        <br>
-                        <br>
-                        <b-row>
-                            <b-col lg="9" class="pb-2">
-                            </b-col>
-                            <b-col lg="3" class="pb-2">
-                                <b-button variant="success" @click="createGame">Continue</b-button>
-                            </b-col>
-                        </b-row>
-                    </b-modal>
                     
-                    <b-modal v-if="!isLogged" id="modalSelectGame" title="Select a DEMO" hide-footer>
-                        <br>
-                        <b-row>
-                            <b-col cols="8" sm="6">DEMO 1</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(0)" style="float:right;">PLAY</b-button></b-col>
-                        </b-row>
-                        <br>
-                        <b-row>
-                            <b-col cols="8" sm="6">DEMO 2</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(1)" style="float:right;">PLAY</b-button></b-col>
-                        </b-row>
-                        <br>
-                        <b-row>
-                            <b-col cols="8" sm="6">DEMO 3</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(2)" style="float:right;">PLAY</b-button></b-col>
-                        </b-row>
-                        <br>
-                        <b-row>
-                            <b-col cols="8" sm="6">DEMO 4</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(3)" style="float:right;">PLAY</b-button></b-col>
-                        </b-row>
-                        <br>
-                        <b-row>
-                            <b-col cols="8" sm="6">DEMO 5</b-col>
-                            <b-col cols="4" sm="6"><b-button @click="createGame(4)" style="float:right;">PLAY</b-button></b-col>
-                        </b-row>
-                    </b-modal>
                     <div class="game__div">
                         <div v-if="showQuestions" v-for="(question, index) in this.questions" class="game__body">
                             <question v-show="actualQuestion == index" :infoQuestion="question" @userAnswer="addUserAnswer">
