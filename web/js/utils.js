@@ -66,17 +66,26 @@ Vue.component('record', {
                     </b-card>
                 </div>`,
     methods: {
-        
+        chargeRecord: function() {
+            console.log("hola id " + this.id);
+            fetch("../trivial5/public/record/"+ this.id +"")
+                .then(res => res.json())
+                .then(data => {
+                    console.log("json" + data[0]);
+                    console.log(data);
+                    this.gamesPlayed = data;
+            });
+        }
     },
     mounted() {
-        console.log("hola id " + this.id);
-        fetch("../trivial5/public/record/"+ this.id +"")
-            .then(res => res.json())
-            .then(data => {
-                console.log("json" + data[0]);
-                console.log(data);
-                this.gamesPlayed = data;
-        });
+       this.chargeRecord();
+    },
+    watch: {
+        // whenever question changes, this function will run
+        id(newID, oldID) {
+          console.log("change id record");
+          this.chargeRecord();
+        }
     },
     computed: {
         isLogged() {
@@ -400,6 +409,19 @@ Vue.component('profile', {
         },
         logoutUser: function() {
             userStore().logged = false;
+        },
+        chargeProfile: function() {
+            console.log("id ruta " + this.$route.params.id + " | id " + this.id);
+
+            this.id = this.$route.params.id;
+
+            fetch('../trivial5/public/indexPerfil/' + this.id)
+            .then(res=>res.json())
+            .then(data=>{
+                console.log(data[0]);
+                this.infoUser = data[0];
+            });
+
         }
     },
     computed: {
@@ -435,16 +457,18 @@ Vue.component('profile', {
     // },
     mounted() {
 
-        console.log("id ruta " + this.$route.params.id + " | id " + this.id);
+        this.chargeProfile();
 
-        this.id = this.$route.params.id;
+        // console.log("id ruta " + this.$route.params.id + " | id " + this.id);
 
-        fetch('../trivial5/public/indexPerfil/' + this.id)
-        .then(res=>res.json())
-        .then(data=>{
-            console.log(data[0]);
-            this.infoUser = data[0];
-        });
+        // this.id = this.$route.params.id;
+
+        // fetch('../trivial5/public/indexPerfil/' + this.id)
+        // .then(res=>res.json())
+        // .then(data=>{
+        //     console.log(data[0]);
+        //     this.infoUser = data[0];
+        // });
 
        
         // let userStatistics = new CharacterData("userStatistics",{
@@ -454,6 +478,14 @@ Vue.component('profile', {
         // })
         // router.push("/");
                 
+    },
+    watch:{
+        
+        $route (to, from){
+            console.log("ruta cambiada");
+            this.chargeProfile();
+            this.show = false;
+        }
     },
 });
 
@@ -836,7 +868,7 @@ Vue.component('dailyranking', {
                                 <tbody>
                                     <tr v-for="(player, index) in this.players">
                                         <td>{{index + 1}}</td>
-                                        <td>{{player.name}}</td>
+                                        <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
                                         <td>{{player.score}}</td>
                                     </tr>
                                 </tbody>
@@ -874,7 +906,7 @@ Vue.component('globalranking', {
                                 <tbody>
                                     <tr v-for="(player, index) in this.players">
                                         <td>{{index + 1}}</td>
-                                        <td>{{player.name}}</td>
+                                        <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
                                         <td>{{player.total_score}}</td>
                                     </tr>
                                 </tbody>
@@ -1079,29 +1111,42 @@ Vue.component('game' , {
             questions: [],
             daily: false,
             idGame: null,
-            selectedDifficulty: "",
-            selectedCategory: "",
+            selectedDifficulty: "easy",
+            selectedCategory: "arts_and_literature",
             showQuestions: null,
             showResults: null,
             actualQuestion: 0,
             timer: 150,
             userAnswers: [null, null, null, null, null, null, null, null, null, null],
-            boxTwo: ''
+            boxTwo: '',
+            page: 0,
         }
     },
 
     template: ` <div class="container_button_play" >
-                <div><img src="img/Winner.png" style="width: 100%;height: 100%;"></img></div>
-                    <div v-if="showButtonPlay" class="div_button_play">
-                        <div class="start__tituloDiv">
-                            <h4>WELCOME TO</h4>
-                            <h1 class="start__tituloPrincipal"> LEAGUE OF <br> TRIVIAL</h1>
+                    <div v-if="this.page == 0">
+                        <div>
+                            <img src="img/Winner.png" style="width: 100%;height: 100%;"></img>
                         </div>
-                        <b-button v-b-modal="'modalSelectGame'" class="button__play"><span>PLAY</span></b-button>
-                        <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button><br>
-                        <div class="mb-1" v-if="!isLogged">
-                            <br><b-button @click="desplegarModalLogin" class="start__dailyGameButton">DAILY GAME</b-button> 
+                        <div v-if="showButtonPlay" class="div_button_play">
+                            <div class="start__tituloDiv">
+                                <h4>WELCOME TO</h4>
+                                <h1 class="start__tituloPrincipal"> LEAGUE OF <br> TRIVIAL</h1>
+                            </div>
+                            <b-button @click="increasePage" class="button__play"><span>PLAY</span></b-button>
+                            <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button><br>
+                            <div class="mb-1" v-if="!isLogged">
+                                <br><b-button @click="desplegarModalLogin" class="start__dailyGameButton">DAILY GAME</b-button> 
+                            </div>
                         </div>
+                    </div>
+                    <div v-if="this.page == 1">
+                        <p style="color: white;"></p>
+                        <b-button @click="changeDifficulty('easy')" value="easy">Easy</b-button>
+                        <b-button @click="changeDifficulty('medium')" value="medium">Medium</b-button>
+                        <b-button @click="changeDifficulty('hard')" value="hard">Hard</b-button>
+                        <b-button @click="decreasePage" class="button__play"><span>Back</span></b-button>
+                        <b-button @click="createGame" class="button__play"><span>Start</span></b-button>
                     </div>
                     <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
                         <p>Difficulty</p>
@@ -1241,6 +1286,19 @@ Vue.component('game' , {
             this.timer = 150;
             this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
             
+        },
+        increasePage: function() {
+            this.page++;
+        },
+        decreasePage: function() {
+            this.page--;
+        },
+        changeDifficulty: function(difficulty) {
+            console.log("dificultad " + difficulty);
+            this.selectedDifficulty = difficulty;
+        },
+        changeCategory: function(category){
+            this.selectedCategory = category;
         },
         incrementQuestion: function() {
             if(this.actualQuestion < 9) {
