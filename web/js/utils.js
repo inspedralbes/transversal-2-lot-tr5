@@ -1133,7 +1133,7 @@ Vue.component('game' , {
                                 <h4>WELCOME TO</h4>
                                 <h1 class="start__tituloPrincipal"> LEAGUE OF <br> TRIVIAL</h1>
                             </div>
-                            <b-button @click="increasePage" class="button__play"><span>PLAY</span></b-button>
+                            <b-button @click="playButton" class="button__play"><span>PLAY</span></b-button>
                             <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button><br>
                             <div class="mb-1" v-if="!isLogged">
                                 <br><b-button @click="desplegarModalLogin" class="start__dailyGameButton">DAILY GAME</b-button> 
@@ -1311,8 +1311,15 @@ Vue.component('game' , {
             this.page++;
             this.createGame();
         },
-        increasePage: function() {
-            this.page++;
+        playButton: function() {
+            if(this.isLogged){
+                this.page++;
+            }
+            else {
+                let randomID = Math.floor(Math.random() * 5);
+                this.createGame(randomID);
+            }
+            
         },
         decreasePage: function() {
             this.page--;
