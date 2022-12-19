@@ -17,3 +17,5 @@ League of Trivia és un quiz online multijugador que poden desafiar reciprocamen
 
  * URL de producció (quan la tingueu)
  * Estat: (explicació de en quin punt està)
+
+ * URL documentació API: https://app.swaggerhub.com/apis/cargomfue/Trivial5/0.1#/ 
