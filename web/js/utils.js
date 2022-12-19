@@ -1141,12 +1141,32 @@ Vue.component('game' , {
                         </div>
                     </div>
                     <div v-if="this.page == 1">
-                        <p style="color: white;"></p>
-                        <b-button @click="changeDifficulty('easy')" value="easy">Easy</b-button>
-                        <b-button @click="changeDifficulty('medium')" value="medium">Medium</b-button>
-                        <b-button @click="changeDifficulty('hard')" value="hard">Hard</b-button>
+                        <p style="color: white;">Select difficulty</p>
+                        <b-button @click="changeDifficulty('easy')">Easy</b-button>
+                        <b-button @click="changeDifficulty('medium')">Medium</b-button>
+                        <b-button @click="changeDifficulty('hard')">Hard</b-button>
+
+                        <p style="color: white;">Select category</p>
+
+                        <b-row class="justify-content-md-center">
+                            <b-col cols="2"><b-button @click="changeCategory('arts_and_literature')">🎨Arts & Literature</b-button></b-col>
+                            <b-col cols="2"><b-button @click="changeCategory('film_and_tv')">🎞️Film & TV</b-button></b-col>
+                            <b-col cols="2"><b-button @click="changeCategory('food_and_drink')">🥘Food & Drink</b-button></b-col></b-col>
+                            <b-col cols="2"><b-button @click="changeCategory('general_knowledge')">🤓General Knowledge</b-button></b-col></b-col>
+                            <b-col cols="2"><b-button @click="changeCategory('geography')">🗺️Geography</b-button></b-col></b-col>
+                        </b-row>
+                        <b-row class="justify-content-md-center">
+                            <b-col cols="2"><b-button @click="changeCategory('history')">📜History</b-button></b-col></b-col>
+                            <b-col cols="2"><b-button @click="changeCategory('music')">🎼Music</b-button></b-col></b-col>
+                            <b-col cols="2"><b-button @click="changeCategory('science')">🔬Science</b-button></b-col></b-col>
+                            <b-col cols="2"><b-button @click="changeCategory('society_and_culture')">🧠Society & Culture</b-button></b-col></b-col>
+                            <b-col cols="2"><b-button @click="changeCategory('sport_and_leisure')">🤺Sport & Leisure</b-button></b-col></b-col>
+                        </b-row>
+
+                        <p style="color: white;">Your selection -> {{this.selectedDifficulty}} && {{this.selectedCategory}}</p>
+
                         <b-button @click="decreasePage" class="button__play"><span>Back</span></b-button>
-                        <b-button @click="createGame" class="button__play"><span>Start</span></b-button>
+                        <b-button @click="startGame" class="button__play"><span>Start</span></b-button>
                     </div>
                     <b-modal v-if="isLogged" id="modalSelectGame" title="Select your game mode" hide-footer class="game__modal">
                         <p>Difficulty</p>
@@ -1287,6 +1307,10 @@ Vue.component('game' , {
             this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
             
         },
+        startGame: function(){
+            this.page++;
+            this.createGame();
+        },
         increasePage: function() {
             this.page++;
         },
@@ -1294,8 +1318,9 @@ Vue.component('game' , {
             this.page--;
         },
         changeDifficulty: function(difficulty) {
-            console.log("dificultad " + difficulty);
+            console.log("dificultad param " + difficulty);
             this.selectedDifficulty = difficulty;
+            console.log("dificultad this.selected " + this.selectedDifficulty);
         },
         changeCategory: function(category){
             this.selectedCategory = category;
