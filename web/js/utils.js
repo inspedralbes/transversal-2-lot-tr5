@@ -1168,6 +1168,7 @@ Vue.component('game' , {
                         <b-button @click="decreasePage" class="button__play"><span>Back</span></b-button>
                         <b-button @click="startGame" class="button__play"><span>Start</span></b-button>
                     </div>
+                    <br><br>
                     <div class="game__outerDiv">
                         <div class="game__div">
                             <div v-if="showQuestions" v-for="(question, index) in this.questions" class="game__body">
