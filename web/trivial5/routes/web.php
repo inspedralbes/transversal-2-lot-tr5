@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 //GET
 
-Route::get('demo/{id}', [GameController::class, 'index_jugar'] );
+Route::get('chargegame/{id}', [GameController::class, 'index_jugar'] );
 
 Route::get('dailyranking', [PlayedgameController::class, 'index_dailyranking'] );
 

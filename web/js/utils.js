@@ -60,6 +60,7 @@ Vue.component('record', {
                                 Score: {{game.score}}
                                 <br>
                                 Date: {{game.created_at}}
+                                <b-button v-if="!this.id == this.userLogged.idUser" variant="success" @click="playChallenge(game.id)">Play same game</b-button>
                             </b-card-text>
                             <hr>
                         </div>
@@ -75,6 +76,12 @@ Vue.component('record', {
                     console.log(data);
                     this.gamesPlayed = data;
             });
+        },
+        playChallenge: function(id) {
+            userStore().idChallenge = id;
+            userStore().playChallenge = true;
+
+            router.push("/");
         }
     },
     mounted() {
@@ -929,7 +936,7 @@ Vue.component('results' , {
                     <br>
                     <h1 class="game__resultLetter">Your result is {{correctAnswers}}/{{results.length}}</h1>
                     <h1 v-show="this.isLogged" class="game__resultLetter">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
-                    <b-button to="/start">Lobby</b-button>
+                    <b-button to="/">Lobby</b-button>
                     <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
                 </div>`,
     methods: {
@@ -1195,12 +1202,12 @@ Vue.component('game' , {
             this.showButtonDaily = false;
             let rutaFetch = "";
             if(!this.daily){
-                if(this.isLogged){
+                if(this.isLogged && !userStore().playChallenge){
                     rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
                 }
                 else {
                     console.log(id);
-                    rutaFetch = "../trivial5/public/demo/"+id;
+                    rutaFetch = "../trivial5/public/chargegame/"+id;
                 }
             }
             else {
@@ -1423,7 +1430,13 @@ Vue.component('game' , {
                 
              });
         }
-        
+    },
+    mounted() {
+
+        if(userStore().playChallenge){
+            this.createGame(userStore().idChallenge);
+        }
+
     },
     computed: {
         isLogged() {
@@ -1516,7 +1529,9 @@ const userStore = Pinia.defineStore('usuario', {
             loginInfo: {
                 nombre: '',
                 idUser: ''
-            }
+            },
+            playChallenge: false,
+            idChallenge: '',
         }
     },
     actions: {
