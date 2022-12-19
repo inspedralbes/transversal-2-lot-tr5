@@ -216,9 +216,18 @@ body{
 }
 
 /*Desktop Query*/
-@media only screen and(min-width:768px){
-    .game__card{
-        width: 60%;
+@media(min-width:768px){
+    /* .game__outerDiv{
+        align-items: center; 
+        justify-content: center;
+    } */
+    .game__div{
+        text-align: center;
+        /* width: 60%; */
+    }
+
+    .game__body{
+        display: inline-block;
     }
 }
 

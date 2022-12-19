@@ -1237,20 +1237,20 @@ Vue.component('game' , {
                             <b-col cols="4" sm="6"><b-button @click="createGame(4)" style="float:right;">PLAY</b-button></b-col>
                         </b-row>
                     </b-modal>
-
-                    <div v-if="showQuestions" v-for="(question, index) in this.questions">
-                        <question v-show="actualQuestion == index" :infoQuestion="question" @userAnswer="addUserAnswer">
-                        <br><br>
-                        <div v-for="(answer, index) in userAnswers" class="game__cardFooter">
-                            <div v-if="isLogged" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(index), game__answerIncorrect: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
+                    <div class="game__div">
+                        <div v-if="showQuestions" v-for="(question, index) in this.questions" class="game__body">
+                            <question v-show="actualQuestion == index" :infoQuestion="question" @userAnswer="addUserAnswer">
+                            <br><br>
+                            <div v-for="(answer, index) in userAnswers" class="game__cardFooter">
+                                <div v-if="isLogged" v-bind:class="{ game__answerCorrect:  comprobarRespuestaCorrecta(index), game__answerIncorrect: comprobarRespuestaIncorrecta(index)}">{{index+1}}</div>
+                            </div>
+                            <br><br>
+                            <h3>Timer: {{timer}}</h3>
+                            </question>
                         </div>
-                        <br><br>
-                        <h3>Timer: {{timer}}</h3>
-                        </question>
                     </div>
                     <div v-if="showQuestions">
                         
-                    </div>
                     <div v-if="showResults">
                         <results :results=userAnswers :timerRestante=timer :daily=daily :difficulty=selectedDifficulty @saveData="updateScore" @playagain="playagain"></results>
                     </div>
