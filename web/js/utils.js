@@ -60,7 +60,7 @@ Vue.component('record', {
                                 Score: {{game.score}}
                                 <br>
                                 Date: {{game.created_at}}
-                                <b-button v-if="!this.id == this.userLogged.idUser" variant="success" @click="playChallenge(game.id)">Play same game</b-button>
+                                <b-button variant="success" @click="playChallenge(game.id)">Play same game</b-button>
                             </b-card-text>
                             <hr>
                         </div>
@@ -588,12 +588,6 @@ Vue.component('user-profile', {
 Vue.component('daily', {
     template: ` <div>
                     <p style="color:white">Esta es la partida diaria</p>
-                </div>`, 
-});
-
-Vue.component('start', {
-    template: ` <div>
-                    <h1 class="start__tituloPrincipal"> <br> League <br> of <br> Trivial</h1>
                 </div>`, 
 });
 
@@ -1433,10 +1427,25 @@ Vue.component('game' , {
     },
     mounted() {
 
+        this.showButtonPlay = true;
+        this.showButtonDaily = false;
+        this.questions = [];
+        this.daily = false;
+        this.idGame = null;
+        this.selectedDifficulty = "easy";
+        this.selectedCategory = "arts_and_literature";
+        this.showQuestions = null;
+        this.showResults = null;
+        this.actualQuestion = 0;
+        this.timer = 150;
+        this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
+        this.boxTwo = '';
+        this.page = 0;
+
         if(userStore().playChallenge){
             this.createGame(userStore().idChallenge);
         }
-
+        
     },
     computed: {
         isLogged() {
@@ -1458,10 +1467,6 @@ Vue.component('game' , {
         }
     }
 });
-
-const Start = {
-    template: `<start></start>`,
-}
 
 const Game = {
     template: ` <div>
@@ -1507,10 +1512,6 @@ const routes = [{
 {
     path: '/join',
     component: Join
-},
-{
-    path: '/start',
-    component: Start
 },
 {
     path: '/dailyGame',
