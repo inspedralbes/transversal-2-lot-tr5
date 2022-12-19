@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigInteger('idChallenger')->unsigned();
             $table->bigInteger('idChallenged')->unsigned();
             $table->bigInteger('idGame')->unsigned();
-            $table->bigInteger('idWinner')->unsigned();
+            $table->bigInteger('idWinner')->default(0);
             $table->string('date');
             // $table->boolean('isFinished')->default(0);
             $table->enum('status',['accepted', 'pending', 'rejected'])->default('pending');
