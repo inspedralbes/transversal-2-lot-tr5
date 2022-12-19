@@ -930,7 +930,7 @@ Vue.component('results' , {
                     <br>
                     <h1 class="game__resultLetter">Your result is {{correctAnswers}}/{{results.length}}</h1>
                     <h1 v-show="this.isLogged" class="game__resultLetter">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
-                    <b-button to="/">Lobby</b-button>
+                    <b-button @click="$emit('lobby')">Lobby</b-button>
                     <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
                 </div>`,
     methods: {
@@ -1192,7 +1192,7 @@ Vue.component('game' , {
                     <div v-if="showQuestions"></div>
                         
                     <div v-if="showResults">
-                        <results :results=userAnswers :timerRestante=timer :daily=daily :difficulty=selectedDifficulty @saveData="updateScore" @playagain="playagain"></results>
+                        <results :results=userAnswers :timerRestante=timer :daily=daily :difficulty=selectedDifficulty @saveData="updateScore" @playagain="playagain" @lobby="resetAll"></results>
                     </div>
                 </div>`,
     methods: {
@@ -1226,11 +1226,16 @@ Vue.component('game' , {
                 }
                 else {
                     this.questions = data;
-                    this.$bvModal.hide("modalSelectGame");
+                    if(userStore().playChallenge) {
+                        this.idGame = userStore().idChallenge;
+                        this.page = 2;
+                        this.saveData(-300);
+                        
+                    }
                 }
                 this.showQuestions = true;
                 this.countDownTimer();
-                if(this.isLogged && !this.daily){
+                if(this.isLogged && !this.daily && !userStore().playChallenge){
                     this.saveGame();
                 }
             });
@@ -1350,6 +1355,7 @@ Vue.component('game' , {
             .then(res => res.json())
             .then(data => {
                 console.log("return " + data);
+                userStore().playChallenge = false;
             });
         },
         saveGame: function() {
@@ -1376,6 +1382,23 @@ Vue.component('game' , {
             this.daily = true;
 
             this.createGame();
+        },
+        resetAll: function() {
+            this.showButtonPlay = true;
+            this.showButtonDaily = false;
+            this.questions = [];
+            this.daily = false;
+            this.idGame = null;
+            this.selectedDifficulty = "easy";
+            this.selectedCategory = "arts_and_literature";
+            this.showQuestions = null;
+            this.showResults = null;
+            this.actualQuestion = 0;
+            this.timer = 150;
+            this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
+            this.boxTwo = '';
+            this.page = 0;
+            userStore().playChallenge = false;
         },
         countDownTimer () {
             if (this.timer > 0 && this.showQuestions == true) {
@@ -1431,21 +1454,6 @@ Vue.component('game' , {
         }
     },
     mounted() {
-
-        this.showButtonPlay = true;
-        this.showButtonDaily = false;
-        this.questions = [];
-        this.daily = false;
-        this.idGame = null;
-        this.selectedDifficulty = "easy";
-        this.selectedCategory = "arts_and_literature";
-        this.showQuestions = null;
-        this.showResults = null;
-        this.actualQuestion = 0;
-        this.timer = 150;
-        this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
-        this.boxTwo = '';
-        this.page = 0;
 
         if(userStore().playChallenge){
             this.createGame(userStore().idChallenge);
