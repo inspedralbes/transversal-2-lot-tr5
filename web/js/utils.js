@@ -48,6 +48,7 @@ Vue.component('record', {
     data: function(){
         return{
             gamesPlayed: [],
+            externProfile: false
         }
     },
     template: ` <div class="nav-container">
@@ -60,7 +61,7 @@ Vue.component('record', {
                                 Score: {{game.score}}
                                 <br>
                                 Date: {{game.created_at}}
-                                <b-button variant="success" @click="playChallenge(game.id)">Play same game</b-button>
+                                <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id)">Play same game</b-button>
                             </b-card-text>
                             <hr>
                         </div>
@@ -75,6 +76,12 @@ Vue.component('record', {
                     console.log("json" + data[0]);
                     console.log(data);
                     this.gamesPlayed = data;
+                    if(this.id == userStore().loginInfo.idUser){
+                        this.externProfile = false;
+                    }
+                    else {
+                        this.externProfile = true;
+                    }
             });
         },
         playChallenge: function(id) {
