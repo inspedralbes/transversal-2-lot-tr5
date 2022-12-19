@@ -929,17 +929,56 @@ Vue.component('results' , {
         return {
             correctAnswers: 0,
             points: 0,
-            timer: 0
+            timer: 0,
+            friends: [],
+            withFriends: false,
         }
     },
-    props: ['results', 'timerRestante', 'difficulty', 'daily'],
+    props: ['results', 'timerRestante', 'difficulty', 'daily', 'idGame'],
     template: ` <div class="game__result">
                     <br>
                     <h1 class="game__resultLetter">Your result is {{correctAnswers}}/{{results.length}}</h1>
                     <h1 v-show="this.isLogged" class="game__resultLetter">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
                     <b-button @click="$emit('lobby')">Lobby</b-button>
                     <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
-                    <b-button @click="">Chanllenge someone!</B-button>
+                    <b-button v-b-modal="'sendChallenge'">Challenge someone!</B-button>
+
+                    <div>
+                        <b-modal id="sendChallenge" title="Challenge someone!" ok-only>
+                            <p>
+                            Friend List
+                            <div v-if="withFriends === true" v-for="(friend, index) in friends">
+                                <b-card class="mb-3 friend__list">
+                                    <b-card-text class="friends__cardtext">
+                                        <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
+                                        <p> {{friend.name}} </p>
+                                        <b-button variant="danger" class="button__delete" @click="sendChallenge(friend.id)">Send Challenge</b-button>
+                                    </b-card-text>
+                                </b-card>
+                            </div>
+                            <div v-if="withFriends === false">
+                                <b-card class="mb-3">
+                                    <b-card-text>
+                                        No friends
+                                    </b-card-text>
+                                </b-card>
+                            </div>
+                            
+                            </p>
+                            <template #modal-footer>
+                                <div class="w-100">
+                                    <b-button
+                                        variant="primary"
+                                        size="sm"
+                                        class="float-right"
+                                        @click="$bvModal.hide('sendChallenge')"
+                                    >
+                                        Close
+                                    </b-button>
+                                </div>
+                            </template>
+                        </b-modal>
+                    </div>
                 </div>`,
     methods: {
         calcularPuntuacion: function() {
@@ -953,7 +992,37 @@ Vue.component('results' , {
             else {
                 console.log('level easy');
             }
+
+            if(this.correctAnswer < 5) {
+                this.points -= 300;
+                if(this.points < 0) {
+                    this.points = 0;
+                }
+            }
         },
+        sendChallenge: function(id) {
+
+            let dateNow = new Date();
+            let day = dateNow.getDate();
+            let month = dateNow.getMonth()+1;
+            let year = dateNow.getFullYear();
+            let date = day+"/"+month+"/"+year;
+
+            let gameChallenge = new FormData();
+            gameChallenge.append('idGame', this.idGame);
+            gameChallenge.append('idChallenger', userStore().loginInfo.idUser);
+            gameChallenge.append('idChallenged', id);
+            gameChallenge.append('date', date);
+
+            fetch('../trivial5/public/storechallenge', {
+                method: 'POST',
+                body: gameChallenge
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("return " + data);
+            });
+        }
     },
     mounted() {
         for (let i = 0; i < this.results.length; i++) {
@@ -963,6 +1032,22 @@ Vue.component('results' , {
         }
         this.timer = this.timerRestante;
         this.calcularPuntuacion();
+
+        fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser,{
+            headers:{"Accept":"application/json"},
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if(data != "sin amigos") {
+                console.log("tiene amigos");
+                this.friends = data;
+                this.withFriends = true;
+            }else{
+                this.withFriends = false;
+                console.log(this.withFriends);
+            }
+        }); 
 
         if(this.isLogged) {
             this.$emit('saveData', this.points);
@@ -1200,7 +1285,7 @@ Vue.component('game' , {
                     <div v-if="showQuestions"></div>
                         
                     <div v-if="showResults">
-                        <results :results=userAnswers :timerRestante=timer :daily=daily :difficulty=selectedDifficulty @saveData="updateScore" @playagain="playagain" @lobby="resetAll"></results>
+                        <results :results=userAnswers :timerRestante=timer :daily=daily :difficulty=selectedDifficulty :idGame=idGame @saveData="updateScore" @playagain="playagain" @lobby="resetAll"></results>
                     </div>
                 </div>`,
     methods: {
