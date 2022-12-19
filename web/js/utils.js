@@ -1126,7 +1126,7 @@ Vue.component('game' , {
     template: ` <div class="container_button_play" >
                     <div v-if="this.page == 0">
                         <div>
-                            <img src="img/winner.png" style="width: 100%;height: 100%;"></img>
+                            <img src="img/Winner.png" style="width: 100%;height: 100%;"></img>
                         </div>
                         <div v-if="showButtonPlay" class="div_button_play">
                             <div class="start__tituloDiv">
