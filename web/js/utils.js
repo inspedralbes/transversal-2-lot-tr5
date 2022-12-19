@@ -669,7 +669,7 @@ Vue.component('register', {
             this.form.password != ""?this.validPassword=true:this.validPassword=false;
             this.form.confirmPassword != ""?this.validConfirmPassword = true:this.validConfirmPassword=false;
             this.form.confirmPassword === this.form.password?this.samePassword=true:this.samePassword=false;
-            if(this.validEmail==true&&this.validUsername==true&&this.validPassword==true&&this.validConfirmPassword == true&&this.samePassoword==true){
+            if(this.validEmail==true&&this.validUsername==true&&this.validPassword==true&&this.validConfirmPassword == true&&this.samePassword==true){
                 this.submitRegister();
             }
         },
