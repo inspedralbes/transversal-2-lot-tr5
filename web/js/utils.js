@@ -184,9 +184,9 @@ Vue.component('challenges', {
                         borrar = i;
                     }
                 }
-                console.log("antes de " + borrar + " " + this.challengeRequest);
-                this.challengeRequest.splice(borrar, 1); 
-                console.log("despues de " + borrar + " " + this.challengeRequest);
+                console.log("antes de " + borrar + " " + this.challengesPending);
+                this.challengesPending.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.challengesPending);
             }); 
 
             if(status == "accepted"){

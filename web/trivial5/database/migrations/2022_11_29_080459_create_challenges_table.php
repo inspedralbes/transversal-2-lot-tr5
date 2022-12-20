@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('date');
             // $table->boolean('isFinished')->default(0);
             $table->enum('status',['accepted', 'pending', 'rejected'])->default('pending');
+            $table->bigInteger('scoreChallenger')->default(0);
+            $table->bigInteger('scoreChallenged')->default(0);
 
             $table->primary(['idChallenger', 'idChallenged', 'idGame'])->index();
             $table->foreign('idChallenger')->references('id')->on('users')->onDelete('cascade');

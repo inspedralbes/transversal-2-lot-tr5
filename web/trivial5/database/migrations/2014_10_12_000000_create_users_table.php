@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->bigInteger('total_score')->default(0);
+            $table->string('description')->nullable();
+            $table->string('image')->default('https://placekitten.com/300/300');
             $table->timestamps();
         });
     }
