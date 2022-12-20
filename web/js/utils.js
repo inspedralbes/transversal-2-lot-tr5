@@ -1061,6 +1061,9 @@ Vue.component('results' , {
         }
     },
     mounted() {
+
+        console.log("mounted dificultad " + this.difficulty)
+
         for (let i = 0; i < this.results.length; i++) {
             if(this.results[i]){
                 this.correctAnswers++;
@@ -1103,7 +1106,7 @@ Vue.component('results' , {
         else {
             updateChallenge.append('idWinner', null);
         }
-        updateChallenge.append('score_challenged', this.points)
+        updateChallenge.append('score_challenged', this.points);
 
         fetch('../trivial5/public/updatechallengewinner', {
             method: 'POST',
@@ -1395,6 +1398,7 @@ Vue.component('game' , {
                     this.questions = data;
                     if(userStore().challenged) {
                         // this.idGame = userStore().idChallenge;
+                        this.getDifficulty();
                         this.idGame = userStore().challengeInfo.idGame;
                         this.page = 2;
                         this.saveData(-300);
@@ -1406,6 +1410,13 @@ Vue.component('game' , {
                 if(this.isLogged && !this.daily && !userStore().challenged){
                     this.saveGame();
                 }
+            });
+        },
+        getDifficulty: function() {
+            fetch("../trivial5/public/gamedifficulty/"+id)
+            .then(res => res.json())
+            .then(data => {
+                this.selectedDifficulty = data;
             });
         },
         playagain: function() {
