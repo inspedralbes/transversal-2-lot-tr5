@@ -484,7 +484,7 @@ tr:nth-child(even) {
 }
 
 .button__playSameGame{
-    
+
 }
 @media only screen and (min-width: 768px) {
     .record__div{
@@ -683,7 +683,7 @@ box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
     color: #eaeaeb;
 }
 
-.register__button{
+.register__button,.button__playSameGame{
     background: linear-gradient(112.9deg, rgb(112, 255, 151) 6.2%, rgb(70, 195, 255) 99.7%);
     /* border: 1px solid #3b4c61!important; */
     /* background-color: #1e2833 !important; */
