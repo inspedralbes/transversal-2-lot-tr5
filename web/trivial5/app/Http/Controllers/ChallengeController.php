@@ -52,9 +52,9 @@ class ChallengeController extends Controller
         $challenge -> idChallenger = $request -> idChallenger;
         $challenge -> idChallenged = $request -> idChallenged;
         $challenge -> idGame = $request -> idGame;
-        $challenge -> idWinner = $request -> idWinner;
+        $challenge -> idWinner = 0;
         $challenge -> date = $request -> date;
-        $challenge -> status = $request -> status;
+        // $challenge -> status = "pending";
 
         // $playedGame = new PlayedGame();
         // $playedGames -> idUser = $request -> idChallenger;

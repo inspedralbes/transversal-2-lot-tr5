@@ -871,8 +871,8 @@ Vue.component('ranking', {
     template: ` <div class="nav-container">
                     <br><br>
                     <b-tabs pills cardcontent-class="mt-3" active-nav-item-class="font-weight-bold text-danger">
-                        <b-tab title="Global" active active title-item-class="w-50 login__tab"><globalranking></globalranking></b-tab>
-                        <b-tab title="Daily" title-item-class="w-50 register__tab"><dailyranking></dailyranking></b-tab>
+                        <b-tab title="Global" active active title-item-class="w-25 login__tab"><globalranking></globalranking></b-tab>
+                        <b-tab title="Daily" title-item-class="w-25 register__tab"><dailyranking></dailyranking></b-tab>
                     </b-tabs>
                 </div>`,
 

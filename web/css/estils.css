@@ -280,24 +280,6 @@ body{
 }
 
 
-/* @media only screen and(max-width:768px){
-    .respuestas__body{
-        width: 100%;
-        height: 100%;
-    }
-    .question__card{
-        max-width: 90vw;
-    }
-}
-
-@media only screen and(max-width:992px){
-    .question__card{
-        max-width: 80vw;
-        max-height: 70vh;
-        height: 50rem;
-    }
-} */
-
 table{
     width: 100%;
     border-collapse: inherit;
@@ -313,6 +295,19 @@ table{
     margin-top: 0px;
     /* background: linear-gradient(#555, #222); */
 }
+
+@media (min-width:768px){
+    .text-center{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ranking__content{
+        width: 70%;
+    }
+}
+
 
 /* th{
     padding: 20px 15px;
@@ -472,11 +467,16 @@ tr:nth-child(even) {
     align-items: center;
 }
 
-@media(min-width:768px){
+@media only screen and (min-width: 768px) {
     .record__div{
-        width: 70%;
+        width: 60%;
     }
-}
+    .record__outerDiv{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+  }
 
 /*-----FRIEND LIST CSS-----*/
 .friend__list, .friends__pendinglist{
