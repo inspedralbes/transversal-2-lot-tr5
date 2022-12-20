@@ -16,9 +16,9 @@ function play(){
 Vue.component('routes', {
     template: ` <div class="nav-container">
                     <b-nav class="navbar">
-                        <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
+                        <b-nav-item v-show="this.isLogged" to="/ranking">RANKING</b-nav-item>
                         <b-nav-item active to="/">HOME</b-nav-item>
-                        <b-nav-item v-show="this.isLogged" :to="'/profile/' + this.userLogged.idUser">Profile</b-nav-item>
+                        <b-nav-item v-show="this.isLogged" :to="'/profile/' + this.userLogged.idUser">PROFILE</b-nav-item>
                         <b-nav-item v-show="!this.isLogged" to="/join">LOG IN</b-nav-item>
                     </b-nav>
                 </div>`,
@@ -911,9 +911,26 @@ Vue.component('globalranking', {
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
                                     <tr v-for="(player, index) in this.players">
-                                        <td>{{index + 1}}</td>
-                                        <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
-                                        <td>{{player.total_score}}</td>
+                                        <div v-if="index = 0">
+                                            <td>{{index + 1}}FIRST</td>
+                                            <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
+                                            <td>{{player.total_score}}</td>
+                                        </div>
+                                        <div v-if="index = 1">
+                                            <td>{{index + 1}}SECOND</td>
+                                            <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
+                                            <td>{{player.total_score}}</td>
+                                        </div>
+                                        <div v-if="index = 2">
+                                            <td>{{index + 1}}THIRD</td>
+                                            <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
+                                            <td>{{player.total_score}}</td>
+                                        </div>
+                                        <div v-else>
+                                            <td>{{index + 1}}</td>
+                                            <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
+                                            <td>{{player.total_score}}</td>
+                                        </div>
                                     </tr>
                                 </tbody>
                             </table>
