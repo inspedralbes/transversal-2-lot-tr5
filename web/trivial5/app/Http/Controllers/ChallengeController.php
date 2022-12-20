@@ -22,10 +22,25 @@ class ChallengeController extends Controller
             ->join('challenges',function($join){
                 $join->on('played_games.idGame','=','challenges.idGame');
             })
-            ->where('challenges.status', '=', 'pending')
+            ->where('challenges.status', '=', 'accepted')
             ->get();
 
         return $completedChallenges;
+    }
+
+    public function index_pending($id) {
+
+        $completedChallenges = DB::table('challenges')
+        ->distinct()
+            ->join('played_games',function($join){
+                $join->on('played_games.idGame','=','challenges.idGame');
+            })
+            ->where('challenges.status', '=', 'pending')
+            ->where('challenges.idChallenged', $id)
+            ->get();
+
+        return $completedChallenges;
+
     }
 
     /**
@@ -53,9 +68,9 @@ class ChallengeController extends Controller
         $challenge -> idChallenger = $request -> idChallenger;
         $challenge -> idChallenged = $request -> idChallenged;
         $challenge -> idGame = $request -> idGame;
-        $challenge -> idWinner = 0;
+        $challenge -> idWinner = $request -> idWinner;
         $challenge -> date = $request -> date;
-        // $challenge -> status = "pending";
+        $challenge -> status = $request -> status;
 
         // $playedGame = new PlayedGame();
         // $playedGames -> idUser = $request -> idChallenger;

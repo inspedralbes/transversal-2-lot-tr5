@@ -167,7 +167,7 @@ Vue.component('challenges', {
     },
     beforeMount() {
         console.log("fetch indexchallenge");
-        fetch('../trivial5/public/indexChallenge/' + userStore().loginInfo.idUser)
+        fetch('../trivial5/public/indexpending/' + userStore().loginInfo.idUser)
         .then(res => res.json())
         .then(data => {
             console.log("IC " + data);
@@ -1537,10 +1537,10 @@ Vue.component('game' , {
     }
 });
 
-Vue.component('footer',{
-    template:`<div class="footer">
-                <footer>Copyright</footer>
-        </div>`
+Vue.component('footercopyright',{
+    template:`  <div class="footer">
+                    <p style="color: white;">© All the answers and questions come from <a href="https://the-trivia-api.com/">The trivia api</a></p>
+                </div>`
 });
 
 const Game = {
@@ -1564,9 +1564,6 @@ const Daily = {
     template:`<daily></daily>`
 }
 
-const UP = {
-    template:`<user-profile></user-profile>`
-}
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [{
@@ -1575,10 +1572,6 @@ const routes = [{
 }, {
     path: '/profile/:id',
     component: Perfil
-},
-{
-    path: '/userprofile/:id',
-    component: UP
 },
 {
     path: '/ranking',
