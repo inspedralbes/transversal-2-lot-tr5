@@ -57,12 +57,21 @@ Vue.component('record', {
                             <b-card header="Results" class="record__header">
                                 <div v-for="(game, index) in gamesPlayed">
                                     <b-card-text class="record_cardTexts">
-                                        Game: {{index+1}}
-                                        Difficulty: {{game.difficulty}}
-                                        Category: {{game.category}}
-                                        Score: {{game.score}}
-                                        <br>
-                                        Date: {{game.created_at}}
+                                        <div class="record__selection" style="display:inline-block;">
+                                            <div v-if="game.difficulty=='easy'">
+                                                <p style="color:green;">E</p>
+                                            </div>
+                                            <div v-if="game.difficulty=='medium'">
+                                                <p style="color:orange;">M</p>
+                                            </div>
+                                            <div v-if="game.difficulty=='hard'">
+                                                <p style="color:red;">H</p>
+                                            </div>
+                                            {{game.score}}
+                                            Category: {{game.category}}
+                                            
+                                            Date: {{game.created_at}}
+                                        </div>
                                         <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id)">Play same game</b-button>
                                     </b-card-text>
                                     <hr>
@@ -797,12 +806,11 @@ Vue.component('login', {
 Vue.component('ranking', {
     template: ` <div class="nav-container">
                     <br><br>
-                    <b-tabs pills cardcontent-class="mt-3" active-nav-item-class="font-weight-bold text-danger">
+                    <b-tabs pills card content-class="mt-3" align="center">
                         <b-tab title="Global" active active title-item-class="w-25 login__tab"><globalranking></globalranking></b-tab>
                         <b-tab title="Daily" title-item-class="w-25 register__tab"><dailyranking></dailyranking></b-tab>
                     </b-tabs>
                 </div>`,
-
 });
 
 Vue.component('dailyranking', {
