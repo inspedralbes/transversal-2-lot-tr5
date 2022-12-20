@@ -29,20 +29,10 @@ class ChallengeController extends Controller
     }
 
     public function index_pending($id) {
-        $sql_result='SELECT * FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenged = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = '.$id;
+        $sql_result='SELECT * FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenger = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = '.$id;
         // $pendingChallenges = DB::select('SELECT * FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenged = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = ?',$id);
         $pendingChallenges = DB::select($sql_result);
         return json_encode($pendingChallenges);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -86,15 +76,13 @@ class ChallengeController extends Controller
     {
         $updateScore = DB::table('challenges')
             ->where('idChallenger', '=', $request -> idChallenger)
-            ->where('idChallenged', '=', $request -> idChallenged)
-            ->update(['idWinner' => $request -> $id,'status'=>$request->status]);
+            ->where('idChallenged', '=', $request -> idChallenged);
 
-        $challenge = new Challenge();
-        $challenge -> idChallenger = $request -> idChallenger;
-        $challenge -> idChallenged = $request -> idChallenged;
-        $challenge -> idGame = $request -> idGame;
-        $challenge -> date = $request -> date;
-        $challenge -> save();
+        if($updateScore->where('status'->$request->status === 'accepted')){
+            $updateScore->update(['idWinner' => $id,'status'=>$request->status]);
+        }else if($updateScore->where('status'->$request->stauts === 'rejected')){
+            $updateScore->update(['status'=>$request->status]);
+        }
         return $challenge;
     }
 

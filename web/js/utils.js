@@ -904,8 +904,7 @@ Vue.component('results' , {
 
                     <div>
                         <b-modal id="sendChallenge" title="Challenge someone!" ok-only>
-                            <p>
-                            Friend List
+                            <p>Friend List</p>
                             <div v-if="withFriends === true" v-for="(friend, index) in friends">
                                 <b-card class="mb-3 friend__list">
                                     <b-card-text class="friends__cardtext">
@@ -1191,7 +1190,7 @@ Vue.component('game' , {
                         <div class="select__options">
                             <div v-if="this.page == 1">
                                 <br><br>
-                                <p style="color: white; font-family: 'Common Pixel', sans-serif; !important">Select difficulty</p>
+                                <p style="color: white; font-family: 'chubby', sans-serif; !important">Select difficulty</p>
                                 <div class="difficulty__buttonsOuter">
                                     <div class="difficulty__buttons">
                                         <div><b-button @click="changeDifficulty('easy')" class="difficulty__easy">Easy</b-button></div>
@@ -1200,7 +1199,7 @@ Vue.component('game' , {
                                     </div>
                                 </div>
 
-                                <p style="color: white; font-family: 'Common Pixel', sans-serif; !important">Select category</p>
+                                <p style="color: white; font-family: 'chubby', sans-serif; !important">Select category</p>
                                 <div class="category__selectionsOuter">
                                     <div class="category__selections">
                                         <b-row style="padding-bottom:15px">
