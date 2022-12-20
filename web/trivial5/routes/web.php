@@ -55,4 +55,6 @@ Route::post('storechallenge',[ChallengeController::class,'store']);
 
 Route::post('updatechallengestatus',[ChallengeController::class,'update']);
 
+Route::post('updatechallengewinner',[ChallengeController::class,'update_winner']);
+
 require __DIR__.'/auth.php';
