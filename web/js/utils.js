@@ -59,16 +59,16 @@ Vue.component('record', {
                                     <b-card-text class="record_cardTexts">
                                         <div class="record__selection" style="display:inline-block;">
                                             <div v-if="game.difficulty=='easy'">
-                                                <h1 style="color:#86a83a;">E</h1>
+                                                <h1 style="color:#86a83a;">EASY</h1>
                                             </div>
                                             <div v-if="game.difficulty=='medium'">
-                                                <h1 style="color:#daa759;">M</h1>
+                                                <h1 style="color:#daa759;">MEDIUM</h1>
                                             </div>
                                             <div v-if="game.difficulty=='hard'">
-                                                <h1 style="color:#d25353;">H</h1>
+                                                <h1 style="color:#d25353;">HARD</h1>
                                             </div>
-                                            <h1>{{game.score}}</h1>
                                             {{game.category}}<br>
+                                            <h3> Score: {{game.score}}</h3>
                                             Date: {{game.created_at}}
                                         </div>
                                         <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id, game.idUser, game.score)">Play same game</b-button>
@@ -404,7 +404,7 @@ Vue.component('send_friend_request', {
                     <b-input-group class="mt-3">
                         <b-form-input placeholder="Enter a friend's email" v-model="email" class="friend__requestInput"></b-form-input>
                         <b-input-group-append>
-                            <b-button variant="danger" @click="validarEmail" class="friend__requestButton">+</b-button>
+                            <b-button variant="danger" @click="validarEmail" class="friend__requestButton"><p>+</p></b-button>
                         </b-input-group-append>
                     </b-input-group>
                     <p v-if="!mailValido" style="color:red;">*Email address incorrect</p>
@@ -935,8 +935,8 @@ Vue.component('results' , {
     props: ['results', 'timerRestante', 'difficulty', 'daily', 'idGame'],
     template: ` <div class="game__result">
                     <br>
-                    <h1 class="game__resultLetter">Your result is {{correctAnswers}}/{{results.length}}</h1>
-                    <h1 v-show="this.isLogged" class="game__resultLetter">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
+                    <h1 class="game__resultLetter">{{correctAnswers}}/{{results.length}} answers correct! </h1>
+                    <h1 v-show="this.isLogged" class="game__resultLetter">Score: {{this.points}}</h1>
                     <b-button @click="$emit('lobby')">Lobby</b-button>
                     <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
                     <b-button v-if="!daily" v-b-modal="'sendChallenge'">Challenge someone!</B-button>
