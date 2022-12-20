@@ -141,13 +141,14 @@ Vue.component('challenges', {
         }
     },
     template: ` <div class="nav-container">
+                    <p>CHALLENGE LIST</p>
                     <div v-for="(challenge, index) in challengesPending">
                         <b-card class="mb-3 friend__list">
                             <b-card-text class="friends__cardtext">
                                 <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
-                                <RouterLink :to="'/profile/'+11"> {{name}} </RouterLink>
-                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', )"></i> 
-                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', )"></i>
+                                <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame)"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame)"></i>
                             </b-card-text>
                         </b-card>
                     </div>
@@ -170,6 +171,7 @@ Vue.component('challenges', {
         .then(res => res.json())
         .then(data => {
             console.log("IC " + data);
+            this.challengesPending = data;
             
         }); 
     }
