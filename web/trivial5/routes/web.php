@@ -32,6 +32,8 @@ Route::get('indexPerfil/{id}', [UserController::class, 'indexPerfil']);
 
 Route::get('indexChallenge/{id}',[ChallengeController::class,'index']);
 
+Route::get('indexpending/{id}',[ChallengeController::class,'index_pending']);
+
 
 //POST
 
