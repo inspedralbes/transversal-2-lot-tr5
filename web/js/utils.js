@@ -66,8 +66,8 @@ Vue.component('record', {
                                             </div>
                                             <div v-if="game.difficulty=='hard'">
                                                 <h1 style="color:#d25353;">HARD</h1>
-                                            </div>
-                                            {{game.category}}<br>
+                                            </div>    
+                                            <h4>{{game.category}}</h4><br>
                                             <h3> Score: {{game.score}}</h3>
                                             Date: {{game.created_at}}
                                         </div>
@@ -1290,7 +1290,15 @@ Vue.component('game' , {
                                 <h4>WELCOME TO</h4>
                                 <h1 class="start__tituloPrincipal"> LEAGUE OF <br> TRIVIAL</h1>
                             </div><br><br>
-                            <b-button @click="playButton" class="button__play">PLAY</b-button><br>
+                            <div class="button__playDiv">
+                                <b-button @click="playButton" class="button__play1">
+                                    <span>P</span>
+                                    <span>L</span>  
+                                    <span>A</span>  
+                                    <span>Y</span>
+                                </b-button>
+                            </div>
+                            <br>     
                             <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button>
                         </div>
                         <footercopyright v-if="this.page == 0"></footercopyright>
