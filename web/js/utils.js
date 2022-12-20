@@ -124,13 +124,15 @@ Vue.component('record', {
 
 Vue.component('challenges', {
     template: ` <div class="nav-container">
-                    <b-card>
-                        <b-card-text>
-                            challenges
-                        </b-card-text>
-
-                        <b-button href="#" variant="primary">Go somewhere</b-button>
-                    </b-card>
+                    <div v-if="withFriends === true" v-for="(friend, index) in friends">
+                        <b-card class="mb-3 friend__list">
+                            <b-card-text class="friends__cardtext">
+                                <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
+                                <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
+                                <b-button variant="danger" class="button__delete" @click="deleteFriend(friend.idUserRequested, friend.idUserRequest)">Delete</b-button>
+                            </b-card-text>
+                        </b-card>
+                    </div>
                 </div>`,
     methods: {
     }
@@ -149,7 +151,8 @@ Vue.component('list_friends', {
                             <b-card-text class="friends__cardtext">
                                 <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                 <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
-                                <b-button variant="danger" class="button__delete" @click="deleteFriend(friend.idUserRequested, friend.idUserRequest)">Delete</b-button>
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', )"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', )"></i>
                             </b-card-text>
                         </b-card>
                     </div>
@@ -187,6 +190,16 @@ Vue.component('list_friends', {
                 console.log("despues de " + borrar + " " + this.friends);
             }); 
             
+        },
+        changeChallengeRequest: function(status) {
+
+            if(status == "accepted"){
+                //jugar partida y cambiar estado challenge a accepted
+            }
+            else {
+                //cambiar estado challenge a rejected
+            }
+
         }
         // showUser(userId){
         //     fetch('../trivial5/public/indexPerfil/'+this.friend.id)
