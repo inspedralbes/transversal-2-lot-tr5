@@ -146,19 +146,27 @@ Vue.component('challenges', {
     data: function(){
         return{
             challengesPending: [],
+            withChallenges: false
         }
     },
     template: ` <div class="nav-container">
                     <div class="challenge__outDiv">
                         <div class="challenge__div">
                             <p>CHALLENGE LIST</p>
-                            <div v-for="(challenge, index) in challengesPending">
+                            <div v-if="withChallenges" v-for="(challenge, index) in challengesPending">
                                 <b-card class="mb-3 friend__list">
                                     <b-card-text class="friends__cardtext">
                                         <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                         <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
                                         <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i> 
                                         <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i>
+                                    </b-card-text>
+                                </b-card>
+                            </div>
+                            <div v-if="withChallenges === false">
+                                <b-card class="mb-3" class="friends__noPendingText">
+                                    <b-card-text>
+                                        No challenges
                                     </b-card-text>
                                 </b-card>
                             </div>
@@ -214,7 +222,13 @@ Vue.component('challenges', {
         .then(res => res.json())
         .then(data => {
             console.log("IC " + data);
-            this.challengesPending = data;
+            if(data == "no hay challenges") {
+
+            }
+            else {
+                this.challengesPending = data;
+            }
+            
             
         }); 
     }
@@ -610,7 +624,7 @@ Vue.component('join', {
     template: ` <div class="nav-container">
                     <br><br>
                     <b-tabs pills card content-class="mt-3" align="center">
-                        <b-tab title="Login" active active title-item-class="w-25 login__tab"><br><login></login></b-tab>
+                        <b-tab title="Login" active active title-item-class="w-25 login__tab" id="login"><br><login></login></b-tab>
                         <b-tab title="Register" title-item-class="w-25 register__tab"><br><register></register></b-tab>
                     </b-tabs>
                 </div>`,
@@ -779,7 +793,7 @@ Vue.component('login', {
                             </div>
                         </div>
                         <b-button @click="loginValidation" class="login__button">Join <b-icon icon="arrow-right"></b-icon></b-button><br><br>
-                        <p v-if="credentialsIncorrect" style="color:red;">*Credentials incorrect</p>
+                        <p v-if="credentialsIncorrect" style="color:red;">*Incorrect Credentials</p>
                     </div>
                 </div>
             </div>
@@ -953,13 +967,13 @@ Vue.component('results' , {
                         <h1 class="game__resultLetter">Challenge</h1>
                         <b-row>
                             <b-col cols="6">
-                                <h1 v-if="infoChallenge.score_challenger < this.points" class="game__resultLetter">Looser</h1>
+                                <h1 v-if="infoChallenge.score_challenger < this.points" class="game__resultLetter">Loser</h1>
                                 <h1 v-if="infoChallenge.score_challenger > this.points" class="game__resultLetter">Winner</h1>
                                 <h1 class="game__resultLetter">{{infoChallenge.nameChallenger}}</h1>
                                 <h1 class="game__resultLetter">{{infoChallenge.score_challenger}}</h1>
                             </b-col>
                             <b-col cols="6">
-                                <h1 v-if="infoChallenge.score_challenger > this.points" class="game__resultLetter">Looser</h1>
+                                <h1 v-if="infoChallenge.score_challenger > this.points" class="game__resultLetter">Loser</h1>
                                 <h1 v-if="infoChallenge.score_challenger < this.points" class="game__resultLetter">Winner</h1>
                                 <h1 class="game__resultLetter">{{userLogged.nombre}}</h1>
                                 <h1 class="game__resultLetter">{{this.points}}</h1>
@@ -1062,6 +1076,10 @@ Vue.component('results' , {
     },
     mounted() {
 
+        if(this.isChallenge || this.daily || !this.isLogged) {
+            this.showButtons = false;
+        }
+
         console.log("mounted dificultad " + this.difficulty)
 
         for (let i = 0; i < this.results.length; i++) {
@@ -1069,55 +1087,58 @@ Vue.component('results' , {
                 this.correctAnswers++;
             }
         }
-        this.timer = this.timerRestante;
-        this.calcularPuntuacion();
 
-        if(this.isChallenge || this.daily) {
-            this.showButtons = false;
+        if(userStore().logged) {
+            
+            this.timer = this.timerRestante;
+            this.calcularPuntuacion();
+
+            fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser,{
+                headers:{"Accept":"application/json"},
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if(data != "sin amigos") {
+                    console.log("tiene amigos");
+                    this.friends = data;
+                    this.withFriends = true;
+                }else{
+                    this.withFriends = false;
+                    console.log(this.withFriends);
+                }
+            }); 
         }
 
-        fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser,{
-            headers:{"Accept":"application/json"},
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            if(data != "sin amigos") {
-                console.log("tiene amigos");
-                this.friends = data;
-                this.withFriends = true;
-            }else{
-                this.withFriends = false;
-                console.log(this.withFriends);
+        if(userStore().challenged) {
+            updateChallenge = new FormData();
+            updateChallenge.append('idChallenged', this.infoChallenge.idChallenged);
+            updateChallenge.append('idChallenger', this.infoChallenge.idChallenger);
+            updateChallenge.append('idGame', this.infoChallenge.idGame);
+    
+            if(this.infoChallenge.score_challenger < this.points){
+                updateChallenge.append('idWinner', this.infoChallenge.idChallenged);
             }
-        }); 
-
-        updateChallenge = new FormData();
-        updateChallenge.append('idChallenged', this.infoChallenge.idChallenged);
-        updateChallenge.append('idChallenger', this.infoChallenge.idChallenger);
-        updateChallenge.append('idGame', this.infoChallenge.idGame);
-
-        if(this.infoChallenge.score_challenger < this.points){
-            updateChallenge.append('idWinner', this.infoChallenge.idChallenged);
+            else if(this.infoChallenge.score_challenger > this.points) {
+                updateChallenge.append('idWinner', this.infoChallenge.idChallenger);
+            }
+            else {
+                updateChallenge.append('idWinner', null);
+            }
+            updateChallenge.append('score_challenged', this.points);
+    
+            fetch('../trivial5/public/updatechallengewinner', {
+                method: 'POST',
+                body: updateChallenge
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            });
         }
-        else if(this.infoChallenge.score_challenger > this.points) {
-            updateChallenge.append('idWinner', this.infoChallenge.idChallenger);
-        }
-        else {
-            updateChallenge.append('idWinner', null);
-        }
-        updateChallenge.append('score_challenged', this.points);
-
-        fetch('../trivial5/public/updatechallengewinner', {
-            method: 'POST',
-            body: updateChallenge
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-        });
 
         if(this.isLogged) {
+            console.log("savedata hola");            
             this.$emit('saveData', this.points);
         }
     },
@@ -1304,7 +1325,7 @@ Vue.component('game' , {
                             <br>     
                             <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button>
                         </div>
-                        <footercopyright v-if="this.page == 0"></footercopyright>
+                        <footercopyright v-if="showButtonPlay"></footercopyright>
                     </div>
                     <div class="select__optionsOuter">
                         <div class="select__options">
@@ -1338,7 +1359,7 @@ Vue.component('game' , {
                                         </b-row>
                                     </div>
                                 </div>
-                                <br><p style="color: white;">Your selection -> {{this.selectedDifficulty}} && {{this.selectedCategory}}</p>
+                                <br><p style="color: white;">Your selection -> {{this.selectedDifficulty}} & {{this.selectedCategory}}</p>
 
                                 <b-button @click="decreasePage"><span>Back</span></b-button>
                                 <b-button @click="startGame"><span>Start</span></b-button><br><br>
@@ -1396,9 +1417,9 @@ Vue.component('game' , {
                 }
                 else {
                     this.questions = data;
+                    console.log('resturn de la partida encontrada ' + data);
                     if(userStore().challenged) {
                         // this.idGame = userStore().idChallenge;
-                        this.getDifficulty();
                         this.idGame = userStore().challengeInfo.idGame;
                         this.page = 2;
                         this.saveData(-300);
@@ -1410,13 +1431,6 @@ Vue.component('game' , {
                 if(this.isLogged && !this.daily && !userStore().challenged){
                     this.saveGame();
                 }
-            });
-        },
-        getDifficulty: function() {
-            fetch("../trivial5/public/gamedifficulty/"+id)
-            .then(res => res.json())
-            .then(data => {
-                this.selectedDifficulty = data;
             });
         },
         playagain: function() {
@@ -1663,7 +1677,7 @@ Vue.component('footercopyright',{
                     left:0;
                     width:100%;
                     ">
-                    © Answers && questions come from <a href="https://the-trivia-api.com/">Trivia api</a>
+                    © Answers & questions come from <a href="https://the-trivia-api.com/">Trivia api</a>
                 </div>`
 });
 
