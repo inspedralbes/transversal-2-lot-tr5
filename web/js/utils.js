@@ -71,7 +71,7 @@ Vue.component('record', {
                                             <h3> Score: {{game.score}}</h3>
                                             Date: {{game.created_at}}
                                         </div>
-                                        <b-button v-if="externProfile" class="button__playSameGame" @click="playChallenge(game.id, game.idUser, game.score)">Play same game</b-button>
+                                        <b-button v-if="externProfile" class="button__playSameGame" @click="playChallenge(game.id, game.idUser, game.score)">PLAY</b-button>
                                     </b-card-text>
                                     <hr>
                                 </div>
