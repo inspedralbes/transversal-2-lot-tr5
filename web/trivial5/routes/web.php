@@ -30,7 +30,7 @@ Route::get('listfriends/{id}', [FriendController::class, 'index'] );
 
 Route::get('indexPerfil/{id}', [UserController::class, 'indexPerfil']);
 
-Route::get('indexChallenge',[ChallengeController::class,'index']);
+Route::get('indexChallenge/{id}',[ChallengeController::class,'index']);
 
 
 //POST
