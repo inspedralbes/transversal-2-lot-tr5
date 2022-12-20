@@ -154,8 +154,8 @@ Vue.component('challenges', {
                             <b-card-text class="friends__cardtext">
                                 <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                 <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
-                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.total_score)"></i> 
-                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.total_score)"></i>
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger)"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger)"></i>
                             </b-card-text>
                         </b-card>
                     </div>
@@ -1009,6 +1009,8 @@ Vue.component('results' , {
             gameChallenge.append('idChallenger', userStore().loginInfo.idUser);
             gameChallenge.append('idChallenged', id);
             gameChallenge.append('date', date);
+            gameChallenge.append('scoreChallenger', this.points);
+            scoreChallenger
 
             fetch('../trivial5/public/storechallenge', {
                 method: 'POST',
@@ -1223,7 +1225,7 @@ Vue.component('game' , {
                             <b-button @click="playButton" class="button__play">PLAY</b-button><br>
                             <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button>
                         </div>
-                        <footercopyright></footercopyright>
+                        <footercopyright v-if="this.page == 0"></footercopyright>
                     </div>
                     <div class="select__optionsOuter">
                         <div class="select__options">

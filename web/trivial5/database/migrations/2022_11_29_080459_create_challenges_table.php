@@ -27,7 +27,6 @@ return new class extends Migration
             $table->primary(['idChallenger', 'idChallenged', 'idGame'])->index();
             $table->foreign('idChallenger')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('idChallenged')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('idWinner')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('idGame')->references('id')->on('games')->onDelete('cascade');
 
             $table->timestamps();
