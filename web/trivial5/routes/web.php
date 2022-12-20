@@ -34,6 +34,7 @@ Route::get('indexChallenge/{id}',[ChallengeController::class,'index']);
 
 Route::get('indexpending/{id}',[ChallengeController::class,'index_pending']);
 
+Route::get('gamedifficulty/{id}',[GameController::class,'getDifficulty']);
 
 //POST
 
