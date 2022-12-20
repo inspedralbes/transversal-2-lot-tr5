@@ -1010,7 +1010,6 @@ Vue.component('results' , {
             gameChallenge.append('idChallenged', id);
             gameChallenge.append('date', date);
             gameChallenge.append('scoreChallenger', this.points);
-            scoreChallenger
 
             fetch('../trivial5/public/storechallenge', {
                 method: 'POST',
@@ -1018,7 +1017,17 @@ Vue.component('results' , {
             })
             .then(res => res.json())
             .then(data => {
-                console.log("return " + data);
+                console.log(data);
+                let borrar = 0;
+                for (let i = 0; i < this.friends.length; i++) {
+                    console.log(this.friends[i].id + " id");
+                    if(this.friends[i].id == id) {
+                        borrar = i;
+                    }
+                }
+                console.log("antes de " + borrar + " " + this.friends);
+                this.friends.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.friends);
             });
         }
     },
