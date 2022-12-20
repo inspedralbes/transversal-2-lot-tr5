@@ -61,7 +61,7 @@ class ChallengeController extends Controller
             ->where('idChallenger', '=', $request -> idChallenger)
             ->where('idChallenged', '=', $request -> idChallenged)
             ->where('idGame','=',$request->idGame)
-            ->update(['idWinner','=',$request->idWinner,'scoreChallenged','=',$request->score_challenged]);
+            ->update(['idWinner'=>$request->idWinner,'scoreChallenged'=>$request->score_challenged]);
         return $updateChallenge;
     }
 

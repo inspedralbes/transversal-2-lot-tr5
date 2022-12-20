@@ -58,6 +58,12 @@ class GameController extends Controller
             
     }
     
+    public function getDifficulty($id){
+        $getDiffi='SELECT difficulty FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenger = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = '.$id;
+        // $pendingChallenges = DB::select('SELECT * FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenged = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = ?',$id);
+        $pendingChallenges = DB::select($getDiffi);
+        return json_encode($pendingChallenges);
+    }
 
     /**
      * Show the form for creating a new resource.
