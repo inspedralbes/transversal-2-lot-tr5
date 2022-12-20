@@ -939,6 +939,7 @@ Vue.component('results' , {
             timer: 0,
             friends: [],
             withFriends: false,
+            showButtons: true
         }
     },
     props: ['results', 'timerRestante', 'difficulty', 'daily', 'idGame'],
@@ -947,8 +948,8 @@ Vue.component('results' , {
                     <h1 class="game__resultLetter">{{correctAnswers}}/{{results.length}} answers correct! </h1>
                     <h1 v-show="this.isLogged" class="game__resultLetter">Score: {{this.points}}</h1>
                     <b-button @click="$emit('lobby')">Lobby</b-button>
-                    <b-button v-if="!daily || !isChallenge" @click="$emit('playagain')">Play again</b-button>
-                    <b-button v-if="!daily || !isChallenge" v-b-modal="'sendChallenge'">Challenge someone!</B-button>
+                    <b-button v-if="showButtons" @click="$emit('playagain')">Play again</b-button>
+                    <b-button v-if="showButtons" v-b-modal="'sendChallenge'">Challenge someone!</B-button>
 
                     <div>
                         <b-modal id="sendChallenge" title="Challenge someone!" ok-only>
@@ -1048,6 +1049,10 @@ Vue.component('results' , {
         }
         this.timer = this.timerRestante;
         this.calcularPuntuacion();
+
+        if(this.isChallenge || this.daily) {
+            this.showButtons = false;
+        }
 
         fetch('../trivial5/public/listfriends/' + userStore().loginInfo.idUser,{
             headers:{"Accept":"application/json"},
