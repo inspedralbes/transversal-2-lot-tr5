@@ -17,9 +17,9 @@ Vue.component('routes', {
     template: ` <div class="nav-container">
                     <b-nav class="navbar">
                         <b-nav-item v-show="this.isLogged" to="/ranking">Ranking</b-nav-item>
-                        <b-nav-item active to="/">LOGO</b-nav-item>
+                        <b-nav-item active to="/">HOME</b-nav-item>
                         <b-nav-item v-show="this.isLogged" :to="'/profile/' + this.userLogged.idUser">Profile</b-nav-item>
-                        <b-nav-item v-show="!this.isLogged" to="/join">Login</b-nav-item>
+                        <b-nav-item v-show="!this.isLogged" to="/join">LOG IN</b-nav-item>
                     </b-nav>
                 </div>`,
     computed: {
@@ -52,20 +52,24 @@ Vue.component('record', {
         }
     },
     template: ` <div class="nav-container">
-                    <b-card header="Results" class="record__header">
-                        <div v-for="(game, index) in gamesPlayed">
-                            <b-card-text class="record_cardTexts">
-                                Game: {{index+1}}
-                                Difficulty: {{game.difficulty}}
-                                Category: {{game.category}}
-                                Score: {{game.score}}
-                                <br>
-                                Date: {{game.created_at}}
-                                <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id)">Play same game</b-button>
-                            </b-card-text>
-                            <hr>
+                    <div class="record__outerDiv">
+                        <div class="record__div">
+                            <b-card header="Results" class="record__header">
+                                <div v-for="(game, index) in gamesPlayed">
+                                    <b-card-text class="record_cardTexts">
+                                        Game: {{index+1}}
+                                        Difficulty: {{game.difficulty}}
+                                        Category: {{game.category}}
+                                        Score: {{game.score}}
+                                        <br>
+                                        Date: {{game.created_at}}
+                                        <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id)">Play same game</b-button>
+                                    </b-card-text>
+                                    <hr>
+                                </div>
+                            </b-card>
                         </div>
-                    </b-card>
+                    </div>
                 </div>`,
     methods: {
         chargeRecord: function() {
@@ -146,22 +150,31 @@ Vue.component('list_friends', {
         }
     },
     template:`  <div class="nav-container">
-                    <div v-if="withFriends === true" v-for="(friend, index) in friends">
-                        <b-card class="mb-3 friend__list">
-                            <b-card-text class="friends__cardtext">
-                                <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
-                                <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
-                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', )"></i> 
-                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', )"></i>
-                            </b-card-text>
-                        </b-card>
-                    </div>
-                    <div v-if="withFriends === false">
-                        <b-card class="mb-3">
-                            <b-card-text>
-                                No friends
-                            </b-card-text>
-                        </b-card>
+                    <div class="friend__outerListDiv">
+                        <div class="friend__listDivBackground">
+                            <div class="friend__listDiv">
+                                <send_friend_request></send_friend_request><br>
+                                <p>Friend list</p>
+                                <div v-if="withFriends === true" v-for="(friend, index) in friends">
+                                    <b-card class="mb-3 friend__list">
+                                        <b-card-text class="friends__cardtext">
+                                            <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
+                                            <RouterLink :to="'/profile/'+friend.id">{{friend.name}}</RouterLink>
+                                            <div class="friend__listButton">
+                                                <b-button variant="danger" class="button__delete" @click="deleteFriend(friend.idUserRequested, friend.idUserRequest)">Delete</b-button>
+                                            </div>
+                                        </b-card-text>
+                                    </b-card>
+                                </div>
+                                <div v-if="withFriends === false">
+                                    <b-card class="mb-3">
+                                        <b-card-text>
+                                            No friends
+                                        </b-card-text>
+                                    </b-card>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>`,
     methods: {
@@ -238,22 +251,27 @@ Vue.component('pending_requests', {
         }
     },
     template:`  <div class="nav-container">
-                    <div v-if="withRequests" v-for="(request, index) in requests">
-                        <b-card class="mb-3">
-                            <b-card-text>
-                                {{request.name}} 
-                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeStatusRequest('rejected', request.idUserRequest)"></i> 
-                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeStatusRequest('accepted', request.idUserRequest)"></i>
-                            </b-card-text>
-                            
-                        </b-card>
-                    </div>
-                    <div v-if="!withRequests">
-                        <b-card class="mb-3">
-                            <b-card-text>
-                                No pending requests
-                            </b-card-text>
-                        </b-card>
+                    <div class="game__outerPendingDiv">
+                        <div class="game__pendingDiv">
+                            <div v-if="withRequests" v-for="(request, index) in requests">
+                                <b-card class="mb-3 friends__pendinglist">
+                                    <b-card-text class="friends__pendingCardText">
+                                        {{request.name}} 
+                                        <div class="friends__pendingSelections">
+                                            <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeStatusRequest('rejected', request.idUserRequest)"></i> 
+                                            <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeStatusRequest('accepted', request.idUserRequest)"></i>
+                                        </div>
+                                    </b-card-text>
+                                </b-card>
+                            </div>
+                            <div v-if="!withRequests">
+                                <b-card class="mb-3" class="friends__noPendingText">
+                                    <b-card-text>
+                                        No pending requests
+                                    </b-card-text>
+                                </b-card>
+                            </div>
+                        </div>
                     </div>
                 </div>`,
     methods: {
@@ -322,9 +340,9 @@ Vue.component('send_friend_request', {
     template: ` <div class="nav-container">
                     <br>
                     <b-input-group class="mt-3">
-                        <b-form-input placeholder="Write your friend Email" v-model="email"></b-form-input>
+                        <b-form-input placeholder="Enter a friend's email" v-model="email" class="friend__requestInput"></b-form-input>
                         <b-input-group-append>
-                            <b-button variant="danger" @click="validarEmail">Send</b-button>
+                            <b-button variant="danger" @click="validarEmail" class="friend__requestButton">+</b-button>
                         </b-input-group-append>
                     </b-input-group>
                     <p v-if="!mailValido" style="color:red;">*Email address incorrect</p>
@@ -366,9 +384,8 @@ Vue.component('send_friend_request', {
 
 Vue.component('friends', {
     template: ` <div class="nav-container">
-                    <b-tabs content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
+                    <b-tabs pills card content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab title="List" active><list_friends></list_friends></b-tab>
-                        <b-tab title="Send"><send_friend_request></send_friend_request></b-tab>
                         <b-tab title="Pending"><pending_requests></pending_requests></b-tab>
                     </b-tabs>
                 </div>`,
@@ -406,7 +423,7 @@ Vue.component('profile', {
                         </div>
                         <br>
                         <p class="profile__userName">{{infoUser.name}}</p>
-                        <p class="profile__userScore">Total Score -> {{infoUser.total_score}}</p>
+                        <p class="profile__userScore">Total Score <br> {{infoUser.total_score}}</p>
                     </div>
                     <br>
                     <b-tabs pills card content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
@@ -963,7 +980,7 @@ Vue.component('results' , {
                             <div v-if="withFriends === true" v-for="(friend, index) in friends">
                                 <b-card class="mb-3 friend__list">
                                     <b-card-text class="friends__cardtext">
-                                        <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
+                                        <b-avatar variant="primary" class="mr-3 friends__avatar" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                         <p> {{friend.name}} </p>
                                         <b-button variant="danger" class="button__delete" @click="sendChallenge(friend.id)">Send Challenge</b-button>
                                     </b-card-text>
@@ -1101,7 +1118,7 @@ Vue.component('question' , {
                     :title=infoQuestion.question
                     class="mb-2 game__card"
                     >
-                        <hr><br>
+                        <br><br>
                         <div>
                             <b-row>
                                 <b-col lg="6" class="pb-3" ml="10">
@@ -1232,16 +1249,13 @@ Vue.component('game' , {
 
     template: ` <div class="container_button_play" >
                     <div v-if="this.page == 0">
-                        <div>
-                            <img src="img/Winner.png" style="width: 100%;height: 100%;"></img>
-                        </div>
                         <div v-if="showButtonPlay" class="div_button_play">
                             <div class="start__tituloDiv">
                                 <h4>WELCOME TO</h4>
                                 <h1 class="start__tituloPrincipal"> LEAGUE OF <br> TRIVIAL</h1>
-                            </div>
-                            <b-button @click="playButton" class="button__play"><span>PLAY</span></b-button>
-                            <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button><br>
+                            </div><br><br>
+                            <b-button @click="playButton" class="button__play">PLAY</b-button><br>
+                            <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button>
                             <div class="mb-1" v-if="!isLogged">
                                 <br><b-button @click="desplegarModalLogin" class="start__dailyGameButton">DAILY GAME</b-button> 
                             </div>
@@ -1251,32 +1265,38 @@ Vue.component('game' , {
                         <div class="select__options">
                             <div v-if="this.page == 1">
                                 <br><br>
-                                <p style="color: white;">Select difficulty</p>
-                                <b-button @click="changeDifficulty('easy')">Easy</b-button>
-                                <b-button @click="changeDifficulty('medium')">Medium</b-button>
-                                <b-button @click="changeDifficulty('hard')">Hard</b-button>
+                                <p style="color: white; font-family: 'Common Pixel', sans-serif; !important">Select difficulty</p>
+                                <div class="difficulty__buttonsOuter">
+                                    <div class="difficulty__buttons">
+                                        <div><b-button @click="changeDifficulty('easy')" class="difficulty__easy">Easy</b-button></div>
+                                        <div><b-button @click="changeDifficulty('medium')" class="difficulty__medium">Medium</b-button></div>
+                                        <div><b-button @click="changeDifficulty('hard')" class="difficulty__hard">Hard</b-button></div>
+                                    </div>
+                                </div>
 
-                                <p style="color: white;">Select category</p>
-
-                                <b-row class="justify-content-md-center">
-                                    <b-col cols="2"><b-button @click="changeCategory('arts_and_literature')">🎨Arts & Literature</b-button></b-col>
-                                    <b-col cols="2"><b-button @click="changeCategory('film_and_tv')">🎞️Film & TV</b-button></b-col>
-                                    <b-col cols="2"><b-button @click="changeCategory('food_and_drink')">🥘Food & Drink</b-button></b-col></b-col>
-                                    <b-col cols="2"><b-button @click="changeCategory('general_knowledge')">🤓General Knowledge</b-button></b-col></b-col>
-                                    <b-col cols="2"><b-button @click="changeCategory('geography')">🗺️Geography</b-button></b-col></b-col>
-                                </b-row>
-                                <b-row class="justify-content-md-center">
-                                    <b-col cols="2"><b-button @click="changeCategory('history')">📜History</b-button></b-col></b-col>
-                                    <b-col cols="2"><b-button @click="changeCategory('music')">🎼Music</b-button></b-col></b-col>
-                                    <b-col cols="2"><b-button @click="changeCategory('science')">🔬Science</b-button></b-col></b-col>
-                                    <b-col cols="2"><b-button @click="changeCategory('society_and_culture')">🧠Society & Culture</b-button></b-col></b-col>
-                                    <b-col cols="2"><b-button @click="changeCategory('sport_and_leisure')">🤺Sport & Leisure</b-button></b-col></b-col>
-                                </b-row>
-
-                                <p style="color: white;">Your selection -> {{this.selectedDifficulty}} && {{this.selectedCategory}}</p>
+                                <p style="color: white; font-family: 'Common Pixel', sans-serif; !important">Select category</p>
+                                <div class="category__selectionsOuter">
+                                    <div class="category__selections">
+                                        <b-row style="padding-bottom:15px">
+                                            <b-col cols="2"><b-button @click="changeCategory('arts_and_literature')">🎨</b-button></b-col>
+                                            <b-col cols="2"><b-button @click="changeCategory('film_and_tv')">🎞️</b-button></b-col>
+                                            <b-col cols="2"><b-button @click="changeCategory('food_and_drink')">🥘</b-button></b-col></b-col>
+                                            <b-col cols="2"><b-button @click="changeCategory('general_knowledge')">🤓</b-button></b-col></b-col>
+                                            <b-col cols="2"><b-button @click="changeCategory('geography')">🗺️</b-button></b-col></b-col>
+                                        </b-row>
+                                        <b-row>
+                                            <b-col cols="2"><b-button @click="changeCategory('history')">📜</b-button></b-col></b-col>
+                                            <b-col cols="2"><b-button @click="changeCategory('music')">🎼</b-button></b-col></b-col>
+                                            <b-col cols="2"><b-button @click="changeCategory('science')">🔬</b-button></b-col></b-col>
+                                            <b-col cols="2"><b-button @click="changeCategory('society_and_culture')">🧠</b-button></b-col></b-col>
+                                            <b-col cols="2"><b-button @click="changeCategory('sport_and_leisure')">🤺</b-button></b-col></b-col>
+                                        </b-row>
+                                    </div>
+                                </div>
+                                <br><p style="color: white;">Your selection -> {{this.selectedDifficulty}} && {{this.selectedCategory}}</p>
 
                                 <b-button @click="decreasePage"><span>Back</span></b-button>
-                                <b-button @click="startGame"><span>Start</span></b-button>
+                                <b-button @click="startGame"><span>Start</span></b-button><br><br>
                             </div>
                         </div>
                     </div>
@@ -1585,6 +1605,12 @@ Vue.component('game' , {
             }
         }
     }
+});
+
+Vue.component('footer',{
+    template:`<div class="footer">
+                <footer>Copyright</footer>
+        </div>`
 });
 
 const Game = {

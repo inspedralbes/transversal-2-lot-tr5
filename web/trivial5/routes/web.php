@@ -47,6 +47,8 @@ Route::post('updatescore', [PlayedgameController::class, 'update']);
 
 Route::post('deletefriend', [FriendController::class, 'deleteFriend']);
 
-Route::post('editProfile', [UserController::class, 'updateProfile']);
+Route::post('editprofile', [UserController::class, 'updateProfile']);
+
+Route::post('storechallenge',[ChallengeController::class,'store']);
 
 require __DIR__.'/auth.php';

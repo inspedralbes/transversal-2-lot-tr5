@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Game;
 use App\Models\PlayedGame;
+use App\Models\Challenge;
 
 class ChallengeController extends Controller
 {
@@ -44,6 +45,9 @@ class ChallengeController extends Controller
      */
     public function store(Request $request)
     {
+        //ID PARTIDA, ID PERSONA QUE ENVIA, ID PERSONA QUE RECIBE
+        $diaActual = date('d/m/Y');
+
         $challenge = new Challenge();
         $challenge -> idChallenger = $request -> idChallenger;
         $challenge -> idChallenged = $request -> idChallenged;
@@ -52,17 +56,17 @@ class ChallengeController extends Controller
         $challenge -> date = $request -> date;
         $challenge -> status = $request -> status;
 
-        $playedGame = new PlayedGame();
-        $playedGames -> idUser = $request -> idUser;
-        $playedGames -> idGame = $request -> idGame;
-        $playedGames -> date = $request -> date;
-        $playedGames -> score = $request ->score;
+        // $playedGame = new PlayedGame();
+        // $playedGames -> idUser = $request -> idChallenger;
+        // $playedGames -> idGame = $request -> idGame;
+        // $playedGames -> date = $request -> date;
+        // $playedGames -> score = $request ->score;
 
-        $playedGames -> save();
-        $user = User::find($playedGames -> idUser);
-        $user -> total_score +=  $playedGames -> score;
+        // $playedGames -> save();
+        // $user = User::find($playedGames -> idUser);
+        // $user -> total_score +=  $playedGames -> score;
 
-        $user -> save();
+        // $user -> save();
         $challenge -> save();
         
         return $challenge;
