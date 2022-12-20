@@ -50,6 +50,7 @@ class ChallengeController extends Controller
         $challenge -> idChallenged = $request -> idChallenged;
         $challenge -> idGame = $request -> idGame;
         $challenge -> date = $request -> date;
+        $challenge -> scoreChallenger +=  $request -> scoreChallenger;
         $challenge -> save();
         return $challenge;
     }

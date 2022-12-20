@@ -483,6 +483,9 @@ tr:nth-child(even) {
     width: 80%;
 }
 
+.button__playSameGame{
+    
+}
 @media only screen and (min-width: 768px) {
     .record__div{
         width: 60%;

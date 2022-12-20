@@ -71,7 +71,7 @@ Vue.component('record', {
                                             <h3> Score: {{game.score}}</h3>
                                             Date: {{game.created_at}}
                                         </div>
-                                        <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id, game.idUser, game.score)">Play same game</b-button>
+                                        <b-button v-if="externProfile" class="button__playSameGame" @click="playChallenge(game.id, game.idUser, game.score)">Play same game</b-button>
                                     </b-card-text>
                                     <hr>
                                 </div>
@@ -184,9 +184,9 @@ Vue.component('challenges', {
                         borrar = i;
                     }
                 }
-                console.log("antes de " + borrar + " " + this.challengesPending);
-                this.challengesPending.splice(borrar, 1); 
-                console.log("despues de " + borrar + " " + this.challengesPending);
+                console.log("antes de " + borrar + " " + this.challengeRequest);
+                this.challengeRequest.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.challengeRequest);
             }); 
 
             if(status == "accepted"){
@@ -911,26 +911,9 @@ Vue.component('globalranking', {
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
                                     <tr v-for="(player, index) in this.players">
-                                        <div v-if="index = 0">
-                                            <td>{{index + 1}}FIRST</td>
-                                            <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
-                                            <td>{{player.total_score}}</td>
-                                        </div>
-                                        <div v-if="index = 1">
-                                            <td>{{index + 1}}SECOND</td>
-                                            <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
-                                            <td>{{player.total_score}}</td>
-                                        </div>
-                                        <div v-if="index = 2">
-                                            <td>{{index + 1}}THIRD</td>
-                                            <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
-                                            <td>{{player.total_score}}</td>
-                                        </div>
-                                        <div v-else>
-                                            <td>{{index + 1}}</td>
-                                            <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
-                                            <td>{{player.total_score}}</td>
-                                        </div>
+                                        <td>{{index + 1}}</td>
+                                        <td><RouterLink :to="'/profile/'+player.id"> {{player.name}}</RouterLink></td>
+                                        <td>{{player.total_score}}</td>
                                     </tr>
                                 </tbody>
                             </table>
