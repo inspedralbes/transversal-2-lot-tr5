@@ -1191,6 +1191,7 @@ Vue.component('game' , {
                             <b-button @click="playButton" class="button__play">PLAY</b-button><br>
                             <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button>
                         </div>
+                        <footercopyright></footercopyright>
                     </div>
                     <div class="select__optionsOuter">
                         <div class="select__options">
@@ -1538,8 +1539,15 @@ Vue.component('game' , {
 });
 
 Vue.component('footercopyright',{
-    template:`  <div class="footer">
-                    <p style="color: white;">© All the answers and questions come from <a href="https://the-trivia-api.com/">The trivia api</a></p>
+    template:`  <div class="footer" 
+                    style="color: white;
+                    height:50px;
+                    line-height:50px;
+                    bottom:0;
+                    left:0;
+                    width:100%;
+                    ">
+                    © Answers && questions come from <a href="https://the-trivia-api.com/">Trivia api</a>
                 </div>`
 });
 
