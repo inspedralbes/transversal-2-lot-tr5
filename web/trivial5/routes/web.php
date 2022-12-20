@@ -53,4 +53,6 @@ Route::post('editprofile', [UserController::class, 'updateProfile']);
 
 Route::post('storechallenge',[ChallengeController::class,'store']);
 
+Route::post('updatechallengestatus',[ChallengeController::class,'update']);
+
 require __DIR__.'/auth.php';

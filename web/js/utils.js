@@ -71,7 +71,7 @@ Vue.component('record', {
                                             {{game.category}}<br>
                                             Date: {{game.created_at}}
                                         </div>
-                                        <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id)">Play same game</b-button>
+                                        <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id, game.idUser, game.score)">Play same game</b-button>
                                     </b-card-text>
                                     <hr>
                                 </div>
@@ -96,10 +96,17 @@ Vue.component('record', {
                     }
             });
         },
-        playChallenge: function(id) {
-            userStore().idChallenge = id;
-            userStore().playChallenge = true;
-
+        playChallenge: function(idGame, idChallenger, scoreChallenger) {
+            
+            // userStore().idChallenge = id;
+            // userStore().playChallenge = true;
+            userStore().challengeInfo.idGame = idGame;
+            userStore().challengeInfo.idChallenger = idChallenger;
+            userStore().challengeInfo.score_challenger = scoreChallenger;
+            userStore().challengeInfo.idChallenged = userStore().loginInfo.idUser;
+            userStore().challengeInfo.score_challenged = 0;
+            userStore().challenged = true;
+            
             router.push("/");
         }
     },
@@ -147,20 +154,50 @@ Vue.component('challenges', {
                             <b-card-text class="friends__cardtext">
                                 <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                 <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
-                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame)"></i> 
-                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame)"></i>
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.total_score)"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.total_score)"></i>
                             </b-card-text>
                         </b-card>
                     </div>
                 </div>`,
     methods: {
-        changeChallengeRequest: function(status) {
+        changeChallengeRequest: function(status, idChallenger, idChallenged, idGame, scoreChallenger) {
+
+            challengeRequest = new FormData();
+            challengeRequest.append('status', status);
+            challengeRequest.append('idChallenged', idChallenged);
+            challengeRequest.append('idChallenger', idChallenger);
+            challengeRequest.append('idGame', idGame);
+
+            fetch('../trivial5/public/updatechallengestatus', {
+                method: 'POST',
+                headers: {"Accept": "application/json"},
+                body: challengeRequest
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                let borrar = 0;
+                for (let i = 0; i < this.challengesPending.length; i++) {
+                    console.log(this.challengesPending[i].idChallenged + " idChallenged");
+                    if(this.challengesPending[i].idChallenged == idChallenged) {
+                        borrar = i;
+                    }
+                }
+                console.log("antes de " + borrar + " " + this.challengeRequest);
+                this.challengeRequest.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.challengeRequest);
+            }); 
 
             if(status == "accepted"){
-                //jugar partida y cambiar estado challenge a accepted
-            }
-            else {
-                //cambiar estado challenge a rejected
+                userStore().challengeInfo.idGame = idGame;
+                userStore().challengeInfo.idChallenger = idChallenger;
+                userStore().challengeInfo.score_challenger = scoreChallenger;
+                userStore().challengeInfo.idChallenged = idChallenged;
+                userStore().challengeInfo.score_challenged = 0;
+                userStore().challenged = true;
+                
+                router.push("/");
             }
 
         }
@@ -1253,7 +1290,7 @@ Vue.component('game' , {
             this.showButtonDaily = false;
             let rutaFetch = "";
             if(!this.daily){
-                if(this.isLogged && !userStore().playChallenge){
+                if(this.isLogged && !userStore().challenged){
                     rutaFetch = "https://the-trivia-api.com/api/questions?categories="+ this.selectedCategory +"&limit=10&region=ES&difficulty=" + this.selectedDifficulty;
                 }
                 else {
@@ -1278,8 +1315,9 @@ Vue.component('game' , {
                 }
                 else {
                     this.questions = data;
-                    if(userStore().playChallenge) {
-                        this.idGame = userStore().idChallenge;
+                    if(userStore().challenged) {
+                        // this.idGame = userStore().idChallenge;
+                        this.idGame = userStore().challengeInfo.idGame;
                         this.page = 2;
                         this.saveData(-300);
                         
@@ -1287,21 +1325,14 @@ Vue.component('game' , {
                 }
                 this.showQuestions = true;
                 this.countDownTimer();
-                if(this.isLogged && !this.daily && !userStore().playChallenge){
+                if(this.isLogged && !this.daily && !userStore().challenged){
                     this.saveGame();
                 }
             });
         },
         playagain: function() {
-            this.$bvModal.show("modalSelectGame");
-            this.idGame = null;
-            this.selectedDifficulty = "";
-            this.selectedCategory = "";
-            this.showQuestions = null;
-            this.showResults = null;
-            this.actualQuestion = 0;
-            this.timer = 150;
-            this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
+            this.resetAll();
+            this.page=1;
             
         },
         startGame: function(){
@@ -1407,7 +1438,7 @@ Vue.component('game' , {
             .then(res => res.json())
             .then(data => {
                 console.log("return " + data);
-                userStore().playChallenge = false;
+                userStore().challenged = false;
             });
         },
         saveGame: function() {
@@ -1450,7 +1481,7 @@ Vue.component('game' , {
             this.userAnswers = [null, null, null, null, null, null, null, null, null, null];
             this.boxTwo = '';
             this.page = 0;
-            userStore().playChallenge = false;
+            userStore().challenged = false;
         },
         countDownTimer () {
             if (this.timer > 0 && this.showQuestions == true) {
@@ -1507,8 +1538,9 @@ Vue.component('game' , {
     },
     mounted() {
 
-        if(userStore().playChallenge){
-            this.createGame(userStore().idChallenge);
+        if(userStore().challenged){
+            // this.createGame(userStore().idChallenge);
+            this.createGame(userStore().challengeInfo.idGame);
         }
         
     },
@@ -1602,8 +1634,14 @@ const userStore = Pinia.defineStore('usuario', {
                 nombre: '',
                 idUser: ''
             },
-            playChallenge: false,
-            idChallenge: '',
+            challenged: false,
+            challengeInfo: {
+                idChallenger: "",
+                idChallenged: "",
+                idGame: "",
+                score_challenger: "",
+                score_challenged: "",
+            },
         }
     },
     actions: {
