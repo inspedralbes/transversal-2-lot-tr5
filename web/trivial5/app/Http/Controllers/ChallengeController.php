@@ -29,28 +29,10 @@ class ChallengeController extends Controller
     }
 
     public function index_pending($id) {
-
-        $completedChallenges = DB::table('challenges')
-        ->distinct()
-            ->join('played_games',function($join){
-                $join->on('played_games.idGame','=','challenges.idGame');
-            })
-            ->where('challenges.status', '=', 'pending')
-            ->where('challenges.idChallenged', $id)
-            ->get();
-
-        return $completedChallenges;
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $sql_result='SELECT * FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenger = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = '.$id;
+        // $pendingChallenges = DB::select('SELECT * FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenged = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = ?',$id);
+        $pendingChallenges = DB::select($sql_result);
+        return json_encode($pendingChallenges);
     }
 
     /**
@@ -63,40 +45,13 @@ class ChallengeController extends Controller
     {
         //ID PARTIDA, ID PERSONA QUE ENVIA, ID PERSONA QUE RECIBE
         $diaActual = date('d/m/Y');
-
         $challenge = new Challenge();
         $challenge -> idChallenger = $request -> idChallenger;
         $challenge -> idChallenged = $request -> idChallenged;
         $challenge -> idGame = $request -> idGame;
-        $challenge -> idWinner = $request -> idWinner;
         $challenge -> date = $request -> date;
-        $challenge -> status = $request -> status;
-
-        // $playedGame = new PlayedGame();
-        // $playedGames -> idUser = $request -> idChallenger;
-        // $playedGames -> idGame = $request -> idGame;
-        // $playedGames -> date = $request -> date;
-        // $playedGames -> score = $request ->score;
-
-        // $playedGames -> save();
-        // $user = User::find($playedGames -> idUser);
-        // $user -> total_score +=  $playedGames -> score;
-
-        // $user -> save();
         $challenge -> save();
-        
         return $challenge;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -119,7 +74,16 @@ class ChallengeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $updateScore = DB::table('challenges')
+            ->where('idChallenger', '=', $request -> idChallenger)
+            ->where('idChallenged', '=', $request -> idChallenged);
+
+        if($updateScore->where('status'->$request->status === 'accepted')){
+            $updateScore->update(['idWinner' => $id,'status'=>$request->status]);
+        }else if($updateScore->where('status'->$request->stauts === 'rejected')){
+            $updateScore->update(['status'=>$request->status]);
+        }
+        return $challenge;
     }
 
     /**
