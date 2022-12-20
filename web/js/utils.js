@@ -146,19 +146,27 @@ Vue.component('challenges', {
     data: function(){
         return{
             challengesPending: [],
+            withChallenges: false
         }
     },
     template: ` <div class="nav-container">
                     <div class="challenge__outDiv">
                         <div class="challenge__div">
                             <p>CHALLENGE LIST</p>
-                            <div v-for="(challenge, index) in challengesPending">
+                            <div v-if="withChallenges" v-for="(challenge, index) in challengesPending">
                                 <b-card class="mb-3 friend__list">
                                     <b-card-text class="friends__cardtext">
                                         <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                         <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
                                         <i class="fa fa-times-circle" style="font-size:24px;color:red;float:right;padding-top:20px;padding-left:10px;" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i> 
                                         <i class="fa fa-check-circle" style="font-size:24px;color:green;float:right;padding-top:20px;" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i>
+                                    </b-card-text>
+                                </b-card>
+                            </div>
+                            <div v-if="withChallenges === false">
+                                <b-card class="mb-3" class="friends__noPendingText">
+                                    <b-card-text>
+                                        No challenges
                                     </b-card-text>
                                 </b-card>
                             </div>
@@ -192,6 +200,10 @@ Vue.component('challenges', {
                 console.log("antes de " + borrar + " " + this.challengesPending);
                 this.challengesPending.splice(borrar, 1); 
                 console.log("despues de " + borrar + " " + this.challengesPending);
+
+                if(this.challengesPending.length = 0) {
+                    this.withChallenges = false;
+                }
             }); 
 
             if(status == "accepted"){
@@ -214,7 +226,13 @@ Vue.component('challenges', {
         .then(res => res.json())
         .then(data => {
             console.log("IC " + data);
-            this.challengesPending = data;
+            if(data == "no hay challenges") {
+                this.withChallenges = false;
+            }
+            else {
+                this.challengesPending = data;
+                this.withChallenges = true;
+            }
             
         }); 
     }
@@ -1408,6 +1426,7 @@ Vue.component('game' , {
                         // this.idGame = userStore().idChallenge;
                         this.idGame = userStore().challengeInfo.idGame;
                         this.page = 2;
+                        this.selectedDifficulty = this.questions[0].difficulty;
                         this.saveData(-300);
                         
                     }
@@ -1610,6 +1629,8 @@ Vue.component('game' , {
     },
     beforeMount () {
 
+        this.resetAll();
+
         if(this.isLogged) {
             fetch("../trivial5/public/comprobardaily/"+ this.userLogged.idUser +"")
             .then(res => res.json())
@@ -1662,7 +1683,7 @@ Vue.component('footercopyright',{
                     left:0;
                     width:100%;
                     ">
-                    © Answers && questions come from <a href="https://the-trivia-api.com/">Trivia api</a>
+                    © Answers & questions come from <a href="https://the-trivia-api.com/">Trivia api</a>
                 </div>`
 });
 
