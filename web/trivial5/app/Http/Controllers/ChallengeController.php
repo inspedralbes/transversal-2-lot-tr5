@@ -55,13 +55,6 @@ class ChallengeController extends Controller
         return $challenge;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update_winner(Request $request)
     {
         $updateChallenge = DB::table('challenges')
@@ -69,6 +62,16 @@ class ChallengeController extends Controller
             ->where('idChallenged', '=', $request -> idChallenged)
             ->where('idGame','=',$request->idGame)
             ->update(['idWinner','=',$request->idWinner,'scoreChallenged','=',$request->score_challenged]);
+        return $updateChallenge;
+    }
+
+    public function update(Request $request)
+    {
+        $updateChallenge = DB::table('challenges')
+            ->where('idChallenger', '=', $request -> idChallenger)
+            ->where('idChallenged', '=', $request -> idChallenged)
+            ->where('idGame','=',$request->idGame)
+            ->update(['status'=>$request->status]);
         return $updateChallenge;
     }
 
