@@ -104,7 +104,7 @@ class FriendController extends Controller
         $solicitudAMi = ((Friend::where('idUserRequested',$request->id)->value('idUserRequested')) == (Friend::where('idUserRequest',$requestedID)->value('idUserRequest')));
         if(User::where('email',$request->email)->exists()){
             error_log("entra if");
-            if((!$if1)||(!$if2)){
+            if((!$if1)||(!$if2)||(!$solicitudAMi)){
                 $friend -> idUserRequested = $requestedID;
                 $friend -> idUserRequest = $request -> id;
                 $friend -> save();

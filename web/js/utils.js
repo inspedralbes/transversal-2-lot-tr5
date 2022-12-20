@@ -59,17 +59,16 @@ Vue.component('record', {
                                     <b-card-text class="record_cardTexts">
                                         <div class="record__selection" style="display:inline-block;">
                                             <div v-if="game.difficulty=='easy'">
-                                                <p style="color:green;">E</p>
+                                                <h1 style="color:#86a83a;">E</h1>
                                             </div>
                                             <div v-if="game.difficulty=='medium'">
-                                                <p style="color:orange;">M</p>
+                                                <h1 style="color:#daa759;">M</h1>
                                             </div>
                                             <div v-if="game.difficulty=='hard'">
-                                                <p style="color:red;">H</p>
+                                                <h1 style="color:#d25353;">H</h1>
                                             </div>
-                                            {{game.score}}
-                                            Category: {{game.category}}
-                                            
+                                            <h1>{{game.score}}</h1>
+                                            {{game.category}}<br>
                                             Date: {{game.created_at}}
                                         </div>
                                         <b-button v-if="externProfile" variant="success" @click="playChallenge(game.id)">Play same game</b-button>
@@ -426,12 +425,6 @@ Vue.component('profile', {
     },
     template: ` <div v-show="this.isLogged">
                     <br>
-                    <b-container class="bv-example-row">
-                        <b-row>
-                            <b-col><b-button to="/" class="profile__backButton"><b-icon icon="arrow-left"></b-icon></b-button></b-col>
-                            <b-col><b-button @click="logoutUser" class="profile__logoutButton">Logout</b-button></b-col>
-                        </b-row>
-                    </b-container>
                     <br>
                     <div class="profile__div">
                         <div class="profile__picture">
@@ -448,6 +441,7 @@ Vue.component('profile', {
                         <br>
                         <p class="profile__userName">{{infoUser.name}}</p>
                         <p class="profile__userScore">Total Score <br> {{infoUser.total_score}}</p>
+                        <b-button @click="logoutUser" class="profile__logoutButton">Logout</b-button>
                     </div>
                     <br>
                     <b-tabs pills card content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">

@@ -452,6 +452,14 @@ tr:nth-child(even) {
     color: #e3e3e3 !important;
 }
 
+.record__selection>div{
+    display: inline-block;
+}
+
+.record__selection>h1{
+    display: inline-block;
+}
+
 .card-body .record_cardTexts{
     color: #e3e3e3 !important;
     padding-top: 5px;
