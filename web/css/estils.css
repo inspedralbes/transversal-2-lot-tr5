@@ -19,7 +19,6 @@ html{
 }
 
 body{
-    /* background: #222; */
     background: #141f2a;
     height: 100%;
     background-repeat: no-repeat;
@@ -31,8 +30,6 @@ body{
 }
 
 .container_button_play{
-    /* height: 500px;
-    position:relative; */
     font-family: 'chubby',sans-serif;
 }
 
@@ -47,61 +44,9 @@ body{
     text-align: center;
 }
 
-/* .button__play {
-    width: 100px;
-    height: 50px;
-    border:none;
-    border-radius: 50px;
-    font-family: 'chubby',sans-serif;
-    font-weight: bolder;
-    letter-spacing: 0.3rem;
-    text-transform: uppercase;
-    mix-blend-mode: color-dodge; 
-    perspective: 500px;
-    transform-style: preserve-3d;
-    cursor: pointer;
-    color:white;
-    line-height: 40px;
-    padding: 0;
-    border: none;
-    background-color: #141f2a;
-  } */
+/*----NEW PLAY BUTTON-----*/
 
-  /* .button__play{
-    color: #fff352;
-    border: 1px solid #fff352;
-    box-shadow: 0 0 5px #fff352, 0 0 5px #fff352 inset;
-    z-index: 2;
-    transition: all 0.9s ease;
-    overflow: hidden;
-  }
-  .button__play:after {
-    position: absolute;
-    content: " ";
-    z-index: -1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: all 0.3s ease;
-  }
-  .button__play:hover {
-    color: white;
-  }
-  .button__play:hover:after {
-    background: #fff352;
-    -webkit-transform: scale(2) rotate(180deg);
-    transform: scale(2) rotate(180deg);
-    box-shadow:  4px 4px 6px 0 rgba(255,255,255, 1),
-                -4px -4px 6px 0 rgba(116, 125, 136, .2), 
-      inset -4px -4px 6px 0 rgba(255,255,255, 1),
-      inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
-  } */
-
-
-  /*NUEVO PLAY BUTTON*/
-
-  .button__play1{
+.button__play1{
     width:200px;
     height:70px;
     outline:none;
@@ -109,52 +54,68 @@ body{
     cursor:pointer;
     background-color: #141f2a;
     font-size: 30px;
-  }
-  .button__play1:hover{
-    text-decoration: none;
-  }
-  .button__playDiv{
-    position: absolute;
-    top: 0; left: 0;
-    right: 0; bottom: 0;
-    height: 100vh; width: 100vw;
+}
+.button__play1:hover{
+    /* text-decoration: none !important; */
+    background-color: #141f2a;
+    color:#969595;
+}
+.button__playDiv{
     display: flex; 
     justify-content: center;
     align-items: center;
-  }
-  .button__playDiv span{
+}
+.button__playDiv span{
     position: relative;
     top: 20px;
     display: inline-block;
-    animation: bounce 0.7s ease infinite alternate;
-  }
-  @keyframes bounce{
+    animation: bounce 0.8s ease infinite alternate;
+    color: #e3e3e3;
+}
+
+@keyframes bounce{
     100%{
-      top: -20px;
-      text-shadow: 0 1px #ccc, 
-                   0 2px #ccc, 
-                   0 3px #ccc, 
-                   0 4px #ccc, 
-                   0 5px #ccc,
-                   0 6px #ccc, 
-                   0 7px #ccc, 
-                   0 8px #ccc, 
-                   0 9px #ccc, 
+      top: -10px;
+      text-shadow: 0 1px #969595, 
+                   0 2px #969595, 
+                   0 3px #969595, 
+                   0 4px #969595, 
+                   0 5px #969595,
+                   0 6px #969595, 
+                   0 7px #969595, 
+                   0 8px #969595, 
+                   0 9px #969595, 
                    0 50px 25px rgba(0, 0, 0, 0.2);
     }
-  }
-  .button__playDiv span:nth-child(2){
+}
+.button__playDiv span:nth-child(2){
     animation-delay:0.1s;
-  }
-  .button__playDiv span:nth-child(3){
-    animation-delay:0.2s;
-  }
-  .button__playDiv span:nth-child(4){
+}
+.button__playDiv span:nth-child(3){
     animation-delay:0.3s;
-  }
-  .button__playDiv span:nth-child(5){
-    animation-delay:0.4s;
-  }
+}
+.button__playDiv span:nth-child(4){
+    animation-delay:0.5s;
+}
+.button__playDiv span:nth-child(5){
+    animation-delay:0.7s;
+}
+
+@media(max-width:480px){
+    .start__tituloDiv>h4{
+        font-size: 25px!important;
+    }
+    .button__play1{
+        width: 130px;
+        height: 50px;
+    }
+    .button__play1>span{
+        font-size: 25px;
+    }
+    .footer{
+        line-height: 17px!important;
+    }
+}
 
 .navbar{
     background: #141f2a;
@@ -282,9 +243,9 @@ body{
     font-size: 30px!important;
 }
 
-.friends__noPendingText{
+.friends__noPendingText,.challenges__noChallenges{
     background: #1e2833;
-    height: 30px;
+    height: 65px;
     padding: 1px;
     color:#eaeaeb;
 }
@@ -303,8 +264,7 @@ body{
     .game__div{
         width: 80%;
     }
-}
-@media(min-width:768px){
+
     .game__outerPendingDiv{
         display: flex;
         justify-content: center;
@@ -313,6 +273,10 @@ body{
 
     .game__pendingDiv{
         width: 60%;
+    }
+
+    .friend__requestInput{
+        font-size: 20px !important;
     }
 }
 
@@ -370,18 +334,6 @@ table{
     }
 }
 
-
-/* th{
-    padding: 20px 15px;
-    text-align: left;
-    font-weight: 500;
-    font-size: 16px;
-    color: #eaeaeb;
-    text-align: center;
-    text-transform: uppercase;
-    border-radius: 3px;
-} */
-
 td{
     border-top: 10px;
     padding: 20px;
@@ -390,7 +342,7 @@ td{
     font-weight: 300;
     font-size: 14px;
     color: #eaeaeb;
-    border-bottom: solid 1px rgba(255,255,255,0.1);
+    /* border-bottom: solid 1px rgba(255,255,255,0.1); */
     text-align: center;
     /* text-decoration: none; */
 }
@@ -456,6 +408,20 @@ tr:nth-child(even) {
     width: 400px;
 }
 
+.challenges__noChallenges{
+    height: 60px;
+}
+
+@media(max-width:480px){
+    .start__tituloPrincipal{
+        font-size: 50px;
+        width: 300px;
+    }
+    .challenges__noChallenges > .card-body > .card-text{
+        font-size: 15px !important;
+    }
+}
+
 .start__dailyGameButton{
     background-color: #222;
     border: 1px white;
@@ -465,8 +431,8 @@ tr:nth-child(even) {
 .start__buttonDaily{
     background-color: #222;
     border: 1px white;
+    cursor: pointer;
 }
-
 
 /*-----PROFILE CSS-----*/
 .profile__div{
@@ -582,7 +548,6 @@ tr:nth-child(even) {
 }
 
 .friends__pendinglist{
-    padding: 20px;
     color:#eaeaeb
 }
 
@@ -724,7 +689,7 @@ box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
 .input__icon{
     position: absolute;
     color:#eaeaeb;
-    top:30px
+    top:25px
 }
 
 .input__text:hover
@@ -811,6 +776,17 @@ box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
 .modal-header,.modal-body,.modal-footer{
     background-color: #1e2833;
     color:#eaeaeb;
+    border: none;
+    border-color: #1e2833;
+}
+
+.modal-content > .modal-header > .close{
+    background-color: #1e2833;
+    color:#eaeaeb;
+}
+
+.friends__cardtext > .button__delete{
+    float:right;
 }
 
 /*-----FOOTER CSS-----*/
@@ -840,6 +816,7 @@ box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 30px;
 }
 
 @media only screen and (max-width:700px){

@@ -32,7 +32,17 @@ class ChallengeController extends Controller
         $sql_result='SELECT * FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenger = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = '.$id;
         // $pendingChallenges = DB::select('SELECT * FROM challenges JOIN games ON challenges.idGame = games.id JOIN users ON challenges.idChallenged = users.id WHERE challenges.status = "pending" AND challenges.idChallenged = ?',$id);
         $pendingChallenges = DB::select($sql_result);
-        return json_encode($pendingChallenges);
+
+        $allChallenges = [];
+        for ($i = 0; $i < count($pendingChallenges);$i++){
+            array_push($allChallenges, $pendingChallenges[$i]);
+        }
+        if(count($allChallenges)>0){
+            return json_encode($pendingChallenges);
+        }else{
+            return json_encode('no hay challenges');
+        }
+        
     }
 
     /**

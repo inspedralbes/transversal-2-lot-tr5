@@ -146,19 +146,27 @@ Vue.component('challenges', {
     data: function(){
         return{
             challengesPending: [],
+            withChallenges:false,
         }
     },
     template: ` <div class="nav-container">
                     <div class="challenge__outDiv">
                         <div class="challenge__div">
                             <p>CHALLENGE LIST</p>
-                            <div v-for="(challenge, index) in challengesPending">
+                            <div v-if="withChallenges===true" v-for="(challenge, index) in challengesPending">
                                 <b-card class="mb-3 friend__list">
                                     <b-card-text class="friends__cardtext">
                                         <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                         <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
-                                        <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i> 
-                                        <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i>
+                                        <i class="fa fa-times-circle" style="font-size:24px;color:red;float:right;padding-top:20px;padding-left:10px;" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i> 
+                                        <i class="fa fa-check-circle" style="font-size:24px;color:green;float:right;padding-top:20px;" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i>
+                                    </b-card-text>
+                                </b-card>
+                            </div>
+                            <div v-if="withChallenges===false">
+                                <b-card class="challenges__noChallenges">
+                                    <b-card-text>
+                                        It seems like nobody has challenged you yet...
                                     </b-card-text>
                                 </b-card>
                             </div>
@@ -214,7 +222,12 @@ Vue.component('challenges', {
         .then(res => res.json())
         .then(data => {
             console.log("IC " + data);
-            this.challengesPending = data;
+            if(data != "no hay challenges"){
+                this.withChallenges = true;
+                this.challengesPending = data;
+            }else{
+                this.withChallenges = false;
+            }
             
         }); 
     }
@@ -245,7 +258,7 @@ Vue.component('list_friends', {
                                     </b-card>
                                 </div>
                                 <div v-if="withFriends === false">
-                                    <b-card class="mb-3">
+                                    <b-card class="mb-3" class="friends__noPendingText">
                                         <b-card-text>
                                             No friends
                                         </b-card-text>
@@ -947,7 +960,7 @@ Vue.component('results' , {
                     <br>
                     <div v-if="!isChallenge">
                         <h1 class="game__resultLetter">{{correctAnswers}}/{{results.length}} answers correct! </h1>
-                        <h1 v-show="this.isLogged" class="game__resultLetter">Score: {{this.points}}</h1>
+                        <h1 v-show="this.isLogged" class="game__resultLetter">Score: {{this.points}}</h1><br>
                     </div>
                     <div v-if="isChallenge">
                         <h1 class="game__resultLetter">Challenge</h1>
@@ -982,8 +995,8 @@ Vue.component('results' , {
                                 </b-card>
                             </div>
                             <div v-if="withFriends === false">
-                                <b-card class="mb-3">
-                                    <b-card-text>
+                                <b-card class="mb-3 friend__list">
+                                    <b-card-text class="friends__cardtext">
                                         No friends
                                     </b-card-text>
                                 </b-card>
@@ -1319,7 +1332,7 @@ Vue.component('game' , {
                                     </div>
                                 </div>
 
-                                <p style="color: white; font-family: 'chubby', sans-serif; !important">Select category</p>
+                                <p style="color: white; font-family: 'chubby', sans-serif !important;padding-top:20px;">Select category</p>
                                 <div class="category__selectionsOuter">
                                     <div class="category__selections">
                                         <b-row style="padding-bottom:15px">
@@ -1656,13 +1669,13 @@ Vue.component('game' , {
 
 Vue.component('footercopyright',{
     template:`  <div class="footer" 
-                    style="color: white;
-                    height:50px;
+                    style="color: #eaeaeb;
                     line-height:50px;
                     bottom:0;
                     left:0;
                     width:100%;
                     ">
+                    <a>Resposive trivial game made by Carlos Gómez, Iker Bravo and Yenifer Wu</a><br>
                     © Answers && questions come from <a href="https://the-trivia-api.com/">Trivia api</a>
                 </div>`
 });
