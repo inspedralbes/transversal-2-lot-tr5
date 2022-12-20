@@ -67,7 +67,7 @@ Vue.component('record', {
                                             <div v-if="game.difficulty=='hard'">
                                                 <h1 style="color:#d25353;">HARD</h1>
                                             </div>    
-                                            <h4>{{game.category}}</h4><br>
+                                            <h4>{{game.category}}</h4>
                                             <h3> Score: {{game.score}}</h3>
                                             Date: {{game.created_at}}
                                         </div>

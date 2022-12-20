@@ -101,13 +101,17 @@ body{
 
   /*NUEVO PLAY BUTTON*/
 
-  .button__play{
-    width:80px;
+  .button__play1{
+    width:200px;
     height:70px;
     outline:none;
     border:none;
     cursor:pointer;
-    background-color: #ccc;
+    background-color: #141f2a;
+    font-size: 30px;
+  }
+  .button__play1:hover{
+    text-decoration: none;
   }
   .button__playDiv{
     position: absolute;
