@@ -44,7 +44,7 @@ Vue.component('routes', {
 });
 
 Vue.component('record', {
-    props: ['id'],
+    props: ['id', 'name'],
     data: function(){
         return{
             gamesPlayed: [],
@@ -71,7 +71,7 @@ Vue.component('record', {
                                             <h3> Score: {{game.score}}</h3>
                                             Date: {{game.created_at}}
                                         </div>
-                                        <b-button v-if="externProfile" class="button__playSameGame" @click="playChallenge(game.id, game.idUser, game.score)">PLAY</b-button>
+                                        <b-button v-if="externProfile" class="button__playSameGame" @click="playChallenge(game.id, game.idUser, game.score, game)">PLAY</b-button>
                                     </b-card-text>
                                     <hr>
                                 </div>
@@ -105,6 +105,7 @@ Vue.component('record', {
             userStore().challengeInfo.score_challenger = scoreChallenger;
             userStore().challengeInfo.idChallenged = userStore().loginInfo.idUser;
             userStore().challengeInfo.score_challenged = 0;
+            userStore().challengeInfo.nameChallenger = this.name;
             userStore().challenged = true;
             
             router.push("/");
@@ -154,14 +155,14 @@ Vue.component('challenges', {
                             <b-card-text class="friends__cardtext">
                                 <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                 <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
-                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger)"></i> 
-                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger)"></i>
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i>
                             </b-card-text>
                         </b-card>
                     </div>
                 </div>`,
     methods: {
-        changeChallengeRequest: function(status, idChallenger, idChallenged, idGame, scoreChallenger) {
+        changeChallengeRequest: function(status, idChallenger, idChallenged, idGame, scoreChallenger, nameChallenger) {
 
             challengeRequest = new FormData();
             challengeRequest.append('status', status);
@@ -195,6 +196,7 @@ Vue.component('challenges', {
                 userStore().challengeInfo.score_challenger = scoreChallenger;
                 userStore().challengeInfo.idChallenged = idChallenged;
                 userStore().challengeInfo.score_challenged = 0;
+                userStore().challengeInfo.nameChallenger = nameChallenger;
                 userStore().challenged = true;
                 
                 router.push("/");
@@ -364,6 +366,9 @@ Vue.component('pending_requests', {
                 console.log("antes de " + borrar + " " + this.requests);
                 this.requests.splice(borrar, 1); 
                 console.log("despues de " + borrar + " " + this.requests);
+                if(status == "accepted"){
+                    this.$emit('actualizarFriendsList'); 
+                }
             }); 
 
         },
@@ -488,7 +493,7 @@ Vue.component('profile', {
                             <template slot="title">
                                 <b-icon icon="trophy"></b-icon> Record
                             </template>
-                            <record :id=this.id></record>
+                            <record :id=this.id :name=infoUser.name></record>
                         </b-tab>
                         <b-tab v-if="this.id == this.userLogged.idUser" >
                             <template slot="title">
@@ -938,8 +943,8 @@ Vue.component('results' , {
                     <h1 class="game__resultLetter">{{correctAnswers}}/{{results.length}} answers correct! </h1>
                     <h1 v-show="this.isLogged" class="game__resultLetter">Score: {{this.points}}</h1>
                     <b-button @click="$emit('lobby')">Lobby</b-button>
-                    <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
-                    <b-button v-if="!daily" v-b-modal="'sendChallenge'">Challenge someone!</B-button>
+                    <b-button v-if="!daily || !isChallenge" @click="$emit('playagain')">Play again</b-button>
+                    <b-button v-if="!daily || !isChallenge" v-b-modal="'sendChallenge'">Challenge someone!</B-button>
 
                     <div>
                         <b-modal id="sendChallenge" title="Challenge someone!" ok-only>
@@ -1063,6 +1068,9 @@ Vue.component('results' , {
     computed: {
         isLogged() {
             return userStore().logged;
+        },
+        isChallenge() {
+            return userStore().challenged;
         },
         userLogged() {
             if(userStore().logged){
@@ -1449,7 +1457,7 @@ Vue.component('game' , {
             .then(res => res.json())
             .then(data => {
                 console.log("return " + data);
-                userStore().challenged = false;
+                // userStore().challenged = false;
             });
         },
         saveGame: function() {
@@ -1652,6 +1660,8 @@ const userStore = Pinia.defineStore('usuario', {
                 idGame: "",
                 score_challenger: "",
                 score_challenged: "",
+                nameChallenger: "",
+                nameChallenged: "",
             },
         }
     },
