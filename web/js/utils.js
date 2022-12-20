@@ -127,18 +127,43 @@ Vue.component('record', {
 });
 
 Vue.component('challenges', {
+    data: function(){
+        return{
+            challengesPending: [],
+        }
+    },
     template: ` <div class="nav-container">
-                    <div v-if="withFriends === true" v-for="(friend, index) in friends">
+                    <div v-for="(challenge, index) in challengesPending">
                         <b-card class="mb-3 friend__list">
                             <b-card-text class="friends__cardtext">
                                 <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
-                                <RouterLink :to="'/profile/'+friend.id"> {{friend.name}} </RouterLink>
-                                <b-button variant="danger" class="button__delete" @click="deleteFriend(friend.idUserRequested, friend.idUserRequest)">Delete</b-button>
+                                <RouterLink :to="'/profile/'+11"> {{name}} </RouterLink>
+                                <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', )"></i> 
+                                <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', )"></i>
                             </b-card-text>
                         </b-card>
                     </div>
                 </div>`,
     methods: {
+        changeChallengeRequest: function(status) {
+
+            if(status == "accepted"){
+                //jugar partida y cambiar estado challenge a accepted
+            }
+            else {
+                //cambiar estado challenge a rejected
+            }
+
+        }
+    },
+    beforeMount() {
+        console.log("fetch indexchallenge");
+        fetch('../trivial5/public/indexChallenge/' + userStore().loginInfo.idUser)
+        .then(res => res.json())
+        .then(data => {
+            console.log("IC " + data);
+            
+        }); 
     }
 });
 
@@ -204,16 +229,6 @@ Vue.component('list_friends', {
             }); 
             
         },
-        changeChallengeRequest: function(status) {
-
-            if(status == "accepted"){
-                //jugar partida y cambiar estado challenge a accepted
-            }
-            else {
-                //cambiar estado challenge a rejected
-            }
-
-        }
         // showUser(userId){
         //     fetch('../trivial5/public/indexPerfil/'+this.friend.id)
         //     .then(res=>res.json())
@@ -453,6 +468,7 @@ Vue.component('profile', {
         },
         logoutUser: function() {
             userStore().logged = false;
+            router.push("/");
         },
         chargeProfile: function() {
             console.log("id ruta " + this.$route.params.id + " | id " + this.id);
@@ -530,95 +546,6 @@ Vue.component('profile', {
             this.chargeProfile();
             this.show = false;
         }
-    },
-});
-
-Vue.component('user-profile', {
-    data: function(){
-        return{
-            infoUser: "",
-            id: this.$route.params.id,
-        }
-    },
-    template: ` <div v-show="this.isLogged">
-                    <br>
-                    <b-container class="bv-example-row">
-                        <b-row>
-                            <b-col><b-button to="/" class="profile__backButton"><b-icon icon="arrow-left"></b-icon></b-button></b-col>
-                            <b-col><b-button @click="logoutUser" class="profile__logoutButton">Logout</b-button></b-col>
-                        </b-row>
-                    </b-container>
-                    <br>
-                    <div class="profile__div">
-                        <div class="profile__picture">
-                            <b-avatar badge-variant="info" badge-offset="-0.5em" size="6rem" src="https://placekitten.com/300/300">
-                                <template #badge>
-                                    <div class="profile__editOptions">
-                                        <b-button @onclick="editProfile" class="rounded-circle profile__editButton" size="sm">
-                                            <b-icon icon="pencil"></b-icon>
-                                        </b-button>
-                                    </div>
-                                </template>
-                            </b-avatar>
-                        </div>
-                        <br>
-                        <p class="profile__userName">{{infoUser.name}}</p>
-                        <p class="profile__userScore">Total Score -> {{infoUser.total_score}}</p>
-                    </div>
-                    <br>
-                    <b-tabs pills card content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
-                        <b-tab active class="profile__tabsSelection">
-                            <template slot="title">
-                                <b-icon icon="trophy"></b-icon> Record
-                            </template>
-                            <record :id=this.id ></record>
-                        </b-tab>
-                    </b-tabs>
-                </div>`, 
-    methods: {
-        editProfile:function(){
-            alert("edit clicked")
-        },
-        logoutUser: function() {
-            userStore().logged = false;
-        }
-    },
-    computed: {
-        isLogged() {
-            return userStore().logged;
-        },
-        userLogged() {
-            
-            if(userStore().logged){
-                return userStore().loginInfo;
-            }
-            else {
-                return {
-                    user: {
-                        nombre: "",
-                        imagen: ""
-                    }
-                }
-            }
-        }
-    },
-    mounted() {
-
-        fetch('../trivial5/public/indexPerfil/' + this.id)
-        .then(res=>res.json())
-        .then(data=>{
-            console.log(data[0]);
-            this.infoUser = data[0];
-        });
-
-       
-        // let userStatistics = new CharacterData("userStatistics",{
-        //     type:'doughnut',
-        //     data:statisticsData,
-        //     options:{}
-        // })
-        // router.push("/");
-                
     },
 });
 
@@ -971,7 +898,7 @@ Vue.component('results' , {
                     <h1 v-show="this.isLogged" class="game__resultLetter">Time: {{this.timer}} Puntuacion: {{this.points}}</h1>
                     <b-button @click="$emit('lobby')">Lobby</b-button>
                     <b-button v-if="!daily" @click="$emit('playagain')">Play again</b-button>
-                    <b-button v-b-modal="'sendChallenge'">Challenge someone!</B-button>
+                    <b-button v-if="!daily" v-b-modal="'sendChallenge'">Challenge someone!</B-button>
 
                     <div>
                         <b-modal id="sendChallenge" title="Challenge someone!" ok-only>
@@ -980,8 +907,7 @@ Vue.component('results' , {
                             <div v-if="withFriends === true" v-for="(friend, index) in friends">
                                 <b-card class="mb-3 friend__list">
                                     <b-card-text class="friends__cardtext">
-                                        <b-avatar variant="primary" class="mr-3 friends__avatar" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
-                                        <p> {{friend.name}} </p>
+                                        {{friend.name}}
                                         <b-button variant="danger" class="button__delete" @click="sendChallenge(friend.id)">Send Challenge</b-button>
                                     </b-card-text>
                                 </b-card>
@@ -1256,9 +1182,6 @@ Vue.component('game' , {
                             </div><br><br>
                             <b-button @click="playButton" class="button__play">PLAY</b-button><br>
                             <b-button v-if="isLogged && showButtonDaily" class="start__buttonDaily" @click="playDaily">DAILY</b-button>
-                            <div class="mb-1" v-if="!isLogged">
-                                <br><b-button @click="desplegarModalLogin" class="start__dailyGameButton">DAILY GAME</b-button> 
-                            </div>
                         </div>
                     </div>
                     <div class="select__optionsOuter">
@@ -1300,7 +1223,6 @@ Vue.component('game' , {
                             </div>
                         </div>
                     </div>
-                    <br><br>
                     <div class="game__outerDiv">
                         <div class="game__div">
                             <div v-if="showQuestions" v-for="(question, index) in this.questions" class="game__body">

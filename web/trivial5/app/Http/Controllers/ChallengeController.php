@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Game;
 use App\Models\PlayedGame;
 use App\Models\Challenge;
+use Illuminate\Support\Facades\DB;
 
 class ChallengeController extends Controller
 {
@@ -19,9 +20,9 @@ class ChallengeController extends Controller
         $completedChallenges = DB::table('played_games')
         ->distinct()
             ->join('challenges',function($join){
-                $join->on('played_games.idGame','=','challenges.idGmae');
+                $join->on('played_games.idGame','=','challenges.idGame');
             })
-            ->where('challenges.status', '=', 'accepted')
+            ->where('challenges.status', '=', 'pending')
             ->get();
 
         return $completedChallenges;
