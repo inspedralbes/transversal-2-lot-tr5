@@ -72,18 +72,26 @@ class ChallengeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $updateScore = DB::table('challenges')
+        $updateChallenge = DB::table('challenges')
+            ->where('idChallenger', '=', $request -> idChallenger)
+            ->where('idChallenged', '=', $request -> idChallenged)
+            ->update(['status'=>$request->status]);
+        return $updateChallenge;
+    }
+
+    public function finishChallenge(){
+        $finishChallenge = DB::table('challenges')
             ->where('idChallenger', '=', $request -> idChallenger)
             ->where('idChallenged', '=', $request -> idChallenged);
 
-        if($updateScore->where('status'->$request->status === 'accepted')){
-            $updateScore->update(['idWinner' => $id,'status'=>$request->status]);
-        }else if($updateScore->where('status'->$request->stauts === 'rejected')){
-            $updateScore->update(['status'=>$request->status]);
+        if($finishChallenge->where('status'->$request->status === 'accepted')){
+            $finishChallenge->update(['idWinner' => $id,'status'=>$request->status]);
+        }else if($finishChallenge->where('status'->$request->stauts === 'rejected')){
+            $finishChallenge->update(['status'=>$request->status]);
         }
-        return $challenge;
+        return $finishChallenge;
     }
 
     /**
