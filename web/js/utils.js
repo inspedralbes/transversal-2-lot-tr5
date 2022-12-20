@@ -157,8 +157,8 @@ Vue.component('challenges', {
                                     <b-card-text class="friends__cardtext">
                                         <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                         <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
-                                        <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger)"></i> 
-                                        <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger)"></i>
+                                        <i class="fa fa-times-circle" style="font-size:24px;color:red" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i> 
+                                        <i class="fa fa-check-circle" style="font-size:24px;color:green" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i>
                                     </b-card-text>
                                 </b-card>
                             </div>
@@ -189,9 +189,9 @@ Vue.component('challenges', {
                         borrar = i;
                     }
                 }
-                console.log("antes de " + borrar + " " + this.challengeRequest);
-                this.challengeRequest.splice(borrar, 1); 
-                console.log("despues de " + borrar + " " + this.challengeRequest);
+                console.log("antes de " + borrar + " " + this.challengesPending);
+                this.challengesPending.splice(borrar, 1); 
+                console.log("despues de " + borrar + " " + this.challengesPending);
             }); 
 
             if(status == "accepted"){
@@ -945,8 +945,27 @@ Vue.component('results' , {
     props: ['results', 'timerRestante', 'difficulty', 'daily', 'idGame'],
     template: ` <div class="game__result">
                     <br>
-                    <h1 class="game__resultLetter">{{correctAnswers}}/{{results.length}} answers correct! </h1>
-                    <h1 v-show="this.isLogged" class="game__resultLetter">Score: {{this.points}}</h1>
+                    <div v-if="!isChallenge">
+                        <h1 class="game__resultLetter">{{correctAnswers}}/{{results.length}} answers correct! </h1>
+                        <h1 v-show="this.isLogged" class="game__resultLetter">Score: {{this.points}}</h1>
+                    </div>
+                    <div v-if="isChallenge">
+                        <h1 class="game__resultLetter">Challenge</h1>
+                        <b-row>
+                            <b-col cols="6">
+                                <h1 v-if="infoChallenge.score_challenger < this.points" class="game__resultLetter">Looser</h1>
+                                <h1 v-if="infoChallenge.score_challenger > this.points" class="game__resultLetter">Winner</h1>
+                                <h1 class="game__resultLetter">{{infoChallenge.nameChallenger}}</h1>
+                                <h1 class="game__resultLetter">{{infoChallenge.score_challenger}}</h1>
+                            </b-col>
+                            <b-col cols="6">
+                                <h1 v-if="infoChallenge.score_challenger > this.points" class="game__resultLetter">Looser</h1>
+                                <h1 v-if="infoChallenge.score_challenger < this.points" class="game__resultLetter">Winner</h1>
+                                <h1 class="game__resultLetter">{{userLogged.nombre}}</h1>
+                                <h1 class="game__resultLetter">{{this.points}}</h1>
+                            </b-col>
+                        </b-row>
+                    </div>
                     <b-button @click="$emit('lobby')">Lobby</b-button>
                     <b-button v-if="showButtons" @click="$emit('playagain')">Play again</b-button>
                     <b-button v-if="showButtons" v-b-modal="'sendChallenge'">Challenge someone!</B-button>
@@ -1070,6 +1089,31 @@ Vue.component('results' , {
             }
         }); 
 
+        updateChallenge = new FormData();
+        updateChallenge.append('idChallenged', this.infoChallenge.idChallenged);
+        updateChallenge.append('idChallenger', this.infoChallenge.idChallenger);
+        updateChallenge.append('idGame', this.infoChallenge.idGame);
+
+        if(this.infoChallenge.score_challenger < this.points){
+            updateChallenge.append('idWinner', this.infoChallenge.idChallenged);
+        }
+        else if(this.infoChallenge.score_challenger > this.points) {
+            updateChallenge.append('idWinner', this.infoChallenge.idChallenger);
+        }
+        else {
+            updateChallenge.append('idWinner', null);
+        }
+        updateChallenge.append('score_challenged', this.points)
+
+        fetch('../trivial5/public/updatechallengewinner', {
+            method: 'POST',
+            body: updateChallenge
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        });
+
         if(this.isLogged) {
             this.$emit('saveData', this.points);
         }
@@ -1078,20 +1122,18 @@ Vue.component('results' , {
         isLogged() {
             return userStore().logged;
         },
-        isChallenge() {
-            return userStore().challenged;
-        },
         userLogged() {
             if(userStore().logged){
                 return userStore().loginInfo;
             }
-            else {
-                return {
-                    user: {
-                        nombre: "",
-                        imagen: ""
-                    }
-                }
+        },
+        
+        isChallenge() {
+            return userStore().challenged;
+        },
+        infoChallenge() {
+            if(this.isChallenge){
+                return userStore().challengeInfo;
             }
         }
     }
