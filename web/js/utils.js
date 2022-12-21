@@ -71,7 +71,7 @@ Vue.component('record', {
                                                     <h4>{{game.category}}</h4>
                                                 </div> <br>
                                                 <div>
-                                                    <h3> Score: <span style="color:#d25353;">{{game.score}}<span></h3>
+                                                    <h3> Score: <span style="color:#d25353;">{{game.score}}</span></h3>
                                                 </div>
                                                 <div>
                                                     Date: {{game.created_at}}
