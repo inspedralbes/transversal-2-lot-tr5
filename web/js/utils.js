@@ -58,20 +58,26 @@ Vue.component('record', {
                                 <div v-for="(game, index) in gamesPlayed">
                                     <b-card-text class="record_cardTexts">
                                         <div class="record__selection" style="display:inline-block;">
-                                            <div v-if="game.difficulty=='easy'">
-                                                <h1 style="color:#86a83a;">EASY</h1>
-                                            </div>
-                                            <div v-if="game.difficulty=='medium'">
-                                                <h1 style="color:#daa759;">MEDIUM</h1>
-                                            </div>
-                                            <div v-if="game.difficulty=='hard'">
-                                                <h1 style="color:#d25353;">HARD</h1>
-                                            </div>    
-                                            <h4>{{game.category}}</h4>
-                                            <h3> Score: {{game.score}}</h3>
-                                            Date: {{game.created_at}}
+                                                <div v-if="game.difficulty=='easy'">
+                                                    <h1 style="color:#86a83a;">EASY</h1>
+                                                </div>
+                                                <div v-if="game.difficulty=='medium'">
+                                                    <h1 style="color:#daa759;">MEDIUM</h1>
+                                                </div>
+                                                <div v-if="game.difficulty=='hard'">
+                                                    <h1 style="color:#d25353;">HARD</h1>
+                                                </div>
+                                                <div class="record__diffDiv">
+                                                    <h4>{{game.category}}</h4>
+                                                </div> <br>
+                                                <div>
+                                                    <h3> Score: <span style="color:#d25353;">{{game.score}}<span></h3>
+                                                </div>
+                                                <div>
+                                                    Date: {{game.created_at}}
+                                                </div>    
                                         </div>
-                                        <b-button v-if="externProfile" class="button__playSameGame" @click="playChallenge(game.id, game.idUser, game.score, game)">PLAY</b-button>
+                                        <b-button v-if="externProfile" variant="outline-primary" style="float:right;margin-top:25px;" @click="playChallenge(game.id, game.idUser, game.score, game)">PLAY</b-button>
                                     </b-card-text>
                                     <hr>
                                 </div>
@@ -158,8 +164,8 @@ Vue.component('challenges', {
                                     <b-card-text class="friends__cardtext">
                                         <b-avatar variant="primary" class="mr-3" size="4rem" src="https://placekitten.com/300/300"></b-avatar>
                                         <RouterLink :to="'/profile/'+challenge.id"> {{challenge.name}} </RouterLink>
-                                        <i class="fa fa-times-circle" style="font-size:24px;color:red;float:right;padding-top:20px;padding-left:10px;" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i> 
-                                        <i class="fa fa-check-circle" style="font-size:24px;color:green;float:right;padding-top:20px;" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i>
+                                        <i class="fa fa-times-circle" style="font-size:24px;color:red;float:right;padding-top:20px;padding-left:10px; cursor:pointer;" @click="changeChallengeRequest('rejected', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i> 
+                                        <i class="fa fa-check-circle" style="font-size:24px;color:green;float:right;padding-top:20px;cursor:pointer;" @click="changeChallengeRequest('accepted', challenge.idChallenger, challenge.idChallenged, challenge.idGame, challenge.scoreChallenger, challenge.name)"></i>
                                     </b-card-text>
                                 </b-card>
                             </div>
@@ -506,20 +512,21 @@ Vue.component('profile', {
                         </div>
                         <br>
                         <p class="profile__userName">{{infoUser.name}}</p>
-                        <p class="profile__userScore">Total Score <br> {{infoUser.total_score}}</p>
-                        <b-button @click="logoutUser" class="profile__logoutButton">Logout</b-button>
+                        <p style="font-size:18px;color:#eaeaeb!important;">{{infoUser.email}}</p>
+                        <p class="profile__userScore">Total Score: {{infoUser.total_score}}</p>
+                        <b-button v-if="this.id == this.userLogged.idUser" @click="logoutUser" class="profile__logoutButton">Logout</b-button>
                     </div>
                     <br>
                     <b-tabs pills card content-class="mt-3" align="center" active-nav-item-class="font-weight-bold text-danger">
                         <b-tab active >
                             <template slot="title">
-                                <b-icon icon="trophy"></b-icon> Record
+                                <b-icon icon="award"></b-icon> Records
                             </template>
                             <record :id=this.id :name=infoUser.name></record>
                         </b-tab>
                         <b-tab v-if="this.id == this.userLogged.idUser" >
                             <template slot="title">
-                                <b-icon icon="award"></b-icon> Challenges
+                                <b-icon icon="trophy"></b-icon> Challenges
                             </template>
                             <challenges></challenges>
                         </b-tab>
@@ -685,7 +692,7 @@ Vue.component('register', {
                                         <p v-if = "samePassword ===false" class="errorsFields">*Confirm password is not the same as password</p>
                                     </div>
 
-                                    <b-button @click="everythingValids" class="register__button">Register <b-icon icon="arrow-right"></b-icon></b-button><br><br>
+                                    <b-button @click="everythingValids" class="register__button1">Register</b-button><br><br>
 
                                     <p v-if="this.registerCorrect === true"  style="color:green;">Thank you for your registration {{this.form.username}}</p>
                                     <p v-if="this.registerCorrect === false" style="color:red;">{{this.fetchReceivedMessage}}</p>
@@ -796,7 +803,8 @@ Vue.component('login', {
                                 <p v-if = "validLoginPassword===false" class="errorsFields">Password null</p>
                             </div>
                         </div>
-                        <b-button @click="loginValidation" class="login__button">Join <b-icon icon="arrow-right"></b-icon></b-button><br><br>
+                        <b-button @click="loginValidation" class="login__button1">Join</b-button>
+                        <br><br>
                         <p v-if="credentialsIncorrect" style="color:red;">*Incorrect Credentials</p>
                     </div>
                 </div>
@@ -1686,6 +1694,10 @@ Vue.component('footercopyright',{
                     © Answers & questions come from <a href="https://the-trivia-api.com/">Trivia api</a>
                 </div>`
 });
+
+Vue.component('statistics',{
+    props:['questions'],
+})
 
 const Game = {
     template: ` <div>

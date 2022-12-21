@@ -280,6 +280,20 @@ body{
     }
 }
 
+@media(max-width:768px){
+    .login__button1{
+        width: 80px !important;
+        height: 40px !important;
+        font-size: 20px !important;
+    }
+    
+    .register__button1{
+        width: 92px !important;
+        height: 40px !important;
+        font-size: 20px !important;
+    }
+}
+
 /*TABLET QUERY*/
 @media(min-width:1025px){
     .game__outerDiv{
@@ -331,6 +345,10 @@ table{
 
     .ranking__content{
         width: 70%;
+    }
+
+    td, td a{
+        font-size: 20px !important;
     }
 }
 
@@ -452,6 +470,7 @@ tr:nth-child(even) {
 }
 
 .profile__backButton, .profile__logoutButton{
+    font-size: 20px;
     background-color:#141f2a!important;
     border-color: #141f2a !important;
     color: #e3e3e3 !important;
@@ -730,6 +749,70 @@ box-shadow: 0px 17px 24px 3px rgba(14,17,20,0.48);
 .login__button:hover, .register__button:hover{
     background: linear-gradient(112.9deg, rgb(63, 204, 101) 6.2%, rgb(43, 148, 197)99.7%);
     /* background-color: #3b4c61; */
+}
+
+/* .sumbit__buttonDiv {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+  } */
+  
+.login__button1{
+    width: 100px;
+    height: 50px;
+}
+
+.register__button1{
+    width: 110px;
+    height: 50px;
+}
+
+.login__button1,.register__button1 {
+    font-size: 1.2em;
+    font-family: 'chubby',sans-serif;
+    background: #72c8d8;
+    border: 0px;
+    position: relative;
+    box-shadow: 
+      inset -4px 2px 1px 1px grey,
+      inset -4px -2px 1px 1px lightgray,
+      inset 4px 0px 1px 1px lightgray;   
+}
+  
+.login__button1:hover,.register__button1:hover {
+    cursor: pointer;
+      background-color: #72c8d8;
+}
+  
+.login__button1:active ,.register__button1:active{
+    top: 5px;
+    box-shadow: 
+      -4px 2px 1px 1px grey,
+      -4px -2px 1px 1px lightgray,
+      4px 0px 1px 1px lightgray; 
+}
+  
+.login__button1::after,.register__button1::after {
+    content: '';
+    background: black;
+    position: absolute;
+    left: -2.5%;
+    top: 0;
+    width: 105%;
+    height: 100%;
+    z-index: -1;
+}
+  
+.login__button1::before ,.register__button1::before{
+    content: '';
+    background: black;
+    position: absolute;
+    left: 0;
+    top: -5%;
+    width: 100%;
+    height: 113%;
+    z-index: -1;
 }
 
 @media only screen and (min-width:700px){
