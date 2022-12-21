@@ -18,3 +18,11 @@ League of Trivia és un quiz online responsive multijugador que poden desafiar r
 [URL del trivial](http://trivial5.alumnes.inspedralbes.cat/)
 
 [documentació API](https://app.swaggerhub.com/apis/cargomfue/Trivial5/0.1#/) 
+
+
+## CRON
+En aquest projecte hi ha una funcionalitat la qual crea una partida automaticament a la BBDD donada una hora (a les 00:05). Hi haureu de crear el vostre propi cron perque funcioni.
+Per això heu de enganxar aquesta comanda: 
+    cd /home/a21cargomfue/web/trivial5.alumnes.inspedralbes.cat/public_html/transversal-2-lot-tr5/web/trivial5 && php artisan schedule:run >> /dev/null 2>&1
+
+Y també haureu de posar que s'executi cada minut
