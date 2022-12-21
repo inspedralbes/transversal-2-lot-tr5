@@ -29,7 +29,7 @@ Y també haureu de posar que s'executi cada minut
 
 
 ## Manual de desplegament
-Els requeriments minims per poder utilitzar i que tot funcioni bé aquesta aplicació web són:
+Els requeriments minims per poder utilitzar aquesta aplicació web i que tot funcioni bé són:
 - Dispositiu des del qual es pugui obrir un navegador
 - Connexió a internet
 - Tenir la tasca del CRON, anterirment comentada, feta
