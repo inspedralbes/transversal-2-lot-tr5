@@ -1,16 +1,20 @@
-# transversals
-Esquema mínim de carpetes pels projectes transversals
+# League of Trivia (Grup 5)
 
-És obligatori seguir aquesta estructura tot i que la podeu ampliar.
+## Integrants
 
-## Atenció
-Un cop comenceu heu de canviar aquesta explicació amb la corresponent al vostre projecte (utilitzant markdown)
+- Iker Bravo
+
+- Carlos Gómez
+
+- Yenifer Wu
+
+## Descripció
+
+League of Trivia és un quiz online responsive multijugador que poden desafiar reciprocament.
+ 
+[Prototip del Penpot](https://design.penpot.app/#/view/60409f81-bb57-80cc-8001-aac8ab9dfe2f?page-id=60409f81-bb57-80cc-8001-aac8ab9dfe30&section=interactions&index=0&share-id=39eb6d3d-9932-80bd-8001-abd9cfdb9f5e)
 
 
-# Aquest fitxer ha de contenir com a mínim:
- * Nom dels integrants
- * Nom del projecte
- * Petita descripció
- * Adreça del prototip del Penpot
- * URL de producció (quan la tingueu)
- * Estat: (explicació de en quin punt està)
+[URL del trivial](http://trivial5.alumnes.inspedralbes.cat/)
+
+[documentació API](https://app.swaggerhub.com/apis/cargomfue/Trivial5/0.1#/) 
